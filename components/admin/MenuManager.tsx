@@ -30,6 +30,7 @@ export function MenuManager() {
   const [form, setForm] = useState<Omit<MenuItem, "id">>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [uploadingImg, setUploadingImg] = useState(false);
+  const [newCatMode, setNewCatMode] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -42,11 +43,13 @@ export function MenuManager() {
 
   function openCreate() {
     setForm(EMPTY);
+    setNewCatMode(false);
     setCreating(true);
     setEditing(null);
   }
 
   function openEdit(item: MenuItem) {
+    setNewCatMode(false);
     setForm({
       nombre: item.nombre,
       descripcion: item.descripcion ?? "",
@@ -86,7 +89,7 @@ export function MenuManager() {
 
   async function handleSave() {
     setSaving(true);
-    const payload = { ...form, precio: parseFloat(form.precio) };
+    const payload = { ...form, precio: parseFloat(form.precio), categoria: form.categoria.trim() };
     if (editing) {
       await fetch(`/api/admin/menu/${editing.id}`, {
         method: "PUT",
@@ -142,12 +145,51 @@ export function MenuManager() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Categoría</label>
-              <input
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                value={form.categoria}
-                onChange={(e) => setForm((p) => ({ ...p, categoria: e.target.value }))}
-                placeholder="Ej: Almuerzo, Cena, Postres"
-              />
+              {(() => {
+                const cats = [...new Set(items.map((i) => i.categoria))].sort();
+                if (cats.length === 0 || newCatMode) {
+                  return (
+                    <div className="flex gap-2">
+                      <input
+                        autoFocus={newCatMode}
+                        className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        value={form.categoria}
+                        onChange={(e) => setForm((p) => ({ ...p, categoria: e.target.value }))}
+                        placeholder="Nombre de la categoría"
+                      />
+                      {newCatMode && (
+                        <button
+                          type="button"
+                          onClick={() => { setNewCatMode(false); setForm((p) => ({ ...p, categoria: cats[0] ?? "" })); }}
+                          className="text-xs text-gray-400 hover:text-gray-600 px-2"
+                          title="Cancelar nueva categoría"
+                        >
+                          ✕
+                        </button>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <select
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 bg-white"
+                    value={form.categoria}
+                    onChange={(e) => {
+                      if (e.target.value === "__nueva__") {
+                        setNewCatMode(true);
+                        setForm((p) => ({ ...p, categoria: "" }));
+                      } else {
+                        setForm((p) => ({ ...p, categoria: e.target.value }));
+                      }
+                    }}
+                  >
+                    {cats.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                    <option value="__nueva__">+ Nueva categoría…</option>
+                  </select>
+                );
+              })()}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Precio</label>
