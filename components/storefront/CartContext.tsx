@@ -11,6 +11,8 @@ interface CartContextValue {
   clear: () => void;
   total: number;
   count: number;
+  drawerOpen: boolean;
+  setDrawerOpen: (v: boolean) => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -19,6 +21,7 @@ const STORAGE_KEY = "tuco_cart";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -62,7 +65,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const count = items.reduce((sum, i) => sum + i.cantidad, 0);
 
   return (
-    <CartContext.Provider value={{ items, add, remove, updateQty, clear, total, count }}>
+    <CartContext.Provider value={{ items, add, remove, updateQty, clear, total, count, drawerOpen, setDrawerOpen }}>
       {children}
     </CartContext.Provider>
   );
