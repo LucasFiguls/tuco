@@ -100,6 +100,7 @@ export const PedidoScalarFieldEnum = {
   comentarios: 'comentarios',
   estado: 'estado',
   total: 'total',
+  visto: 'visto',
   created_at: 'created_at'
 } as const
 

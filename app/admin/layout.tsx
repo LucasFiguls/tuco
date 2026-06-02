@@ -1,12 +1,13 @@
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { Toaster } from "sonner";
+import { AdminNotificationsProvider } from "@/components/admin/AdminNotificationsProvider";
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AdminNotificationsProvider>
+      {children}
+      <Toaster position="top-right" richColors closeButton />
+    </AdminNotificationsProvider>
+  );
 }
 
 export async function generateMetadata() {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
-import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { CheckoutData } from "@/lib/types";
 
 const HORARIOS = [
@@ -58,10 +57,20 @@ export default function CheckoutPage() {
       }
 
       const pedido = await res.json();
-      const waUrl = buildWhatsAppUrl(items, form, pedido.numero_pedido, total);
+
+      // Guardamos el resumen en sessionStorage para la pantalla de confirmación
+      sessionStorage.setItem(
+        "tuco_last_order",
+        JSON.stringify({
+          numero: pedido.numero_pedido,
+          items,
+          total,
+          modalidad: form.modalidad,
+          nombre: form.cliente_nombre,
+        })
+      );
 
       clear();
-      window.open(waUrl, "_blank");
       router.push(`/confirmacion?numero=${pedido.numero_pedido}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error inesperado");
@@ -226,10 +235,10 @@ export default function CheckoutPage() {
             disabled={loading}
             className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-bold py-4 rounded-2xl text-base transition-colors"
           >
-            {loading ? "Procesando..." : "Enviar pedido por WhatsApp"}
+            {loading ? "Procesando..." : "Enviar pedido"}
           </button>
           <p className="text-xs text-gray-400 text-center">
-            Al confirmar, se abrirá WhatsApp para finalizar tu pedido
+            Al confirmar, recibiremos tu pedido y te contactaremos para coordinar
           </p>
         </form>
       </div>

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
+import { useAdminNotifications } from "./AdminNotificationsProvider";
 import type { EstadoPedido } from "@/lib/types";
 
 interface MenuItem {
@@ -28,6 +29,7 @@ interface Pedido {
   comentarios: string | null;
   estado: EstadoPedido;
   total: string;
+  visto: boolean;
   created_at: string;
   items: PedidoItem[];
 }
@@ -55,9 +57,18 @@ export function PedidosList() {
   const [estadoFiltro, setEstadoFiltro] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const initialLoadDone = useRef(false);
+  const { reloadTrigger } = useAdminNotifications();
 
   async function load() {
     setLoading(true);
+
+    // En la primera carga, marcamos todos como vistos antes de traer la lista
+    if (!initialLoadDone.current) {
+      initialLoadDone.current = true;
+      await fetch("/api/admin/pedidos/marcar-vistos", { method: "PATCH" }).catch(() => {});
+    }
+
     const params = new URLSearchParams({ page: String(page) });
     if (estadoFiltro) params.set("estado", estadoFiltro);
     const res = await fetch(`/api/admin/pedidos?${params}`);
@@ -69,6 +80,11 @@ export function PedidosList() {
 
   useEffect(() => { load(); }, [page, estadoFiltro]);
 
+  // Recarga automática cuando llega un pedido nuevo vía Realtime
+  useEffect(() => {
+    if (reloadTrigger > 0) load();
+  }, [reloadTrigger]);
+
   async function cambiarEstado(id: string, estado: EstadoPedido) {
     await fetch(`/api/admin/pedidos/${id}`, {
       method: "PUT",
@@ -76,6 +92,20 @@ export function PedidosList() {
       body: JSON.stringify({ estado }),
     });
     load();
+  }
+
+  async function handleExpand(id: string) {
+    const isOpening = expanded !== id;
+    setExpanded(isOpening ? id : null);
+
+    if (isOpening) {
+      const pedido = pedidos.find((p) => p.id === id);
+      if (pedido && !pedido.visto) {
+        // Marca como visto localmente para evitar parpadeo
+        setPedidos((prev) => prev.map((p) => p.id === id ? { ...p, visto: true } : p));
+        fetch(`/api/admin/pedidos/${id}/visto`, { method: "PATCH" }).catch(() => {});
+      }
+    }
   }
 
   return (
@@ -101,16 +131,26 @@ export function PedidosList() {
       ) : (
         <div className="space-y-3">
           {pedidos.map((pedido) => (
-            <div key={pedido.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div
+              key={pedido.id}
+              className={`rounded-2xl shadow-sm overflow-hidden transition-colors ${
+                !pedido.visto ? "bg-orange-50 border border-orange-100" : "bg-white"
+              }`}
+            >
               <button
                 className="w-full text-left p-4"
-                onClick={() => setExpanded(expanded === pedido.id ? null : pedido.id)}
+                onClick={() => handleExpand(pedido.id)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span className="font-bold text-gray-900">#{pedido.numero_pedido}</span>
                     <span className="font-medium text-gray-700">{pedido.cliente_nombre}</span>
                     <Badge variant={ESTADO_BADGE[pedido.estado]}>{ESTADO_LABEL[pedido.estado]}</Badge>
+                    {!pedido.visto && (
+                      <span className="text-[10px] font-bold bg-red-500 text-white px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                        Nuevo
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-3 text-sm text-gray-500">
                     <span>${Number(pedido.total).toLocaleString("es-AR")}</span>

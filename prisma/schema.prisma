@@ -35,6 +35,7 @@ model Pedido {
   comentarios      String?
   estado           EstadoPedido @default(PENDIENTE)
   total            Decimal  @db.Decimal(10, 2)
+  visto            Boolean  @default(false)
   created_at       DateTime @default(now())
 
   items PedidoItem[]

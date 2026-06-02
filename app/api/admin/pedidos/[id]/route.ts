@@ -46,3 +46,16 @@ export async function PUT(
   });
   return NextResponse.json(pedido);
 }
+
+// PATCH → marca un pedido individual como visto
+export async function PATCH(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await getSession())) {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+  const { id } = await params;
+  await prisma.pedido.update({ where: { id }, data: { visto: true } });
+  return NextResponse.json({ ok: true });
+}

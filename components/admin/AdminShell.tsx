@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAdminNotifications } from "./AdminNotificationsProvider";
 
 const NAV = [
   { href: "/admin/pedidos", label: "Pedidos", icon: "📋" },
@@ -12,6 +13,7 @@ const NAV = [
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { unseenCount } = useAdminNotifications();
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -29,13 +31,18 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`relative px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     pathname.startsWith(item.href)
                       ? "bg-orange-50 text-orange-600"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
                   {item.icon} {item.label}
+                  {item.href === "/admin/pedidos" && unseenCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                      {unseenCount > 9 ? "9+" : unseenCount}
+                    </span>
+                  )}
                 </Link>
               ))}
             </nav>
@@ -49,12 +56,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
+      {/* Nav móvil */}
       <nav className="sm:hidden bg-white border-t flex">
         {NAV.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex-1 py-3 text-xs font-medium text-center transition-colors ${
+            className={`relative flex-1 py-3 text-xs font-medium text-center transition-colors ${
               pathname.startsWith(item.href)
                 ? "text-orange-600 border-t-2 border-orange-500"
                 : "text-gray-500"
@@ -62,6 +70,11 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           >
             <span className="block text-lg">{item.icon}</span>
             {item.label}
+            {item.href === "/admin/pedidos" && unseenCount > 0 && (
+              <span className="absolute top-1 right-[calc(50%-16px)] bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
+                {unseenCount > 9 ? "9+" : unseenCount}
+              </span>
+            )}
           </Link>
         ))}
       </nav>
