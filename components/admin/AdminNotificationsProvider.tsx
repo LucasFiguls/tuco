@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase-client";
@@ -22,11 +22,33 @@ export function AdminNotificationsProvider({ children }: { children: React.React
   const pathname = usePathname();
   const pathnameRef = useRef(pathname);
   const router = useRouter();
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // Pre-calienta el AudioContext en la primera interacción del usuario
+  // para evitar el bloqueo de autoplay del browser
+  const resumeAudio = useCallback(() => {
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioContext();
+    }
+    if (audioCtxRef.current.state === "suspended") {
+      audioCtxRef.current.resume();
+    }
+  }, []);
 
   // Mantiene la ref actualizada para que el callback de Realtime no capture pathname stale
   useEffect(() => {
     pathnameRef.current = pathname;
   }, [pathname]);
+
+  // Registra listeners para pre-calentar el AudioContext en la primera interacción
+  useEffect(() => {
+    document.addEventListener("click", resumeAudio);
+    document.addEventListener("keydown", resumeAudio);
+    return () => {
+      document.removeEventListener("click", resumeAudio);
+      document.removeEventListener("keydown", resumeAudio);
+    };
+  }, [resumeAudio]);
 
   // Carga el badge inicial al montar el layout
   useEffect(() => {
@@ -58,11 +80,11 @@ export function AdminNotificationsProvider({ children }: { children: React.React
           if (pathnameRef.current.startsWith("/admin/pedidos")) {
             // Ya está en la página de pedidos: solo recarga la lista
             setReloadTrigger((t) => t + 1);
-            playBeep();
+            playBeep(audioCtxRef.current);
           } else {
             // Está en otra sección: incrementa badge y muestra toast
             setUnseenCount((c) => c + 1);
-            playBeep();
+            playBeep(audioCtxRef.current);
             toast("🔔 Nuevo pedido recibido", {
               description: "Entrá a Pedidos para verlo.",
               action: {
@@ -88,10 +110,9 @@ export function AdminNotificationsProvider({ children }: { children: React.React
   );
 }
 
-function playBeep() {
-  if (!document.hasFocus()) return;
+function playBeep(ctx: AudioContext | null) {
+  if (!document.hasFocus() || !ctx || ctx.state !== "running") return;
   try {
-    const ctx = new AudioContext();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);
