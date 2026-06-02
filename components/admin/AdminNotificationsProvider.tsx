@@ -29,10 +29,23 @@ export function AdminNotificationsProvider({ children }: { children: React.React
   const resumeAudio = useCallback(() => {
     if (!audioCtxRef.current) {
       audioCtxRef.current = new AudioContext();
+      console.log("[audio] AudioContext creado, state:", audioCtxRef.current.state);
     }
     if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume();
+      audioCtxRef.current.resume().then(() => {
+        console.log("[audio] AudioContext resumido, state:", audioCtxRef.current?.state);
+      });
     }
+  }, []);
+
+  // Intenta crear el AudioContext al montar (puede quedar suspended hasta primer click)
+  useEffect(() => {
+    try {
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContext();
+        console.log("[audio] AudioContext init en mount, state:", audioCtxRef.current.state);
+      }
+    } catch {}
   }, []);
 
   // Mantiene la ref actualizada para que el callback de Realtime no capture pathname stale
@@ -77,12 +90,11 @@ export function AdminNotificationsProvider({ children }: { children: React.React
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "pedidos" },
         () => {
+          console.log("[realtime] INSERT recibido, pathname:", pathnameRef.current);
           if (pathnameRef.current.startsWith("/admin/pedidos")) {
-            // Ya está en la página de pedidos: solo recarga la lista
             setReloadTrigger((t) => t + 1);
             playBeep(audioCtxRef.current);
           } else {
-            // Está en otra sección: incrementa badge y muestra toast
             setUnseenCount((c) => c + 1);
             playBeep(audioCtxRef.current);
             toast("🔔 Nuevo pedido recibido", {
@@ -111,17 +123,31 @@ export function AdminNotificationsProvider({ children }: { children: React.React
 }
 
 function playBeep(ctx: AudioContext | null) {
-  if (!document.hasFocus() || !ctx || ctx.state !== "running") return;
-  try {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = "sine";
-    osc.frequency.value = 880;
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.4);
-  } catch {}
+  const visible = document.visibilityState !== "hidden";
+  console.log("[audio] playBeep — visible:", visible, "| ctx state:", ctx?.state ?? "null");
+  if (!ctx || !visible) return;
+
+  const doPlay = () => {
+    console.log("[audio] reproduciendo beep");
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.4);
+    } catch (e) {
+      console.log("[audio] error al reproducir:", e);
+    }
+  };
+
+  if (ctx.state === "suspended") {
+    ctx.resume().then(doPlay).catch((e) => console.log("[audio] resume error:", e));
+  } else {
+    doPlay();
+  }
 }
