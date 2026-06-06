@@ -28,10 +28,18 @@ export type AggregateMenuItem = {
 
 export type MenuItemAvgAggregateOutputType = {
   precio: runtime.Decimal | null
+  calorias: number | null
+  proteinas: number | null
+  carbohidratos: number | null
+  grasas: number | null
 }
 
 export type MenuItemSumAggregateOutputType = {
   precio: runtime.Decimal | null
+  calorias: number | null
+  proteinas: number | null
+  carbohidratos: number | null
+  grasas: number | null
 }
 
 export type MenuItemMinAggregateOutputType = {
@@ -42,6 +50,11 @@ export type MenuItemMinAggregateOutputType = {
   categoria: string | null
   disponible: boolean | null
   foto_url: string | null
+  calorias: number | null
+  proteinas: number | null
+  carbohidratos: number | null
+  grasas: number | null
+  ingredientes: string | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -54,6 +67,11 @@ export type MenuItemMaxAggregateOutputType = {
   categoria: string | null
   disponible: boolean | null
   foto_url: string | null
+  calorias: number | null
+  proteinas: number | null
+  carbohidratos: number | null
+  grasas: number | null
+  ingredientes: string | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -66,6 +84,11 @@ export type MenuItemCountAggregateOutputType = {
   categoria: number
   disponible: number
   foto_url: number
+  calorias: number
+  proteinas: number
+  carbohidratos: number
+  grasas: number
+  ingredientes: number
   created_at: number
   updated_at: number
   _all: number
@@ -74,10 +97,18 @@ export type MenuItemCountAggregateOutputType = {
 
 export type MenuItemAvgAggregateInputType = {
   precio?: true
+  calorias?: true
+  proteinas?: true
+  carbohidratos?: true
+  grasas?: true
 }
 
 export type MenuItemSumAggregateInputType = {
   precio?: true
+  calorias?: true
+  proteinas?: true
+  carbohidratos?: true
+  grasas?: true
 }
 
 export type MenuItemMinAggregateInputType = {
@@ -88,6 +119,11 @@ export type MenuItemMinAggregateInputType = {
   categoria?: true
   disponible?: true
   foto_url?: true
+  calorias?: true
+  proteinas?: true
+  carbohidratos?: true
+  grasas?: true
+  ingredientes?: true
   created_at?: true
   updated_at?: true
 }
@@ -100,6 +136,11 @@ export type MenuItemMaxAggregateInputType = {
   categoria?: true
   disponible?: true
   foto_url?: true
+  calorias?: true
+  proteinas?: true
+  carbohidratos?: true
+  grasas?: true
+  ingredientes?: true
   created_at?: true
   updated_at?: true
 }
@@ -112,6 +153,11 @@ export type MenuItemCountAggregateInputType = {
   categoria?: true
   disponible?: true
   foto_url?: true
+  calorias?: true
+  proteinas?: true
+  carbohidratos?: true
+  grasas?: true
+  ingredientes?: true
   created_at?: true
   updated_at?: true
   _all?: true
@@ -211,6 +257,11 @@ export type MenuItemGroupByOutputType = {
   categoria: string
   disponible: boolean
   foto_url: string | null
+  calorias: number | null
+  proteinas: number | null
+  carbohidratos: number | null
+  grasas: number | null
+  ingredientes: string | null
   created_at: Date
   updated_at: Date
   _count: MenuItemCountAggregateOutputType | null
@@ -246,6 +297,11 @@ export type MenuItemWhereInput = {
   categoria?: Prisma.StringFilter<"MenuItem"> | string
   disponible?: Prisma.BoolFilter<"MenuItem"> | boolean
   foto_url?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  calorias?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  proteinas?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  carbohidratos?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  grasas?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  ingredientes?: Prisma.StringNullableFilter<"MenuItem"> | string | null
   created_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   pedido_items?: Prisma.PedidoItemListRelationFilter
@@ -259,6 +315,11 @@ export type MenuItemOrderByWithRelationInput = {
   categoria?: Prisma.SortOrder
   disponible?: Prisma.SortOrder
   foto_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  calorias?: Prisma.SortOrderInput | Prisma.SortOrder
+  proteinas?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrderInput | Prisma.SortOrder
+  grasas?: Prisma.SortOrderInput | Prisma.SortOrder
+  ingredientes?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   pedido_items?: Prisma.PedidoItemOrderByRelationAggregateInput
@@ -275,6 +336,11 @@ export type MenuItemWhereUniqueInput = Prisma.AtLeast<{
   categoria?: Prisma.StringFilter<"MenuItem"> | string
   disponible?: Prisma.BoolFilter<"MenuItem"> | boolean
   foto_url?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  calorias?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  proteinas?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  carbohidratos?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  grasas?: Prisma.FloatNullableFilter<"MenuItem"> | number | null
+  ingredientes?: Prisma.StringNullableFilter<"MenuItem"> | string | null
   created_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   pedido_items?: Prisma.PedidoItemListRelationFilter
@@ -288,6 +354,11 @@ export type MenuItemOrderByWithAggregationInput = {
   categoria?: Prisma.SortOrder
   disponible?: Prisma.SortOrder
   foto_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  calorias?: Prisma.SortOrderInput | Prisma.SortOrder
+  proteinas?: Prisma.SortOrderInput | Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrderInput | Prisma.SortOrder
+  grasas?: Prisma.SortOrderInput | Prisma.SortOrder
+  ingredientes?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   _count?: Prisma.MenuItemCountOrderByAggregateInput
@@ -308,6 +379,11 @@ export type MenuItemScalarWhereWithAggregatesInput = {
   categoria?: Prisma.StringWithAggregatesFilter<"MenuItem"> | string
   disponible?: Prisma.BoolWithAggregatesFilter<"MenuItem"> | boolean
   foto_url?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+  calorias?: Prisma.IntNullableWithAggregatesFilter<"MenuItem"> | number | null
+  proteinas?: Prisma.FloatNullableWithAggregatesFilter<"MenuItem"> | number | null
+  carbohidratos?: Prisma.FloatNullableWithAggregatesFilter<"MenuItem"> | number | null
+  grasas?: Prisma.FloatNullableWithAggregatesFilter<"MenuItem"> | number | null
+  ingredientes?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
 }
@@ -320,6 +396,11 @@ export type MenuItemCreateInput = {
   categoria: string
   disponible?: boolean
   foto_url?: string | null
+  calorias?: number | null
+  proteinas?: number | null
+  carbohidratos?: number | null
+  grasas?: number | null
+  ingredientes?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   pedido_items?: Prisma.PedidoItemCreateNestedManyWithoutMenu_itemInput
@@ -333,6 +414,11 @@ export type MenuItemUncheckedCreateInput = {
   categoria: string
   disponible?: boolean
   foto_url?: string | null
+  calorias?: number | null
+  proteinas?: number | null
+  carbohidratos?: number | null
+  grasas?: number | null
+  ingredientes?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   pedido_items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutMenu_itemInput
@@ -346,6 +432,11 @@ export type MenuItemUpdateInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pedido_items?: Prisma.PedidoItemUpdateManyWithoutMenu_itemNestedInput
@@ -359,6 +450,11 @@ export type MenuItemUncheckedUpdateInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pedido_items?: Prisma.PedidoItemUncheckedUpdateManyWithoutMenu_itemNestedInput
@@ -372,6 +468,11 @@ export type MenuItemCreateManyInput = {
   categoria: string
   disponible?: boolean
   foto_url?: string | null
+  calorias?: number | null
+  proteinas?: number | null
+  carbohidratos?: number | null
+  grasas?: number | null
+  ingredientes?: string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -384,6 +485,11 @@ export type MenuItemUpdateManyMutationInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -396,6 +502,11 @@ export type MenuItemUncheckedUpdateManyInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -408,12 +519,21 @@ export type MenuItemCountOrderByAggregateInput = {
   categoria?: Prisma.SortOrder
   disponible?: Prisma.SortOrder
   foto_url?: Prisma.SortOrder
+  calorias?: Prisma.SortOrder
+  proteinas?: Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrder
+  grasas?: Prisma.SortOrder
+  ingredientes?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
 
 export type MenuItemAvgOrderByAggregateInput = {
   precio?: Prisma.SortOrder
+  calorias?: Prisma.SortOrder
+  proteinas?: Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrder
+  grasas?: Prisma.SortOrder
 }
 
 export type MenuItemMaxOrderByAggregateInput = {
@@ -424,6 +544,11 @@ export type MenuItemMaxOrderByAggregateInput = {
   categoria?: Prisma.SortOrder
   disponible?: Prisma.SortOrder
   foto_url?: Prisma.SortOrder
+  calorias?: Prisma.SortOrder
+  proteinas?: Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrder
+  grasas?: Prisma.SortOrder
+  ingredientes?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -436,12 +561,21 @@ export type MenuItemMinOrderByAggregateInput = {
   categoria?: Prisma.SortOrder
   disponible?: Prisma.SortOrder
   foto_url?: Prisma.SortOrder
+  calorias?: Prisma.SortOrder
+  proteinas?: Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrder
+  grasas?: Prisma.SortOrder
+  ingredientes?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
 
 export type MenuItemSumOrderByAggregateInput = {
   precio?: Prisma.SortOrder
+  calorias?: Prisma.SortOrder
+  proteinas?: Prisma.SortOrder
+  carbohidratos?: Prisma.SortOrder
+  grasas?: Prisma.SortOrder
 }
 
 export type MenuItemScalarRelationFilter = {
@@ -467,6 +601,22 @@ export type DecimalFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -495,6 +645,11 @@ export type MenuItemCreateWithoutPedido_itemsInput = {
   categoria: string
   disponible?: boolean
   foto_url?: string | null
+  calorias?: number | null
+  proteinas?: number | null
+  carbohidratos?: number | null
+  grasas?: number | null
+  ingredientes?: string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -507,6 +662,11 @@ export type MenuItemUncheckedCreateWithoutPedido_itemsInput = {
   categoria: string
   disponible?: boolean
   foto_url?: string | null
+  calorias?: number | null
+  proteinas?: number | null
+  carbohidratos?: number | null
+  grasas?: number | null
+  ingredientes?: string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -535,6 +695,11 @@ export type MenuItemUpdateWithoutPedido_itemsInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,6 +712,11 @@ export type MenuItemUncheckedUpdateWithoutPedido_itemsInput = {
   categoria?: Prisma.StringFieldUpdateOperationsInput | string
   disponible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   foto_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  calorias?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  proteinas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  carbohidratos?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  grasas?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  ingredientes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -590,6 +760,11 @@ export type MenuItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   categoria?: boolean
   disponible?: boolean
   foto_url?: boolean
+  calorias?: boolean
+  proteinas?: boolean
+  carbohidratos?: boolean
+  grasas?: boolean
+  ingredientes?: boolean
   created_at?: boolean
   updated_at?: boolean
   pedido_items?: boolean | Prisma.MenuItem$pedido_itemsArgs<ExtArgs>
@@ -604,6 +779,11 @@ export type MenuItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   categoria?: boolean
   disponible?: boolean
   foto_url?: boolean
+  calorias?: boolean
+  proteinas?: boolean
+  carbohidratos?: boolean
+  grasas?: boolean
+  ingredientes?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["menuItem"]>
@@ -616,6 +796,11 @@ export type MenuItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   categoria?: boolean
   disponible?: boolean
   foto_url?: boolean
+  calorias?: boolean
+  proteinas?: boolean
+  carbohidratos?: boolean
+  grasas?: boolean
+  ingredientes?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["menuItem"]>
@@ -628,11 +813,16 @@ export type MenuItemSelectScalar = {
   categoria?: boolean
   disponible?: boolean
   foto_url?: boolean
+  calorias?: boolean
+  proteinas?: boolean
+  carbohidratos?: boolean
+  grasas?: boolean
+  ingredientes?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type MenuItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "descripcion" | "precio" | "categoria" | "disponible" | "foto_url" | "created_at" | "updated_at", ExtArgs["result"]["menuItem"]>
+export type MenuItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "descripcion" | "precio" | "categoria" | "disponible" | "foto_url" | "calorias" | "proteinas" | "carbohidratos" | "grasas" | "ingredientes" | "created_at" | "updated_at", ExtArgs["result"]["menuItem"]>
 export type MenuItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pedido_items?: boolean | Prisma.MenuItem$pedido_itemsArgs<ExtArgs>
   _count?: boolean | Prisma.MenuItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -653,6 +843,11 @@ export type $MenuItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     categoria: string
     disponible: boolean
     foto_url: string | null
+    calorias: number | null
+    proteinas: number | null
+    carbohidratos: number | null
+    grasas: number | null
+    ingredientes: string | null
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["menuItem"]>
@@ -1086,6 +1281,11 @@ export interface MenuItemFieldRefs {
   readonly categoria: Prisma.FieldRef<"MenuItem", 'String'>
   readonly disponible: Prisma.FieldRef<"MenuItem", 'Boolean'>
   readonly foto_url: Prisma.FieldRef<"MenuItem", 'String'>
+  readonly calorias: Prisma.FieldRef<"MenuItem", 'Int'>
+  readonly proteinas: Prisma.FieldRef<"MenuItem", 'Float'>
+  readonly carbohidratos: Prisma.FieldRef<"MenuItem", 'Float'>
+  readonly grasas: Prisma.FieldRef<"MenuItem", 'Float'>
+  readonly ingredientes: Prisma.FieldRef<"MenuItem", 'String'>
   readonly created_at: Prisma.FieldRef<"MenuItem", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"MenuItem", 'DateTime'>
 }

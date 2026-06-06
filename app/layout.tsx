@@ -4,13 +4,13 @@ import "./globals.css";
 import { CartProvider } from "@/components/storefront/CartContext";
 
 const playfair = Playfair_Display({
-  variable: "--font-playfair",
+  variable: "--font-display",
   subsets: ["latin"],
   display: "swap",
 });
 
 const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+  variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
 });
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${playfair.variable} ${dmSans.variable} h-full`}>
-      <body className="min-h-full bg-tuco-cream font-sans antialiased">
+      <body className="min-h-full bg-brand-cream font-body antialiased">
         <CartProvider>{children}</CartProvider>
       </body>
     </html>

@@ -81,6 +81,11 @@ export const MenuItemScalarFieldEnum = {
   categoria: 'categoria',
   disponible: 'disponible',
   foto_url: 'foto_url',
+  calorias: 'calorias',
+  proteinas: 'proteinas',
+  carbohidratos: 'carbohidratos',
+  grasas: 'grasas',
+  ingredientes: 'ingredientes',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const

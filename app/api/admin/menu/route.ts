@@ -32,6 +32,11 @@ export async function POST(request: NextRequest) {
       categoria: body.categoria,
       disponible: body.disponible ?? true,
       foto_url: body.foto_url ?? null,
+      calorias: body.calorias ? Number(body.calorias) : null,
+      proteinas: body.proteinas ? Number(body.proteinas) : null,
+      carbohidratos: body.carbohidratos ? Number(body.carbohidratos) : null,
+      grasas: body.grasas ? Number(body.grasas) : null,
+      ingredientes: body.ingredientes ?? null,
     },
   });
   return NextResponse.json(item, { status: 201 });

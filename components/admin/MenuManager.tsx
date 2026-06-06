@@ -11,6 +11,11 @@ interface MenuItem {
   categoria: string;
   disponible: boolean;
   foto_url: string | null;
+  calorias: string;
+  proteinas: string;
+  carbohidratos: string;
+  grasas: string;
+  ingredientes: string;
 }
 
 const EMPTY: Omit<MenuItem, "id"> = {
@@ -20,6 +25,11 @@ const EMPTY: Omit<MenuItem, "id"> = {
   categoria: "",
   disponible: true,
   foto_url: null,
+  calorias: "",
+  proteinas: "",
+  carbohidratos: "",
+  grasas: "",
+  ingredientes: "",
 };
 
 export function MenuManager() {
@@ -35,7 +45,17 @@ export function MenuManager() {
   async function load() {
     setLoading(true);
     const res = await fetch("/api/admin/menu");
-    setItems(await res.json());
+    const data = await res.json();
+    setItems(data.map((i: Record<string, unknown>) => ({
+      ...i,
+      calorias: i.calorias != null ? String(i.calorias) : "",
+      proteinas: i.proteinas != null ? String(i.proteinas) : "",
+      carbohidratos: i.carbohidratos != null ? String(i.carbohidratos) : "",
+      grasas: i.grasas != null ? String(i.grasas) : "",
+      ingredientes: i.ingredientes ?? "",
+      descripcion: i.descripcion ?? null,
+      foto_url: i.foto_url ?? null,
+    })));
     setLoading(false);
   }
 
@@ -57,6 +77,11 @@ export function MenuManager() {
       categoria: item.categoria,
       disponible: item.disponible,
       foto_url: item.foto_url,
+      calorias: item.calorias,
+      proteinas: item.proteinas,
+      carbohidratos: item.carbohidratos,
+      grasas: item.grasas,
+      ingredientes: item.ingredientes,
     });
     setEditing(item);
     setCreating(false);
@@ -89,7 +114,16 @@ export function MenuManager() {
 
   async function handleSave() {
     setSaving(true);
-    const payload = { ...form, precio: parseFloat(form.precio), categoria: form.categoria.trim() };
+    const payload = {
+      ...form,
+      precio: parseFloat(form.precio),
+      categoria: form.categoria.trim(),
+      calorias: form.calorias !== "" ? form.calorias : null,
+      proteinas: form.proteinas !== "" ? form.proteinas : null,
+      carbohidratos: form.carbohidratos !== "" ? form.carbohidratos : null,
+      grasas: form.grasas !== "" ? form.grasas : null,
+      ingredientes: form.ingredientes || null,
+    };
     if (editing) {
       await fetch(`/api/admin/menu/${editing.id}`, {
         method: "PUT",
@@ -134,6 +168,7 @@ export function MenuManager() {
             {editing ? "Editar ítem" : "Nuevo ítem"}
           </h2>
 
+          {/* ── Datos principales ─────────────────────────────────────────── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Nombre</label>
@@ -162,7 +197,6 @@ export function MenuManager() {
                           type="button"
                           onClick={() => { setNewCatMode(false); setForm((p) => ({ ...p, categoria: cats[0] ?? "" })); }}
                           className="text-xs text-gray-400 hover:text-gray-600 px-2"
-                          title="Cancelar nueva categoría"
                         >
                           ✕
                         </button>
@@ -237,13 +271,77 @@ export function MenuManager() {
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
               </label>
               {form.foto_url && (
-                <button
-                  onClick={() => setForm((p) => ({ ...p, foto_url: null }))}
-                  className="text-xs text-red-400 hover:text-red-600"
-                >
+                <button onClick={() => setForm((p) => ({ ...p, foto_url: null }))} className="text-xs text-red-400 hover:text-red-600">
                   Quitar
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* ── Información nutricional ────────────────────────────────────── */}
+          <div className="pt-2 border-t border-gray-100">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              Información nutricional <span className="font-normal normal-case">(opcional)</span>
+            </h3>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Calorías (kcal)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="1"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  value={form.calorias}
+                  placeholder="ej: 450"
+                  onChange={(e) => setForm((p) => ({ ...p, calorias: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Proteínas (g)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  value={form.proteinas}
+                  placeholder="ej: 28.5"
+                  onChange={(e) => setForm((p) => ({ ...p, proteinas: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Carbohidratos (g)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  value={form.carbohidratos}
+                  placeholder="ej: 45"
+                  onChange={(e) => setForm((p) => ({ ...p, carbohidratos: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">Grasas (g)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  value={form.grasas}
+                  placeholder="ej: 12"
+                  onChange={(e) => setForm((p) => ({ ...p, grasas: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Ingredientes</label>
+              <textarea
+                rows={3}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"
+                value={form.ingredientes}
+                placeholder="Pasta, salsa de tomate, albahaca, queso rallado…"
+                onChange={(e) => setForm((p) => ({ ...p, ingredientes: e.target.value }))}
+              />
             </div>
           </div>
 
@@ -267,10 +365,7 @@ export function MenuManager() {
       ) : (
         <div className="space-y-2">
           {items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-2xl shadow-sm flex items-center gap-4 p-4"
-            >
+            <div key={item.id} className="bg-white rounded-2xl shadow-sm flex items-center gap-4 p-4">
               <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                 {item.foto_url ? (
                   <Image src={item.foto_url} alt={item.nombre} fill className="object-cover" />
@@ -282,24 +377,16 @@ export function MenuManager() {
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-gray-900">{item.nombre}</span>
                   {!item.disponible && (
-                    <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
-                      Inactivo
-                    </span>
+                    <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Inactivo</span>
                   )}
                 </div>
                 <p className="text-xs text-gray-400">{item.categoria} · ${Number(item.precio).toLocaleString("es-AR")}</p>
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={() => openEdit(item)}
-                  className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100"
-                >
+                <button onClick={() => openEdit(item)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100">
                   Editar
                 </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="text-sm text-red-400 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50"
-                >
+                <button onClick={() => handleDelete(item.id)} className="text-sm text-red-400 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50">
                   Eliminar
                 </button>
               </div>

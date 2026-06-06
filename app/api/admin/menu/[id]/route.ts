@@ -26,6 +26,11 @@ export async function PUT(
       categoria: body.categoria,
       disponible: body.disponible,
       foto_url: body.foto_url ?? null,
+      calorias: body.calorias ? Number(body.calorias) : null,
+      proteinas: body.proteinas ? Number(body.proteinas) : null,
+      carbohidratos: body.carbohidratos ? Number(body.carbohidratos) : null,
+      grasas: body.grasas ? Number(body.grasas) : null,
+      ingredientes: body.ingredientes ?? null,
     },
   });
   return NextResponse.json(item);

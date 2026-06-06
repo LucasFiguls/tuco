@@ -22,7 +22,7 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Tu carrito"
-        className={`fixed inset-y-0 right-0 w-full max-w-sm bg-tuco-white shadow-2xl flex flex-col z-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 right-0 w-full md:w-1/2 bg-tuco-white shadow-2xl flex flex-col z-50 transition-transform duration-300 ease-in-out ${
           drawerOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >

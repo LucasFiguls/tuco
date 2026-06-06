@@ -14,9 +14,14 @@ model MenuItem {
   precio      Decimal  @db.Decimal(10, 2)
   categoria   String
   disponible  Boolean  @default(true)
-  foto_url    String?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  foto_url      String?
+  calorias      Int?
+  proteinas     Float?
+  carbohidratos Float?
+  grasas        Float?
+  ingredientes  String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
   pedido_items PedidoItem[]
 

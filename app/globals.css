@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* ── Legacy tuco tokens — backward compat con componentes existentes ─── */
   --color-tuco-red: #C0392B;
   --color-tuco-red-dark: #A93226;
   --color-tuco-green: #2E7D32;
@@ -8,14 +9,69 @@
   --color-tuco-brown: #6D4C41;
   --color-tuco-brown-light: #8D6E63;
   --color-tuco-white: #FAFAF7;
-  --font-sans: var(--font-dm-sans);
-  --font-serif: var(--font-playfair);
+
+  /* ── Brand tokens ────────────────────────────────────────────────────── */
+  --color-brand-primary: #FF6A1B;
+  --color-brand-primary-hover: #E55A0D;
+  --color-brand-dark: #1A1A1A;
+  --color-brand-cream: #FDF6EE;
+  --color-brand-muted: #6B6B6B;
+  --color-brand-light: #F5F0E8;
+  --color-brand-white: #FFFFFF;
+  --color-brand-border: #E8E0D5;
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+
+  /* ── Border radius ───────────────────────────────────────────────────── */
+  --radius-card: 16px;
+  --radius-btn: 999px;
+  --radius-input: 12px;
+
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-card-hover: 0 8px 32px rgba(0,0,0,0.14);
+  --shadow-nav: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+:root {
+  --color-primary: #FF6A1B;
+  --color-dark: #1A1A1A;
+  --color-cream: #FDF6EE;
 }
 
 body {
-  background: var(--color-tuco-cream);
-  color: var(--color-tuco-brown);
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  background-color: #FDF6EE;
+  color: #1A1A1A;
+  font-family: var(--font-body);
+}
+
+@keyframes badgeBounce {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+@utility animate-badge-bounce {
+  animation: badgeBounce 200ms ease-out;
+}
+
+@keyframes slideTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-slide-text {
+  animation: slideTextIn 400ms ease-out forwards;
 }
 
 @utility scrollbar-none {
