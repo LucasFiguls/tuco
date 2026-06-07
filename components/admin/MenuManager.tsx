@@ -2,10 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { TAG_CONFIG } from "@/lib/tags";
+
+interface ComponentForm {
+  nombre: string;
+  cantidad_label: string;
+  foto_url: string;
+}
 
 interface MenuItem {
   id: string;
   nombre: string;
+  tagline: string;
   descripcion: string | null;
   precio: string;
   categoria: string;
@@ -16,10 +24,13 @@ interface MenuItem {
   carbohidratos: string;
   grasas: string;
   ingredientes: string;
+  tags: string[];
+  components: ComponentForm[];
 }
 
 const EMPTY: Omit<MenuItem, "id"> = {
   nombre: "",
+  tagline: "",
   descripcion: "",
   precio: "",
   categoria: "",
@@ -30,6 +41,8 @@ const EMPTY: Omit<MenuItem, "id"> = {
   carbohidratos: "",
   grasas: "",
   ingredientes: "",
+  tags: [],
+  components: [],
 };
 
 export function MenuManager() {
@@ -48,13 +61,22 @@ export function MenuManager() {
     const data = await res.json();
     setItems(data.map((i: Record<string, unknown>) => ({
       ...i,
-      calorias: i.calorias != null ? String(i.calorias) : "",
-      proteinas: i.proteinas != null ? String(i.proteinas) : "",
+      calorias:      i.calorias      != null ? String(i.calorias)      : "",
+      proteinas:     i.proteinas     != null ? String(i.proteinas)     : "",
       carbohidratos: i.carbohidratos != null ? String(i.carbohidratos) : "",
-      grasas: i.grasas != null ? String(i.grasas) : "",
-      ingredientes: i.ingredientes ?? "",
-      descripcion: i.descripcion ?? null,
-      foto_url: i.foto_url ?? null,
+      grasas:        i.grasas        != null ? String(i.grasas)        : "",
+      ingredientes:  i.ingredientes  ?? "",
+      tagline:       i.tagline       ?? "",
+      descripcion:   i.descripcion   ?? null,
+      foto_url:      i.foto_url      ?? null,
+      tags:          Array.isArray(i.tags) ? i.tags : [],
+      components: Array.isArray(i.components)
+        ? (i.components as Record<string, unknown>[]).map((c) => ({
+            nombre:         String(c.nombre ?? ""),
+            cantidad_label: String(c.cantidad_label ?? ""),
+            foto_url:       String(c.foto_url ?? ""),
+          }))
+        : [],
     })));
     setLoading(false);
   }
@@ -71,17 +93,20 @@ export function MenuManager() {
   function openEdit(item: MenuItem) {
     setNewCatMode(false);
     setForm({
-      nombre: item.nombre,
-      descripcion: item.descripcion ?? "",
-      precio: item.precio,
-      categoria: item.categoria,
-      disponible: item.disponible,
-      foto_url: item.foto_url,
-      calorias: item.calorias,
-      proteinas: item.proteinas,
+      nombre:        item.nombre,
+      tagline:       item.tagline,
+      descripcion:   item.descripcion ?? "",
+      precio:        item.precio,
+      categoria:     item.categoria,
+      disponible:    item.disponible,
+      foto_url:      item.foto_url,
+      calorias:      item.calorias,
+      proteinas:     item.proteinas,
       carbohidratos: item.carbohidratos,
-      grasas: item.grasas,
-      ingredientes: item.ingredientes,
+      grasas:        item.grasas,
+      ingredientes:  item.ingredientes,
+      tags:          item.tags,
+      components:    item.components,
     });
     setEditing(item);
     setCreating(false);
@@ -112,17 +137,48 @@ export function MenuManager() {
     }
   }
 
+  function updateComponent(idx: number, field: keyof ComponentForm, value: string) {
+    setForm((p) => {
+      const updated = [...p.components];
+      updated[idx] = { ...updated[idx], [field]: value };
+      return { ...p, components: updated };
+    });
+  }
+
+  function addComponent() {
+    setForm((p) => ({
+      ...p,
+      components: [...p.components, { nombre: "", cantidad_label: "", foto_url: "" }],
+    }));
+  }
+
+  function removeComponent(idx: number) {
+    setForm((p) => ({ ...p, components: p.components.filter((_, i) => i !== idx) }));
+  }
+
+  function toggleTag(key: string, checked: boolean) {
+    setForm((p) => ({
+      ...p,
+      tags: checked ? [...p.tags, key] : p.tags.filter((t) => t !== key),
+    }));
+  }
+
   async function handleSave() {
     setSaving(true);
     const payload = {
       ...form,
-      precio: parseFloat(form.precio),
-      categoria: form.categoria.trim(),
-      calorias: form.calorias !== "" ? form.calorias : null,
-      proteinas: form.proteinas !== "" ? form.proteinas : null,
+      precio:        parseFloat(form.precio),
+      categoria:     form.categoria.trim(),
+      calorias:      form.calorias      !== "" ? form.calorias      : null,
+      proteinas:     form.proteinas     !== "" ? form.proteinas     : null,
       carbohidratos: form.carbohidratos !== "" ? form.carbohidratos : null,
-      grasas: form.grasas !== "" ? form.grasas : null,
-      ingredientes: form.ingredientes || null,
+      grasas:        form.grasas        !== "" ? form.grasas        : null,
+      ingredientes:  form.ingredientes  || null,
+      tagline:       form.tagline       || null,
+      tags:          form.tags,
+      components:    form.components
+        .filter((c) => c.nombre.trim())
+        .map((c) => ({ ...c, foto_url: c.foto_url || null })),
     };
     if (editing) {
       await fetch(`/api/admin/menu/${editing.id}`, {
@@ -149,6 +205,7 @@ export function MenuManager() {
   }
 
   const showForm = creating || !!editing;
+  const inputCls = "w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300";
 
   return (
     <div>
@@ -168,15 +225,11 @@ export function MenuManager() {
             {editing ? "Editar ítem" : "Nuevo ítem"}
           </h2>
 
-          {/* ── Datos principales ─────────────────────────────────────────── */}
+          {/* ── Datos principales ────────────────────────────────────────── */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Nombre</label>
-              <input
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                value={form.nombre}
-                onChange={(e) => setForm((p) => ({ ...p, nombre: e.target.value }))}
-              />
+              <input className={inputCls} value={form.nombre} onChange={(e) => setForm((p) => ({ ...p, nombre: e.target.value }))} />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Categoría</label>
@@ -193,11 +246,7 @@ export function MenuManager() {
                         placeholder="Nombre de la categoría"
                       />
                       {newCatMode && (
-                        <button
-                          type="button"
-                          onClick={() => { setNewCatMode(false); setForm((p) => ({ ...p, categoria: cats[0] ?? "" })); }}
-                          className="text-xs text-gray-400 hover:text-gray-600 px-2"
-                        >
+                        <button type="button" onClick={() => { setNewCatMode(false); setForm((p) => ({ ...p, categoria: cats[0] ?? "" })); }} className="text-xs text-gray-400 hover:text-gray-600 px-2">
                           ✕
                         </button>
                       )}
@@ -209,17 +258,11 @@ export function MenuManager() {
                     className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 bg-white"
                     value={form.categoria}
                     onChange={(e) => {
-                      if (e.target.value === "__nueva__") {
-                        setNewCatMode(true);
-                        setForm((p) => ({ ...p, categoria: "" }));
-                      } else {
-                        setForm((p) => ({ ...p, categoria: e.target.value }));
-                      }
+                      if (e.target.value === "__nueva__") { setNewCatMode(true); setForm((p) => ({ ...p, categoria: "" })); }
+                      else { setForm((p) => ({ ...p, categoria: e.target.value })); }
                     }}
                   >
-                    {cats.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
+                    {cats.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
                     <option value="__nueva__">+ Nueva categoría…</option>
                   </select>
                 );
@@ -227,31 +270,28 @@ export function MenuManager() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Precio</label>
-              <input
-                type="number"
-                step="0.01"
-                min="0"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                value={form.precio}
-                onChange={(e) => setForm((p) => ({ ...p, precio: e.target.value }))}
-              />
+              <input type="number" step="0.01" min="0" className={inputCls} value={form.precio} onChange={(e) => setForm((p) => ({ ...p, precio: e.target.value }))} />
             </div>
             <div className="flex items-center gap-2 pt-5">
-              <input
-                type="checkbox"
-                id="disponible"
-                checked={form.disponible}
-                onChange={(e) => setForm((p) => ({ ...p, disponible: e.target.checked }))}
-                className="w-4 h-4 accent-orange-500"
-              />
+              <input type="checkbox" id="disponible" checked={form.disponible} onChange={(e) => setForm((p) => ({ ...p, disponible: e.target.checked }))} className="w-4 h-4 accent-orange-500" />
               <label htmlFor="disponible" className="text-sm text-gray-700">Disponible</label>
             </div>
           </div>
 
           <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">Tagline</label>
+            <input
+              className={inputCls}
+              value={form.tagline}
+              placeholder="Frase corta y apetitosa (ej: Pollo a la parrilla con vegetales de estación)"
+              onChange={(e) => setForm((p) => ({ ...p, tagline: e.target.value }))}
+            />
+          </div>
+
+          <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Descripción</label>
             <textarea
-              rows={2}
+              rows={3}
               className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"
               value={form.descripcion ?? ""}
               onChange={(e) => setForm((p) => ({ ...p, descripcion: e.target.value }))}
@@ -271,14 +311,12 @@ export function MenuManager() {
                 <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
               </label>
               {form.foto_url && (
-                <button onClick={() => setForm((p) => ({ ...p, foto_url: null }))} className="text-xs text-red-400 hover:text-red-600">
-                  Quitar
-                </button>
+                <button onClick={() => setForm((p) => ({ ...p, foto_url: null }))} className="text-xs text-red-400 hover:text-red-600">Quitar</button>
               )}
             </div>
           </div>
 
-          {/* ── Información nutricional ────────────────────────────────────── */}
+          {/* ── Información nutricional ──────────────────────────────────── */}
           <div className="pt-2 border-t border-gray-100">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
               Información nutricional <span className="font-normal normal-case">(opcional)</span>
@@ -286,63 +324,93 @@ export function MenuManager() {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Calorías (kcal)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="1"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.calorias}
-                  placeholder="ej: 450"
-                  onChange={(e) => setForm((p) => ({ ...p, calorias: e.target.value }))}
-                />
+                <input type="number" min="0" step="1" className={inputCls} value={form.calorias} placeholder="ej: 450" onChange={(e) => setForm((p) => ({ ...p, calorias: e.target.value }))} />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Proteínas (g)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.proteinas}
-                  placeholder="ej: 28.5"
-                  onChange={(e) => setForm((p) => ({ ...p, proteinas: e.target.value }))}
-                />
+                <input type="number" min="0" step="0.1" className={inputCls} value={form.proteinas} placeholder="ej: 28.5" onChange={(e) => setForm((p) => ({ ...p, proteinas: e.target.value }))} />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Carbohidratos (g)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.carbohidratos}
-                  placeholder="ej: 45"
-                  onChange={(e) => setForm((p) => ({ ...p, carbohidratos: e.target.value }))}
-                />
+                <input type="number" min="0" step="0.1" className={inputCls} value={form.carbohidratos} placeholder="ej: 45" onChange={(e) => setForm((p) => ({ ...p, carbohidratos: e.target.value }))} />
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-600 mb-1">Grasas (g)</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.grasas}
-                  placeholder="ej: 12"
-                  onChange={(e) => setForm((p) => ({ ...p, grasas: e.target.value }))}
-                />
+                <input type="number" min="0" step="0.1" className={inputCls} value={form.grasas} placeholder="ej: 12" onChange={(e) => setForm((p) => ({ ...p, grasas: e.target.value }))} />
               </div>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Ingredientes</label>
-              <textarea
-                rows={3}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"
-                value={form.ingredientes}
-                placeholder="Pasta, salsa de tomate, albahaca, queso rallado…"
-                onChange={(e) => setForm((p) => ({ ...p, ingredientes: e.target.value }))}
-              />
+              <textarea rows={3} className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none" value={form.ingredientes} placeholder="Pasta, salsa de tomate, albahaca…" onChange={(e) => setForm((p) => ({ ...p, ingredientes: e.target.value }))} />
             </div>
+          </div>
+
+          {/* ── Etiquetas ─────────────────────────────────────────────────── */}
+          <div className="pt-2 border-t border-gray-100">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Etiquetas</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {Object.entries(TAG_CONFIG).map(([key, cfg]) => (
+                <label key={key} className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={form.tags.includes(key)}
+                    onChange={(e) => toggleTag(key, e.target.checked)}
+                    className="w-4 h-4 accent-orange-500 flex-shrink-0"
+                  />
+                  <span className="text-sm text-gray-700">{cfg.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Componentes del plato ─────────────────────────────────────── */}
+          <div className="pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Componentes del plato <span className="font-normal normal-case">(opcional)</span>
+              </h3>
+              <button type="button" onClick={addComponent} className="text-xs text-orange-500 hover:text-orange-600 font-medium">
+                + Agregar
+              </button>
+            </div>
+            {form.components.length === 0 ? (
+              <p className="text-xs text-gray-400 italic">Sin componentes. Usá "+ Agregar" para añadir ingredientes o porciones.</p>
+            ) : (
+              <div className="space-y-2">
+                {form.components.map((comp, idx) => (
+                  <div key={idx} className="flex items-start gap-2">
+                    <div className="flex-1 grid grid-cols-2 gap-2">
+                      <input
+                        className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        placeholder="Nombre (ej: Milanesa)"
+                        value={comp.nombre}
+                        onChange={(e) => updateComponent(idx, "nombre", e.target.value)}
+                      />
+                      <input
+                        className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        placeholder="Cantidad (ej: 200 g)"
+                        value={comp.cantidad_label}
+                        onChange={(e) => updateComponent(idx, "cantidad_label", e.target.value)}
+                      />
+                      <input
+                        className="col-span-2 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        placeholder="URL de foto Cloudinary (opcional)"
+                        value={comp.foto_url}
+                        onChange={(e) => updateComponent(idx, "foto_url", e.target.value)}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeComponent(idx)}
+                      className="text-red-400 hover:text-red-600 p-2 mt-0.5 flex-shrink-0"
+                      aria-label="Eliminar componente"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex gap-3 pt-2">
@@ -374,13 +442,26 @@ export function MenuManager() {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-medium text-gray-900">{item.nombre}</span>
                   {!item.disponible && (
                     <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Inactivo</span>
                   )}
+                  {item.tags.length > 0 && (
+                    <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">
+                      {item.tags.length} etiqueta{item.tags.length > 1 ? "s" : ""}
+                    </span>
+                  )}
+                  {item.components.length > 0 && (
+                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+                      {item.components.length} componente{item.components.length > 1 ? "s" : ""}
+                    </span>
+                  )}
                 </div>
-                <p className="text-xs text-gray-400">{item.categoria} · ${Number(item.precio).toLocaleString("es-AR")}</p>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {item.categoria} · ${Number(item.precio).toLocaleString("es-AR")}
+                  {item.tagline && ` · ${item.tagline}`}
+                </p>
               </div>
               <div className="flex gap-2">
                 <button onClick={() => openEdit(item)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100">

@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   MenuItem: 'MenuItem',
+  MenuItemComponent: 'MenuItemComponent',
   Pedido: 'Pedido',
   PedidoItem: 'PedidoItem',
   Configuracion: 'Configuracion'
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "menuItem" | "pedido" | "pedidoItem" | "configuracion"
+    modelProps: "menuItem" | "menuItemComponent" | "pedido" | "pedidoItem" | "configuracion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MenuItemCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MenuItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    MenuItemComponent: {
+      payload: Prisma.$MenuItemComponentPayload<ExtArgs>
+      fields: Prisma.MenuItemComponentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MenuItemComponentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MenuItemComponentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        findFirst: {
+          args: Prisma.MenuItemComponentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MenuItemComponentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        findMany: {
+          args: Prisma.MenuItemComponentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>[]
+        }
+        create: {
+          args: Prisma.MenuItemComponentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        createMany: {
+          args: Prisma.MenuItemComponentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MenuItemComponentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>[]
+        }
+        delete: {
+          args: Prisma.MenuItemComponentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        update: {
+          args: Prisma.MenuItemComponentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        deleteMany: {
+          args: Prisma.MenuItemComponentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MenuItemComponentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MenuItemComponentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>[]
+        }
+        upsert: {
+          args: Prisma.MenuItemComponentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MenuItemComponentPayload>
+        }
+        aggregate: {
+          args: Prisma.MenuItemComponentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMenuItemComponent>
+        }
+        groupBy: {
+          args: Prisma.MenuItemComponentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MenuItemComponentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MenuItemComponentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MenuItemComponentCountAggregateOutputType> | number
         }
       }
     }
@@ -755,11 +830,26 @@ export const MenuItemScalarFieldEnum = {
   carbohidratos: 'carbohidratos',
   grasas: 'grasas',
   ingredientes: 'ingredientes',
+  tagline: 'tagline',
+  tags: 'tags',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
 
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
+
+
+export const MenuItemComponentScalarFieldEnum = {
+  id: 'id',
+  menu_item_id: 'menu_item_id',
+  nombre: 'nombre',
+  cantidad_label: 'cantidad_label',
+  foto_url: 'foto_url',
+  orden: 'orden',
+  created_at: 'created_at'
+} as const
+
+export type MenuItemComponentScalarFieldEnum = (typeof MenuItemComponentScalarFieldEnum)[keyof typeof MenuItemComponentScalarFieldEnum]
 
 
 export const PedidoScalarFieldEnum = {
@@ -1047,6 +1137,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   menuItem?: Prisma.MenuItemOmit
+  menuItemComponent?: Prisma.MenuItemComponentOmit
   pedido?: Prisma.PedidoOmit
   pedidoItem?: Prisma.PedidoItemOmit
   configuracion?: Prisma.ConfiguracionOmit

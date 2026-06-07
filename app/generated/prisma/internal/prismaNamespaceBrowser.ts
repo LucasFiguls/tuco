@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   MenuItem: 'MenuItem',
+  MenuItemComponent: 'MenuItemComponent',
   Pedido: 'Pedido',
   PedidoItem: 'PedidoItem',
   Configuracion: 'Configuracion'
@@ -86,11 +87,26 @@ export const MenuItemScalarFieldEnum = {
   carbohidratos: 'carbohidratos',
   grasas: 'grasas',
   ingredientes: 'ingredientes',
+  tagline: 'tagline',
+  tags: 'tags',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
 
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
+
+
+export const MenuItemComponentScalarFieldEnum = {
+  id: 'id',
+  menu_item_id: 'menu_item_id',
+  nombre: 'nombre',
+  cantidad_label: 'cantidad_label',
+  foto_url: 'foto_url',
+  orden: 'orden',
+  created_at: 'created_at'
+} as const
+
+export type MenuItemComponentScalarFieldEnum = (typeof MenuItemComponentScalarFieldEnum)[keyof typeof MenuItemComponentScalarFieldEnum]
 
 
 export const PedidoScalarFieldEnum = {

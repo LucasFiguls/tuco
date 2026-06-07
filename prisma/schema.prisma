@@ -20,12 +20,29 @@ model MenuItem {
   carbohidratos Float?
   grasas        Float?
   ingredientes  String?
+  tagline       String?
+  tags          String[] @default([])
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
   pedido_items PedidoItem[]
+  components   MenuItemComponent[]
 
   @@map("menu_items")
+}
+
+model MenuItemComponent {
+  id            String   @id @default(cuid())
+  menu_item_id  String
+  nombre        String
+  cantidad_label String
+  foto_url      String?
+  orden         Int      @default(0)
+  created_at    DateTime @default(now())
+
+  menu_item     MenuItem @relation(fields: [menu_item_id], references: [id], onDelete: Cascade)
+
+  @@map("menu_item_components")
 }
 
 model Pedido {

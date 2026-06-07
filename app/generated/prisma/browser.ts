@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type MenuItem = Prisma.MenuItemModel
 /**
+ * Model MenuItemComponent
+ * 
+ */
+export type MenuItemComponent = Prisma.MenuItemComponentModel
+/**
  * Model Pedido
  * 
  */

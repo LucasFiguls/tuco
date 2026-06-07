@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/MenuItem'
+export type * from './models/MenuItemComponent'
 export type * from './models/Pedido'
 export type * from './models/PedidoItem'
 export type * from './models/Configuracion'

@@ -17,23 +17,49 @@ export async function PUT(
   const { id } = await params;
   const body = await request.json();
 
-  const item = await prisma.menuItem.update({
-    where: { id },
-    data: {
-      nombre: body.nombre,
-      descripcion: body.descripcion ?? null,
-      precio: body.precio,
-      categoria: body.categoria,
-      disponible: body.disponible,
-      foto_url: body.foto_url ?? null,
-      calorias: body.calorias ? Number(body.calorias) : null,
-      proteinas: body.proteinas ? Number(body.proteinas) : null,
-      carbohidratos: body.carbohidratos ? Number(body.carbohidratos) : null,
-      grasas: body.grasas ? Number(body.grasas) : null,
-      ingredientes: body.ingredientes ?? null,
-    },
+  type ComponentInput = { nombre: string; cantidad_label: string; foto_url?: string };
+
+  const result = await prisma.$transaction(async (tx) => {
+    await tx.menuItem.update({
+      where: { id },
+      data: {
+        nombre: body.nombre,
+        descripcion: body.descripcion ?? null,
+        precio: body.precio,
+        categoria: body.categoria,
+        disponible: body.disponible,
+        foto_url: body.foto_url ?? null,
+        calorias: body.calorias ? Number(body.calorias) : null,
+        proteinas: body.proteinas ? Number(body.proteinas) : null,
+        carbohidratos: body.carbohidratos ? Number(body.carbohidratos) : null,
+        grasas: body.grasas ? Number(body.grasas) : null,
+        ingredientes: body.ingredientes ?? null,
+        tagline: body.tagline ?? null,
+        tags: body.tags ?? [],
+      },
+    });
+
+    await tx.menuItemComponent.deleteMany({ where: { menu_item_id: id } });
+
+    if (body.components?.length) {
+      await tx.menuItemComponent.createMany({
+        data: (body.components as ComponentInput[]).map((c, i) => ({
+          menu_item_id: id,
+          nombre: c.nombre,
+          cantidad_label: c.cantidad_label,
+          foto_url: c.foto_url || null,
+          orden: i,
+        })),
+      });
+    }
+
+    return tx.menuItem.findUnique({
+      where: { id },
+      include: { components: { orderBy: { orden: "asc" } } },
+    });
   });
-  return NextResponse.json(item);
+
+  return NextResponse.json(result);
 }
 
 export async function DELETE(

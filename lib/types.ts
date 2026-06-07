@@ -1,8 +1,17 @@
 export type Modalidad = "RETIRO" | "DELIVERY";
 
+export interface MenuItemComponent {
+  id: string;
+  nombre: string;
+  cantidad_label: string;
+  foto_url: string | null;
+  orden: number;
+}
+
 export interface MenuItem {
   id: string;
   nombre: string;
+  tagline: string | null;
   descripcion: string | null;
   precio: number;
   categoria: string;
@@ -13,7 +22,10 @@ export interface MenuItem {
   carbohidratos: number | null;
   grasas: number | null;
   ingredientes: string | null;
+  tags: string[];
+  components: MenuItemComponent[];
 }
+
 export type EstadoPedido = "PENDIENTE" | "CONFIRMADO" | "ENTREGADO" | "CANCELADO";
 
 export interface CartItem {

@@ -14,6 +14,7 @@ export async function GET() {
   }
   const items = await prisma.menuItem.findMany({
     orderBy: [{ categoria: "asc" }, { nombre: "asc" }],
+    include: { components: { orderBy: { orden: "asc" } } },
   });
   return NextResponse.json(items);
 }
@@ -24,6 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
+  type ComponentInput = { nombre: string; cantidad_label: string; foto_url?: string };
   const item = await prisma.menuItem.create({
     data: {
       nombre: body.nombre,
@@ -37,7 +39,22 @@ export async function POST(request: NextRequest) {
       carbohidratos: body.carbohidratos ? Number(body.carbohidratos) : null,
       grasas: body.grasas ? Number(body.grasas) : null,
       ingredientes: body.ingredientes ?? null,
+      tagline: body.tagline ?? null,
+      tags: body.tags ?? [],
+      components: body.components?.length
+        ? {
+            createMany: {
+              data: (body.components as ComponentInput[]).map((c, i) => ({
+                nombre: c.nombre,
+                cantidad_label: c.cantidad_label,
+                foto_url: c.foto_url || null,
+                orden: i,
+              })),
+            },
+          }
+        : undefined,
     },
+    include: { components: { orderBy: { orden: "asc" } } },
   });
   return NextResponse.json(item, { status: 201 });
 }

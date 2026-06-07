@@ -4,46 +4,28 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import type { MenuItem } from "@/lib/types";
 import { useCart } from "./CartContext";
-import { Accordion } from "./Accordion";
-import { NutritionGrid } from "./NutritionGrid";
+import { useDrawerBackButton } from "@/hooks/useDrawerBackButton";
+import { getTag } from "@/lib/tags";
 
 interface MenuItemDrawerProps {
   item: MenuItem | null;
   onClose: () => void;
 }
 
-const TAG_RULES: { pattern: RegExp; label: string; className: string }[] = [
-  { pattern: /sin tacc|gluten/i,  label: "Sin TACC",    className: "bg-green-100 text-green-800" },
-  { pattern: /vegano/i,           label: "Vegano",      className: "bg-green-100 text-green-800" },
-  { pattern: /vegetarian[oa]/i,   label: "Vegetariano", className: "bg-green-100 text-green-800" },
-  { pattern: /picante/i,          label: "Picante",     className: "bg-red-100 text-red-700" },
-  { pattern: /sin sal/i,          label: "Sin sal",     className: "bg-slate-100 text-slate-600" },
-  { pattern: /keto/i,             label: "Apto Keto",   className: "bg-amber-100 text-amber-700" },
-];
-
-function extractTags(text: string | null) {
-  if (!text) return [];
-  return TAG_RULES.filter((r) => r.pattern.test(text));
-}
-
-function formatPrice(n: number) {
-  return "$" + n.toLocaleString("es-AR", { maximumFractionDigits: 0 });
-}
-
-const hasNutrition = (item: MenuItem) =>
-  item.calorias !== null ||
-  item.proteinas !== null ||
-  item.carbohidratos !== null ||
-  item.grasas !== null;
-
 export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
   const { add, items, updateQty } = useCart();
-  const panelRef = useRef<HTMLDivElement>(null);
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   const inCart = item ? items.find((i) => i.id === item.id) : undefined;
-  const tags = extractTags(item?.descripcion ?? null);
+  const isOpen = !!item;
 
-  // Cerrar con Escape
+  useDrawerBackButton(isOpen, onClose);
+
+  // Reset scroll to top whenever a new item opens
+  useEffect(() => {
+    if (item && scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [item?.id]);
+
+  // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -52,21 +34,24 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // Bloquear scroll del body mientras el drawer está abierto
+  // Scroll lock
   useEffect(() => {
-    if (item) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = item ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [item]);
 
-  const isOpen = !!item;
+  const nutritionChips = item
+    ? [
+        { value: item.calorias != null ? String(item.calorias) : null, label: "kcal" },
+        { value: item.proteinas != null ? `${item.proteinas}g` : null, label: "prot" },
+        { value: item.carbohidratos != null ? `${item.carbohidratos}g` : null, label: "carb" },
+        { value: item.grasas != null ? `${item.grasas}g` : null, label: "grasas" },
+      ].filter((c): c is { value: string; label: string } => c.value !== null)
+    : [];
 
   return (
     <>
-      {/* ── Overlay ──────────────────────────────────────────────────────── */}
+      {/* Backdrop */}
       <div
         onClick={onClose}
         className={`fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 ${
@@ -75,22 +60,21 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
         aria-hidden
       />
 
-      {/* ── Panel ─────────────────────────────────────────────────────────── */}
+      {/* Panel */}
       <div
-        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label={item?.nombre ?? "Detalle del plato"}
         className={`fixed top-0 right-0 z-50 h-full w-full md:w-1/2 bg-white flex flex-col
-                    shadow-[−8px_0_32px_rgba(0,0,0,0.12)]
+                    shadow-[-8px_0_32px_rgba(0,0,0,0.12)]
                     transition-transform duration-300 ease-out ${
                       isOpen ? "translate-x-0" : "translate-x-full"
                     }`}
       >
         {item && (
           <>
-            {/* ── Imagen ────────────────────────────────────────────────── */}
-            <div className="relative h-[240px] md:h-[320px] bg-brand-cream shrink-0">
+            {/* ── Hero image ──────────────────────────────────────────────── */}
+            <div className="relative h-64 md:h-72 bg-brand-cream shrink-0">
               {item.foto_url ? (
                 <Image
                   src={item.foto_url}
@@ -102,87 +86,139 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
                 />
               ) : (
                 <div className="h-full flex items-center justify-center">
-                  <svg width="56" height="56" viewBox="0 0 44 44" fill="none">
-                    <circle cx="22" cy="24" r="15" fill="#F5F0E8" stroke="#D0C4B8" strokeWidth="1.2" />
-                    <circle cx="22" cy="24" r="10" fill="#FDF6EE" stroke="#D0C4B8" strokeWidth="1" />
-                  </svg>
+                  <PlaceholderIcon />
                 </div>
               )}
 
-              {/* Badge categoría */}
-              <span className="absolute top-3 left-3 bg-white/90 text-brand-primary text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-btn">
+              {/* Gradient fade bottom */}
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/25 to-transparent pointer-events-none" />
+
+              {/* Category badge */}
+              <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-brand-primary text-[10px] font-semibold uppercase tracking-widest px-3 py-1.5 rounded-btn shadow-sm">
                 {item.categoria}
               </span>
 
-              {/* Botón cerrar */}
+              {/* Close button */}
               <button
                 onClick={onClose}
                 aria-label="Cerrar"
-                className="absolute top-3 right-3 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 transition-colors"
+                className="absolute top-4 right-4 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-md hover:bg-gray-50 active:scale-95 transition-all duration-150"
               >
                 <XIcon />
               </button>
             </div>
 
-            {/* ── Contenido scrollable ────────────────────────────────── */}
-            <div className="flex-1 overflow-y-auto px-6 pt-6 pb-4">
+            {/* ── Scrollable body ──────────────────────────────────────────── */}
+            <div ref={scrollRef} className="flex-1 overflow-y-auto">
+              <div className="px-6 pt-5 pb-6 space-y-5">
 
-              <h2 className="font-display font-bold text-[28px] text-brand-dark leading-tight">
-                {item.nombre}
-              </h2>
-
-              {tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {tags.map((tag) => (
-                    <span
-                      key={tag.label}
-                      className={`text-[11px] font-medium px-2.5 py-1 rounded-btn ${tag.className}`}
-                    >
-                      {tag.label}
-                    </span>
-                  ))}
+                {/* Title + tagline */}
+                <div>
+                  <h2 className="font-display font-bold text-[28px] leading-tight text-brand-dark">
+                    {item.nombre}
+                  </h2>
+                  {item.tagline && (
+                    <p className="font-body text-[15px] text-brand-muted mt-1.5 leading-snug">
+                      {item.tagline}
+                    </p>
+                  )}
                 </div>
-              )}
 
-              {item.descripcion && (
-                <p className="font-body text-[15px] text-brand-muted leading-[1.6] mt-4">
-                  {item.descripcion}
-                </p>
-              )}
+                {/* Nutrition chips */}
+                {nutritionChips.length > 0 && (
+                  <div className="flex gap-2">
+                    {nutritionChips.map((chip) => (
+                      <div key={chip.label} className="flex-1 bg-brand-light rounded-card px-2 py-3 text-center">
+                        <p className="font-body font-bold text-[16px] text-brand-dark leading-none">
+                          {chip.value}
+                        </p>
+                        <p className="font-body text-[10px] text-brand-muted uppercase tracking-wide mt-1">
+                          {chip.label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
-              {hasNutrition(item) && (
-                <div className="mt-6">
-                  <Accordion title="Nutrición" defaultOpen>
-                    <NutritionGrid
-                      calorias={item.calorias}
-                      proteinas={item.proteinas}
-                      carbohidratos={item.carbohidratos}
-                      grasas={item.grasas}
-                    />
-                  </Accordion>
-                </div>
-              )}
+                {/* Tags */}
+                {(item.tags ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag) => {
+                      const cfg = getTag(tag);
+                      return (
+                        <span
+                          key={tag}
+                          className={`font-body text-[12px] font-medium px-3 py-1 rounded-btn ${cfg.className}`}
+                        >
+                          {cfg.label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
 
-              {item.ingredientes && (
-                <Accordion title="Ingredientes" defaultOpen>
-                  <p className="font-body text-[14px] text-brand-muted leading-relaxed">
-                    {item.ingredientes}
+                {/* Description */}
+                {item.descripcion && (
+                  <p className="font-body text-[15px] text-brand-muted leading-[1.7]">
+                    {item.descripcion}
                   </p>
-                </Accordion>
-              )}
+                )}
+
+                {/* "Tu Tuco viene con" */}
+                {(item.components ?? []).length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <h3 className="font-display font-semibold text-[17px] text-brand-dark whitespace-nowrap">
+                        Tu Tuco viene con
+                      </h3>
+                      <div className="flex-1 h-px bg-brand-border" />
+                    </div>
+                    <div className="space-y-3">
+                      {item.components.map((c) => (
+                        <div key={c.id} className="flex items-center gap-3">
+                          <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-brand-light flex-shrink-0">
+                            {c.foto_url ? (
+                              <Image
+                                src={c.foto_url}
+                                alt={c.nombre}
+                                fill
+                                className="object-cover"
+                                sizes="56px"
+                              />
+                            ) : (
+                              <div className="h-full flex items-center justify-center">
+                                <ComponentPlaceholderIcon />
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-body text-[14px] font-medium text-brand-dark leading-tight">
+                              {c.nombre}
+                            </p>
+                            <p className="font-body text-[12px] text-brand-muted mt-0.5">
+                              {c.cantidad_label}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              </div>
             </div>
 
-            {/* ── Pie sticky ────────────────────────────────────────────── */}
+            {/* ── Sticky footer ─────────────────────────────────────────────── */}
             <div className="shrink-0 border-t border-brand-border px-6 py-4 flex items-center gap-4 bg-white">
               <span className="font-body text-[24px] font-bold text-brand-dark">
-                {formatPrice(item.precio)}
+                ${item.precio.toLocaleString("es-AR", { maximumFractionDigits: 0 })}
               </span>
 
               {inCart ? (
-                <div className="flex-1 flex items-center justify-center rounded-btn bg-brand-primary overflow-hidden">
+                <div className="flex-1 flex items-center justify-center rounded-btn bg-brand-primary overflow-hidden h-12">
                   <button
                     onClick={() => updateQty(item.id, inCart.cantidad - 1)}
-                    className="text-white w-12 h-12 flex items-center justify-center text-xl font-bold hover:bg-black/10 transition-colors"
+                    className="text-white w-12 h-full flex items-center justify-center text-xl font-bold hover:bg-black/10 transition-colors"
                     aria-label="Reducir cantidad"
                   >
                     −
@@ -192,7 +228,7 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
                   </span>
                   <button
                     onClick={() => updateQty(item.id, inCart.cantidad + 1)}
-                    className="text-white w-12 h-12 flex items-center justify-center text-xl font-bold hover:bg-black/10 transition-colors"
+                    className="text-white w-12 h-full flex items-center justify-center text-xl font-bold hover:bg-black/10 transition-colors"
                     aria-label="Aumentar cantidad"
                   >
                     +
@@ -200,11 +236,16 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
                 </div>
               ) : (
                 <button
-                  onClick={() => add({ id: item.id, nombre: item.nombre, precio: item.precio, foto_url: item.foto_url })}
-                  className="flex-1 flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-body font-semibold text-[15px] py-3 rounded-btn transition-colors duration-200"
+                  onClick={() => add({
+                    id: item.id,
+                    nombre: item.nombre,
+                    precio: item.precio,
+                    foto_url: item.foto_url,
+                  })}
+                  className="flex-1 flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-body font-semibold text-[15px] h-12 rounded-btn transition-colors duration-200 active:scale-[0.98]"
                 >
                   <PlusIcon />
-                  Agregar al carrito
+                  Agregar al pedido
                 </button>
               )}
             </div>
@@ -229,6 +270,24 @@ function PlusIcon() {
     <svg width="14" height="14" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
       <line x1="6" y1="1" x2="6" y2="11" />
       <line x1="1" y1="6" x2="11" y2="6" />
+    </svg>
+  );
+}
+
+function PlaceholderIcon() {
+  return (
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="34" r="22" fill="#F5F0E8" stroke="#E8E0D5" strokeWidth="1.5" />
+      <circle cx="32" cy="34" r="14" fill="#FDF6EE" stroke="#E8E0D5" strokeWidth="1" />
+    </svg>
+  );
+}
+
+function ComponentPlaceholderIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D0C4B8" strokeWidth="1.5" strokeLinecap="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12h8M12 8v8" />
     </svg>
   );
 }

@@ -2,9 +2,11 @@
 
 import { useCart } from "./CartContext";
 import { Cart } from "./Cart";
+import { useDrawerBackButton } from "@/hooks/useDrawerBackButton";
 
 export function CartDrawer() {
   const { drawerOpen, setDrawerOpen, count, total } = useCart();
+  useDrawerBackButton(drawerOpen, () => setDrawerOpen(false));
 
   return (
     <>

@@ -543,14 +543,6 @@ export type PedidoScalarRelationFilter = {
   isNot?: Prisma.PedidoWhereInput
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumModalidadFieldUpdateOperationsInput = {
   set?: $Enums.Modalidad
 }

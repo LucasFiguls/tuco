@@ -12,6 +12,7 @@ export default async function HomePage() {
   const items = await prisma.menuItem.findMany({
     where: { disponible: true },
     orderBy: [{ categoria: "asc" }, { nombre: "asc" }],
+    include: { components: { orderBy: { orden: "asc" } } },
   });
 
   const configuracion = await prisma.configuracion.findMany();
@@ -22,6 +23,7 @@ export default async function HomePage() {
   const mappedItems = items.map((i) => ({
     ...i,
     precio: Number(i.precio),
+    tagline: i.tagline ?? null,
     descripcion: i.descripcion ?? null,
     foto_url: i.foto_url ?? null,
     calorias: i.calorias ?? null,
@@ -29,6 +31,14 @@ export default async function HomePage() {
     carbohidratos: i.carbohidratos ?? null,
     grasas: i.grasas ?? null,
     ingredientes: i.ingredientes ?? null,
+    tags: i.tags,
+    components: i.components.map((c) => ({
+      id: c.id,
+      nombre: c.nombre,
+      cantidad_label: c.cantidad_label,
+      foto_url: c.foto_url ?? null,
+      orden: c.orden,
+    })),
   }));
 
   return (
