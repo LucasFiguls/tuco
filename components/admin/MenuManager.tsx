@@ -198,6 +198,18 @@ export function MenuManager() {
     load();
   }
 
+  async function toggleDisponible(id: string, current: boolean) {
+    setItems((prev) => prev.map((i) => i.id === id ? { ...i, disponible: !current } : i));
+    const res = await fetch(`/api/admin/menu/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ disponible: !current }),
+    });
+    if (!res.ok) {
+      setItems((prev) => prev.map((i) => i.id === id ? { ...i, disponible: current } : i));
+    }
+  }
+
   async function handleDelete(id: string) {
     if (!confirm("¿Eliminar este ítem?")) return;
     await fetch(`/api/admin/menu/${id}`, { method: "DELETE" });
@@ -444,9 +456,6 @@ export function MenuManager() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="font-medium text-gray-900">{item.nombre}</span>
-                  {!item.disponible && (
-                    <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">Inactivo</span>
-                  )}
                   {item.tags.length > 0 && (
                     <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">
                       {item.tags.length} etiqueta{item.tags.length > 1 ? "s" : ""}
@@ -463,7 +472,20 @@ export function MenuManager() {
                   {item.tagline && ` · ${item.tagline}`}
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleDisponible(item.id, item.disponible)}
+                  role="switch"
+                  aria-checked={item.disponible}
+                  aria-label={item.disponible ? "Disponible" : "No disponible"}
+                  className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus:outline-none ${
+                    item.disponible ? "bg-orange-500" : "bg-gray-300"
+                  }`}
+                >
+                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-200 ${
+                    item.disponible ? "translate-x-5" : "translate-x-0.5"
+                  }`} />
+                </button>
                 <button onClick={() => openEdit(item)} className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100">
                   Editar
                 </button>
