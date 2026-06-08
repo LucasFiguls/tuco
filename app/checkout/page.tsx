@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [telefonoTouched, setTelefonoTouched] = useState(false);
 
   const [form, setForm] = useState<CheckoutData>({
     cliente_nombre: "",
@@ -34,12 +35,29 @@ export default function CheckoutPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
+  function validarTelefono(tel: string): string {
+    if (!tel.trim()) return "El teléfono es obligatorio";
+    const digitos = tel.replace(/[\s\-\.\(\)\+]/g, "");
+    if (!/^\d+$/.test(digitos)) return "Solo se permiten dígitos (ej: 1157571366)";
+    if (digitos.length !== 10) return "Ingresá 10 dígitos sin el 0 ni el 15 (ej: 1157571366)";
+    return "";
+  }
+
+  const telefonoError = telefonoTouched ? validarTelefono(form.cliente_telefono) : "";
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
     if (!items.length) {
       setError("Tu carrito está vacío");
+      return;
+    }
+
+    setTelefonoTouched(true);
+    const telError = validarTelefono(form.cliente_telefono);
+    if (telError) {
+      setError(telError);
       return;
     }
 
@@ -136,14 +154,28 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Teléfono <span className="text-red-500">*</span>
+              </label>
               <input
                 required
                 type="tel"
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                inputMode="tel"
+                placeholder="Ej: 1157571366"
+                className={`w-full border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 transition-colors ${
+                  telefonoError
+                    ? "border-red-400 focus:ring-red-200"
+                    : telefonoTouched && !telefonoError
+                      ? "border-green-400 focus:ring-green-200"
+                      : "border-gray-200 focus:ring-orange-300"
+                }`}
                 value={form.cliente_telefono}
                 onChange={(e) => set("cliente_telefono", e.target.value)}
+                onBlur={() => setTelefonoTouched(true)}
               />
+              {telefonoError && (
+                <p className="mt-1 text-xs text-red-500">{telefonoError}</p>
+              )}
             </div>
           </div>
 

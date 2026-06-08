@@ -25,6 +25,7 @@ interface MenuItem {
   grasas: string;
   ingredientes: string;
   tags: string[];
+  menu_del_dia: boolean;
   components: ComponentForm[];
 }
 
@@ -42,6 +43,7 @@ const EMPTY: Omit<MenuItem, "id"> = {
   grasas: "",
   ingredientes: "",
   tags: [],
+  menu_del_dia: false,
   components: [],
 };
 
@@ -70,6 +72,7 @@ export function MenuManager() {
       descripcion:   i.descripcion   ?? null,
       foto_url:      i.foto_url      ?? null,
       tags:          Array.isArray(i.tags) ? i.tags : [],
+      menu_del_dia:  Boolean(i.menu_del_dia),
       components: Array.isArray(i.components)
         ? (i.components as Record<string, unknown>[]).map((c) => ({
             nombre:         String(c.nombre ?? ""),
@@ -106,6 +109,7 @@ export function MenuManager() {
       grasas:        item.grasas,
       ingredientes:  item.ingredientes,
       tags:          item.tags,
+      menu_del_dia:  item.menu_del_dia,
       components:    item.components,
     });
     setEditing(item);
@@ -176,6 +180,7 @@ export function MenuManager() {
       ingredientes:  form.ingredientes  || null,
       tagline:       form.tagline       || null,
       tags:          form.tags,
+      menu_del_dia:  form.menu_del_dia,
       components:    form.components
         .filter((c) => c.nombre.trim())
         .map((c) => ({ ...c, foto_url: c.foto_url || null })),
@@ -196,6 +201,18 @@ export function MenuManager() {
     setSaving(false);
     closeForm();
     load();
+  }
+
+  async function toggleMenuDelDia(id: string, current: boolean) {
+    setItems((prev) => prev.map((i) => i.id === id ? { ...i, menu_del_dia: !current } : i));
+    const res = await fetch(`/api/admin/menu/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ menu_del_dia: !current }),
+    });
+    if (!res.ok) {
+      setItems((prev) => prev.map((i) => i.id === id ? { ...i, menu_del_dia: current } : i));
+    }
   }
 
   async function toggleDisponible(id: string, current: boolean) {
@@ -287,6 +304,10 @@ export function MenuManager() {
             <div className="flex items-center gap-2 pt-5">
               <input type="checkbox" id="disponible" checked={form.disponible} onChange={(e) => setForm((p) => ({ ...p, disponible: e.target.checked }))} className="w-4 h-4 accent-orange-500" />
               <label htmlFor="disponible" className="text-sm text-gray-700">Disponible</label>
+            </div>
+            <div className="flex items-center gap-2 pt-5">
+              <input type="checkbox" id="menu_del_dia" checked={form.menu_del_dia} onChange={(e) => setForm((p) => ({ ...p, menu_del_dia: e.target.checked }))} className="w-4 h-4 accent-orange-500" />
+              <label htmlFor="menu_del_dia" className="text-sm text-gray-700">Menú del día ★</label>
             </div>
           </div>
 
@@ -473,6 +494,13 @@ export function MenuManager() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleMenuDelDia(item.id, item.menu_del_dia)}
+                  title={item.menu_del_dia ? "Quitar del menú del día" : "Marcar como menú del día"}
+                  className={`text-xl leading-none transition-colors ${item.menu_del_dia ? "text-yellow-400" : "text-gray-300 hover:text-gray-400"}`}
+                >
+                  ★
+                </button>
                 <button
                   onClick={() => toggleDisponible(item.id, item.disponible)}
                   role="switch"

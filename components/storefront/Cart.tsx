@@ -1,16 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useCart } from "./CartContext";
 
-export function Cart() {
-  const { items, remove, updateQty, total, clear, setDrawerOpen } = useCart();
-  const router = useRouter();
+interface CartProps {
+  onCheckout: () => void;
+}
 
-  function goToCheckout() {
-    setDrawerOpen(false);
-    router.push("/checkout");
-  }
+export function Cart({ onCheckout }: CartProps) {
+  const { items, remove, updateQty, total, clear } = useCart();
 
   if (!items.length) {
     return (
@@ -71,7 +68,7 @@ export function Cart() {
           </span>
         </div>
         <button
-          onClick={goToCheckout}
+          onClick={onCheckout}
           className="w-full bg-tuco-red hover:bg-tuco-red-dark text-white font-bold py-3.5 rounded-full text-sm transition-colors shadow-sm"
         >
           Confirmar pedido

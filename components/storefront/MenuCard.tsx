@@ -3,23 +3,10 @@
 import Image from "next/image";
 import type { MenuItem } from "@/lib/types";
 import { useCart } from "./CartContext";
+import { getTag } from "@/lib/tags";
 
 interface MenuCardProps extends MenuItem {
   onSelect: () => void;
-}
-
-const TAG_RULES: { pattern: RegExp; label: string; className: string }[] = [
-  { pattern: /sin tacc|gluten/i,  label: "Sin TACC",    className: "bg-green-100 text-green-800" },
-  { pattern: /vegano/i,           label: "Vegano",      className: "bg-green-100 text-green-800" },
-  { pattern: /vegetarian[oa]/i,   label: "Vegetariano", className: "bg-green-100 text-green-800" },
-  { pattern: /picante/i,          label: "Picante",     className: "bg-red-100 text-red-700" },
-  { pattern: /sin sal/i,          label: "Sin sal",     className: "bg-slate-100 text-slate-600" },
-  { pattern: /keto/i,             label: "Apto Keto",   className: "bg-amber-100 text-amber-700" },
-];
-
-function extractTags(text: string | null) {
-  if (!text) return [];
-  return TAG_RULES.filter((r) => r.pattern.test(text));
 }
 
 function formatPrice(n: number) {
@@ -28,12 +15,12 @@ function formatPrice(n: number) {
 
 export function MenuCard({
   id, nombre, descripcion, precio, categoria, foto_url,
-  calorias, proteinas, onSelect, ...rest
+  calorias, proteinas, tags, menu_del_dia, onSelect, ...rest
 }: MenuCardProps) {
   void rest;
   const { add, items, updateQty } = useCart();
   const inCart = items.find((i) => i.id === id);
-  const tags = extractTags(descripcion);
+  const tagBadges = (tags ?? []).map((t) => getTag(t));
 
   const nutritionLine = [
     calorias  && `${calorias} kcal`,
@@ -63,6 +50,11 @@ export function MenuCard({
         <span className="absolute top-3 left-3 bg-white/90 text-brand-primary text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-btn">
           {categoria}
         </span>
+        {menu_del_dia && (
+          <span className="absolute top-3 right-3 w-7 h-7 bg-yellow-400 rounded-full flex items-center justify-center shadow-sm text-[14px] leading-none">
+            ★
+          </span>
+        )}
       </div>
 
       {/* ── Cuerpo ──────────────────────────────────────────────────────── */}
@@ -84,9 +76,9 @@ export function MenuCard({
           </p>
         )}
 
-        {tags.length > 0 && (
+        {tagBadges.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-3">
-            {tags.map((tag) => (
+            {tagBadges.map((tag) => (
               <span key={tag.label} className={`text-[10px] font-medium px-2 py-0.5 rounded-btn ${tag.className}`}>
                 {tag.label}
               </span>

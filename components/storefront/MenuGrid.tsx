@@ -7,21 +7,46 @@ import { CategoryFilter } from "./CategoryFilter";
 import { MenuItemDrawer } from "./MenuItemDrawer";
 
 export function MenuGrid({ items }: { items: MenuItem[] }) {
-  const [activeCategory, setActiveCategory] = useState("Todo");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [menuDelDia, setMenuDelDia]         = useState(false);
+  const [activeTags, setActiveTags]         = useState<string[]>([]);
   const [gridVisible, setGridVisible]       = useState(true);
   const [selectedItem, setSelectedItem]     = useState<MenuItem | null>(null);
   const [, startTransition] = useTransition();
 
-  const categories = ["Todo", ...Array.from(new Set(items.map((i) => i.categoria))).sort()];
+  const categories    = Array.from(new Set(items.map((i) => i.categoria))).sort();
+  const availableTags = Array.from(new Set(items.flatMap((i) => i.tags ?? [])));
 
-  const filtered = activeCategory === "Todo"
-    ? items
-    : items.filter((i) => i.categoria === activeCategory);
+  const filtered = items.filter((item) => {
+    if (activeCategory !== null && item.categoria !== activeCategory) return false;
+    if (menuDelDia && !item.menu_del_dia) return false;
+    if (activeTags.length > 0 && !activeTags.every((t) => (item.tags ?? []).includes(t))) return false;
+    return true;
+  });
 
-  function handleCategoryChange(cat: string) {
+  // Animación solo en cambio de categoría (contexto mayor)
+  function handleCategoryChange(cat: string | null) {
     setGridVisible(false);
     setTimeout(() => {
       startTransition(() => setActiveCategory(cat));
+      setGridVisible(true);
+    }, 200);
+  }
+
+  function handleTagToggle(tag: string) {
+    setActiveTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  }
+
+  function handleReset() {
+    setGridVisible(false);
+    setTimeout(() => {
+      startTransition(() => {
+        setActiveCategory(null);
+        setMenuDelDia(false);
+        setActiveTags([]);
+      });
       setGridVisible(true);
     }, 200);
   }
@@ -43,14 +68,12 @@ export function MenuGrid({ items }: { items: MenuItem[] }) {
     );
   }
 
-  const hasSidebar = categories.length > 2;
-
   return (
     <>
       <section id="menu" className="bg-brand-cream py-16 md:py-24">
         <div className="w-full px-6 lg:px-10 xl:px-14">
 
-          {/* ── Header ─────────────────────────────────────────────────────── */}
+          {/* ── Header ────────────────────────────────────────────────────── */}
           <div className="text-center mb-10 md:mb-14 max-w-2xl mx-auto">
             <p className="font-body text-[11px] uppercase tracking-[0.2em] text-brand-primary mb-2">
               Fresco · Casero · Rico
@@ -63,55 +86,50 @@ export function MenuGrid({ items }: { items: MenuItem[] }) {
             </p>
           </div>
 
-          {/* ── Layout: sidebar + grid ─────────────────────────────────────── */}
-          <div className={hasSidebar ? "lg:flex lg:items-start lg:gap-10 xl:gap-14" : ""}>
-
-            {/* Sidebar — solo desktop */}
-            {hasSidebar && (
-              <aside className="hidden lg:block w-44 xl:w-48 shrink-0 sticky top-24">
-                <p className="font-body text-[11px] uppercase tracking-[0.18em] text-brand-muted mb-4 px-1">
-                  Tipo de plato
-                </p>
-                <CategoryFilter
-                  categories={categories}
-                  active={activeCategory}
-                  onChange={handleCategoryChange}
-                  variant="sidebar"
-                />
-              </aside>
-            )}
-
-            {/* Área principal */}
-            <div className="flex-1 min-w-0">
-
-              {/* Pills — solo mobile/tablet */}
-              {hasSidebar && (
-                <div className="lg:hidden mb-7">
-                  <CategoryFilter
-                    categories={categories}
-                    active={activeCategory}
-                    onChange={handleCategoryChange}
-                    variant="pills"
-                  />
-                </div>
-              )}
-
-              {/* Grid */}
-              <div
-                className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 transition-opacity duration-200 ${
-                  gridVisible ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                {filtered.map((item) => (
-                  <MenuCard
-                    key={item.id}
-                    {...item}
-                    onSelect={() => setSelectedItem(item)}
-                  />
-                ))}
-              </div>
-            </div>
+          {/* ── Filtros ───────────────────────────────────────────────────── */}
+          <div className="mb-8">
+            <CategoryFilter
+              categories={categories}
+              availableTags={availableTags}
+              activeCategory={activeCategory}
+              menuDelDia={menuDelDia}
+              activeTags={activeTags}
+              onCategoryChange={handleCategoryChange}
+              onMenuDelDiaToggle={() => setMenuDelDia((v) => !v)}
+              onTagToggle={handleTagToggle}
+              onReset={handleReset}
+            />
           </div>
+
+          {/* ── Grid ─────────────────────────────────────────────────────── */}
+          <div
+            className={`grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5 transition-opacity duration-200 ${
+              gridVisible ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {filtered.length > 0 ? (
+              filtered.map((item) => (
+                <MenuCard
+                  key={item.id}
+                  {...item}
+                  onSelect={() => setSelectedItem(item)}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-16">
+                <p className="font-body text-brand-muted text-sm">
+                  No hay platos con esa combinación de filtros.
+                </p>
+                <button
+                  onClick={handleReset}
+                  className="mt-3 font-body text-sm text-brand-primary hover:underline"
+                >
+                  Ver todos
+                </button>
+              </div>
+            )}
+          </div>
+
         </div>
       </section>
 

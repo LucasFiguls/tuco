@@ -36,6 +36,7 @@ export async function PUT(
         ingredientes: body.ingredientes ?? null,
         tagline: body.tagline ?? null,
         tags: body.tags ?? [],
+        menu_del_dia: body.menu_del_dia ?? false,
       },
     });
 
@@ -70,11 +71,11 @@ export async function PATCH(
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
   const { id } = await params;
-  const { disponible } = await request.json();
-  const item = await prisma.menuItem.update({
-    where: { id },
-    data: { disponible },
-  });
+  const body = await request.json();
+  const data: Partial<{ disponible: boolean; menu_del_dia: boolean }> = {};
+  if (typeof body.disponible === "boolean")    data.disponible    = body.disponible;
+  if (typeof body.menu_del_dia === "boolean")  data.menu_del_dia  = body.menu_del_dia;
+  const item = await prisma.menuItem.update({ where: { id }, data });
   return NextResponse.json(item);
 }
 

@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       ingredientes: body.ingredientes ?? null,
       tagline: body.tagline ?? null,
       tags: body.tags ?? [],
+      menu_del_dia: body.menu_del_dia ?? false,
       components: body.components?.length
         ? {
             createMany: {

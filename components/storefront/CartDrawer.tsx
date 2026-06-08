@@ -1,12 +1,20 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCart } from "./CartContext";
 import { Cart } from "./Cart";
 import { useDrawerBackButton } from "@/hooks/useDrawerBackButton";
 
 export function CartDrawer() {
   const { drawerOpen, setDrawerOpen, count, total } = useCart();
-  useDrawerBackButton(drawerOpen, () => setDrawerOpen(false));
+  const router = useRouter();
+  const releaseHistory = useDrawerBackButton(drawerOpen, () => setDrawerOpen(false));
+
+  function goToCheckout() {
+    releaseHistory();        // prevent cleanup from calling history.back()
+    setDrawerOpen(false);
+    router.push("/checkout");
+  }
 
   return (
     <>
@@ -49,7 +57,7 @@ export function CartDrawer() {
 
         {/* Contenido del carrito */}
         <div className="flex-1 overflow-y-auto px-6 py-5">
-          <Cart />
+          <Cart onCheckout={goToCheckout} />
         </div>
       </div>
     </>

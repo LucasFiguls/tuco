@@ -32,6 +32,7 @@ export default async function HomePage() {
     grasas: i.grasas ?? null,
     ingredientes: i.ingredientes ?? null,
     tags: i.tags,
+    menu_del_dia: i.menu_del_dia,
     components: i.components.map((c) => ({
       id: c.id,
       nombre: c.nombre,

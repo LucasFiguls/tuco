@@ -89,6 +89,7 @@ export const MenuItemScalarFieldEnum = {
   ingredientes: 'ingredientes',
   tagline: 'tagline',
   tags: 'tags',
+  menu_del_dia: 'menu_del_dia',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const

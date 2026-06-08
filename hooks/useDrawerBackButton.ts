@@ -30,4 +30,8 @@ export function useDrawerBackButton(isOpen: boolean, onClose: () => void) {
       }
     };
   }, [isOpen]);
+
+  // Call this before closing the drawer via programmatic navigation so the
+  // cleanup doesn't call history.back() and undo the push.
+  return () => { pushed.current = false; };
 }

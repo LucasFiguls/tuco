@@ -23,6 +23,7 @@ export interface MenuItem {
   grasas: number | null;
   ingredientes: string | null;
   tags: string[];
+  menu_del_dia: boolean;
   components: MenuItemComponent[];
 }
 
