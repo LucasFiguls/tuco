@@ -108,10 +108,11 @@ export function MenuGrid({ items }: { items: MenuItem[] }) {
             }`}
           >
             {filtered.length > 0 ? (
-              filtered.map((item) => (
+              filtered.map((item, i) => (
                 <MenuCard
                   key={item.id}
                   {...item}
+                  priority={i === 0}
                   onSelect={() => setSelectedItem(item)}
                 />
               ))

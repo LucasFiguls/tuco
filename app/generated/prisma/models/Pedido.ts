@@ -50,6 +50,7 @@ export type PedidoMinAggregateOutputType = {
   total: runtime.Decimal | null
   visto: boolean | null
   created_at: Date | null
+  updated_at: Date | null
 }
 
 export type PedidoMaxAggregateOutputType = {
@@ -66,6 +67,7 @@ export type PedidoMaxAggregateOutputType = {
   total: runtime.Decimal | null
   visto: boolean | null
   created_at: Date | null
+  updated_at: Date | null
 }
 
 export type PedidoCountAggregateOutputType = {
@@ -82,6 +84,7 @@ export type PedidoCountAggregateOutputType = {
   total: number
   visto: number
   created_at: number
+  updated_at: number
   _all: number
 }
 
@@ -110,6 +113,7 @@ export type PedidoMinAggregateInputType = {
   total?: true
   visto?: true
   created_at?: true
+  updated_at?: true
 }
 
 export type PedidoMaxAggregateInputType = {
@@ -126,6 +130,7 @@ export type PedidoMaxAggregateInputType = {
   total?: true
   visto?: true
   created_at?: true
+  updated_at?: true
 }
 
 export type PedidoCountAggregateInputType = {
@@ -142,6 +147,7 @@ export type PedidoCountAggregateInputType = {
   total?: true
   visto?: true
   created_at?: true
+  updated_at?: true
   _all?: true
 }
 
@@ -245,6 +251,7 @@ export type PedidoGroupByOutputType = {
   total: runtime.Decimal
   visto: boolean
   created_at: Date
+  updated_at: Date
   _count: PedidoCountAggregateOutputType | null
   _avg: PedidoAvgAggregateOutputType | null
   _sum: PedidoSumAggregateOutputType | null
@@ -284,6 +291,7 @@ export type PedidoWhereInput = {
   total?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFilter<"Pedido"> | boolean
   created_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   items?: Prisma.PedidoItemListRelationFilter
 }
 
@@ -301,6 +309,7 @@ export type PedidoOrderByWithRelationInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
   items?: Prisma.PedidoItemOrderByRelationAggregateInput
 }
 
@@ -321,6 +330,7 @@ export type PedidoWhereUniqueInput = Prisma.AtLeast<{
   total?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFilter<"Pedido"> | boolean
   created_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   items?: Prisma.PedidoItemListRelationFilter
 }, "id">
 
@@ -338,6 +348,7 @@ export type PedidoOrderByWithAggregationInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
   _count?: Prisma.PedidoCountOrderByAggregateInput
   _avg?: Prisma.PedidoAvgOrderByAggregateInput
   _max?: Prisma.PedidoMaxOrderByAggregateInput
@@ -362,6 +373,7 @@ export type PedidoScalarWhereWithAggregatesInput = {
   total?: Prisma.DecimalWithAggregatesFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolWithAggregatesFilter<"Pedido"> | boolean
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Pedido"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Pedido"> | Date | string
 }
 
 export type PedidoCreateInput = {
@@ -378,6 +390,7 @@ export type PedidoCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   created_at?: Date | string
+  updated_at?: Date | string
   items?: Prisma.PedidoItemCreateNestedManyWithoutPedidoInput
 }
 
@@ -395,6 +408,7 @@ export type PedidoUncheckedCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   created_at?: Date | string
+  updated_at?: Date | string
   items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutPedidoInput
 }
 
@@ -412,6 +426,7 @@ export type PedidoUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUpdateManyWithoutPedidoNestedInput
 }
 
@@ -429,6 +444,7 @@ export type PedidoUncheckedUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUncheckedUpdateManyWithoutPedidoNestedInput
 }
 
@@ -446,6 +462,7 @@ export type PedidoCreateManyInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type PedidoUpdateManyMutationInput = {
@@ -462,6 +479,7 @@ export type PedidoUpdateManyMutationInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PedidoUncheckedUpdateManyInput = {
@@ -478,6 +496,7 @@ export type PedidoUncheckedUpdateManyInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PedidoCountOrderByAggregateInput = {
@@ -494,6 +513,7 @@ export type PedidoCountOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type PedidoAvgOrderByAggregateInput = {
@@ -515,6 +535,7 @@ export type PedidoMaxOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type PedidoMinOrderByAggregateInput = {
@@ -531,6 +552,7 @@ export type PedidoMinOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
 }
 
 export type PedidoSumOrderByAggregateInput = {
@@ -579,6 +601,7 @@ export type PedidoCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type PedidoUncheckedCreateWithoutItemsInput = {
@@ -595,6 +618,7 @@ export type PedidoUncheckedCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type PedidoCreateOrConnectWithoutItemsInput = {
@@ -627,6 +651,7 @@ export type PedidoUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PedidoUncheckedUpdateWithoutItemsInput = {
@@ -643,6 +668,7 @@ export type PedidoUncheckedUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -690,6 +716,7 @@ export type PedidoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   total?: boolean
   visto?: boolean
   created_at?: boolean
+  updated_at?: boolean
   items?: boolean | Prisma.Pedido$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.PedidoCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pedido"]>
@@ -708,6 +735,7 @@ export type PedidoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   total?: boolean
   visto?: boolean
   created_at?: boolean
+  updated_at?: boolean
 }, ExtArgs["result"]["pedido"]>
 
 export type PedidoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -724,6 +752,7 @@ export type PedidoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   total?: boolean
   visto?: boolean
   created_at?: boolean
+  updated_at?: boolean
 }, ExtArgs["result"]["pedido"]>
 
 export type PedidoSelectScalar = {
@@ -740,9 +769,10 @@ export type PedidoSelectScalar = {
   total?: boolean
   visto?: boolean
   created_at?: boolean
+  updated_at?: boolean
 }
 
-export type PedidoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numero_pedido" | "cliente_nombre" | "cliente_telefono" | "modalidad" | "direccion_entrega" | "fecha_entrega" | "hora_entrega" | "comentarios" | "estado" | "total" | "visto" | "created_at", ExtArgs["result"]["pedido"]>
+export type PedidoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numero_pedido" | "cliente_nombre" | "cliente_telefono" | "modalidad" | "direccion_entrega" | "fecha_entrega" | "hora_entrega" | "comentarios" | "estado" | "total" | "visto" | "created_at" | "updated_at", ExtArgs["result"]["pedido"]>
 export type PedidoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | Prisma.Pedido$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.PedidoCountOutputTypeDefaultArgs<ExtArgs>
@@ -769,6 +799,7 @@ export type $PedidoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     total: runtime.Decimal
     visto: boolean
     created_at: Date
+    updated_at: Date
   }, ExtArgs["result"]["pedido"]>
   composites: {}
 }
@@ -1206,6 +1237,7 @@ export interface PedidoFieldRefs {
   readonly total: Prisma.FieldRef<"Pedido", 'Decimal'>
   readonly visto: Prisma.FieldRef<"Pedido", 'Boolean'>
   readonly created_at: Prisma.FieldRef<"Pedido", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"Pedido", 'DateTime'>
 }
     
 

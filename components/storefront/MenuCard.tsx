@@ -7,6 +7,7 @@ import { getTag } from "@/lib/tags";
 
 interface MenuCardProps extends MenuItem {
   onSelect: () => void;
+  priority?: boolean;
 }
 
 function formatPrice(n: number) {
@@ -15,7 +16,7 @@ function formatPrice(n: number) {
 
 export function MenuCard({
   id, nombre, descripcion, precio, categoria, foto_url,
-  calorias, proteinas, tags, menu_del_dia, onSelect, ...rest
+  calorias, proteinas, tags, menu_del_dia, onSelect, priority = false, ...rest
 }: MenuCardProps) {
   void rest;
   const { add, items, updateQty } = useCart();
@@ -39,6 +40,7 @@ export function MenuCard({
             src={foto_url}
             alt={nombre}
             fill
+            priority={priority}
             className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />

@@ -63,20 +63,25 @@ export function AdminNotificationsProvider({ children }: { children: React.React
     };
   }, [resumeAudio]);
 
-  // Carga el badge inicial al montar el layout
+  // Carga el badge inicial solo cuando el admin NO está en la página de pedidos.
+  // Si empieza en /admin/pedidos, el pathname effect ya resetea a 0 de forma síncrona;
+  // correr el GET igualmente genera una race donde el count viejo sobreescribe ese 0.
   useEffect(() => {
-    fetch("/api/admin/pedidos/marcar-vistos")
-      .then((r) => r.json())
-      .then((d) => setUnseenCount(d.count ?? 0))
-      .catch(() => {});
-  }, []);
+    if (!pathname.startsWith("/admin/pedidos")) {
+      fetch("/api/admin/pedidos/marcar-vistos")
+        .then((r) => r.json())
+        .then((d) => setUnseenCount(d.count ?? 0))
+        .catch(() => {});
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Cuando el admin entra a /admin/pedidos: resetea el badge y marca todos como vistos
+  // Cuando el admin entra a /admin/pedidos: resetea el badge.
+  // El PATCH lo maneja PedidosKanban DESPUÉS de su primer fetch,
+  // para que los pedidos no vistos muestren el badge NUEVO antes de marcarse.
   useEffect(() => {
     if (pathname.startsWith("/admin/pedidos")) {
       setUnseenCount(0);
       toast.dismiss();
-      fetch("/api/admin/pedidos/marcar-vistos", { method: "PATCH" }).catch(() => {});
     }
   }, [pathname]);
 
@@ -93,6 +98,7 @@ export function AdminNotificationsProvider({ children }: { children: React.React
           console.log("[realtime] INSERT recibido, pathname:", pathnameRef.current);
           if (pathnameRef.current.startsWith("/admin/pedidos")) {
             setReloadTrigger((t) => t + 1);
+            setUnseenCount((c) => c + 1);
             playBeep(audioCtxRef.current);
           } else {
             setUnseenCount((c) => c + 1);

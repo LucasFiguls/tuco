@@ -866,7 +866,8 @@ export const PedidoScalarFieldEnum = {
   estado: 'estado',
   total: 'total',
   visto: 'visto',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 } as const
 
 export type PedidoScalarFieldEnum = (typeof PedidoScalarFieldEnum)[keyof typeof PedidoScalarFieldEnum]
