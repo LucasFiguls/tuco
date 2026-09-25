@@ -15,8 +15,6 @@ export async function POST(request: NextRequest) {
     };
     items: Array<{
       id: string;
-      nombre: string;
-      precio: number;
       cantidad: number;
     }>;
   };
@@ -29,7 +27,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Dirección requerida para delivery" }, { status: 400 });
   }
 
-  const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+  if (items.some((i) => !Number.isInteger(i.cantidad) || i.cantidad < 1 || i.cantidad > 50)) {
+    return NextResponse.json({ error: "Cantidad inválida" }, { status: 400 });
+  }
+
+  // El precio se toma siempre de la DB, nunca del cliente
+  const menuItems = await prisma.menuItem.findMany({
+    where: { id: { in: items.map((i) => i.id) }, disponible: true },
+    select: { id: true, precio: true },
+  });
+  const precios = new Map(menuItems.map((m) => [m.id, Number(m.precio)]));
+
+  if (items.some((i) => !precios.has(i.id))) {
+    return NextResponse.json(
+      { error: "Algún producto ya no está disponible. Revisá tu carrito." },
+      { status: 409 }
+    );
+  }
+
+  const lineas = items.map((i) => {
+    const precio = precios.get(i.id)!;
+    return { menu_item_id: i.id, cantidad: i.cantidad, precio_unitario: precio, subtotal: precio * i.cantidad };
+  });
+  const total = lineas.reduce((sum, l) => sum + l.subtotal, 0);
 
   const pedido = await prisma.pedido.create({
     data: {
@@ -41,14 +61,7 @@ export async function POST(request: NextRequest) {
       hora_entrega: checkout.hora_entrega,
       comentarios: checkout.comentarios ?? null,
       total,
-      items: {
-        create: items.map((i) => ({
-          menu_item_id: i.id,
-          cantidad: i.cantidad,
-          precio_unitario: i.precio,
-          subtotal: i.precio * i.cantidad,
-        })),
-      },
+      items: { create: lineas },
     },
     include: { items: true },
   });

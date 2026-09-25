@@ -66,3 +66,28 @@ export type PedidoItem = Prisma.PedidoItemModel
  * 
  */
 export type Configuracion = Prisma.ConfiguracionModel
+/**
+ * Model WhatsappTemplate
+ * 
+ */
+export type WhatsappTemplate = Prisma.WhatsappTemplateModel
+/**
+ * Model Insumo
+ * 
+ */
+export type Insumo = Prisma.InsumoModel
+/**
+ * Model MovimientoStock
+ * 
+ */
+export type MovimientoStock = Prisma.MovimientoStockModel
+/**
+ * Model Receta
+ * 
+ */
+export type Receta = Prisma.RecetaModel
+/**
+ * Model IngredienteReceta
+ * 
+ */
+export type IngredienteReceta = Prisma.IngredienteRecetaModel

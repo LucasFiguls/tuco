@@ -25,3 +25,11 @@ export const EstadoPedido = {
 } as const
 
 export type EstadoPedido = (typeof EstadoPedido)[keyof typeof EstadoPedido]
+
+
+export const TipoMovimiento = {
+  ENTRADA: 'ENTRADA',
+  SALIDA: 'SALIDA'
+} as const
+
+export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]

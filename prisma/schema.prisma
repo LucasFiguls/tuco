@@ -28,6 +28,9 @@ model MenuItem {
 
   pedido_items PedidoItem[]
   components   MenuItemComponent[]
+  
+  receta_id    String?
+  receta       Receta?  @relation(fields: [receta_id], references: [id], onDelete: SetNull)
 
   @@map("menu_items")
 }
@@ -89,6 +92,17 @@ model Configuracion {
   @@map("configuracion")
 }
 
+model WhatsappTemplate {
+  id         Int      @id @default(autoincrement())
+  estado     String   @unique
+  habilitado Boolean  @default(true)
+  plantilla  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("whatsapp_templates")
+}
+
 enum Modalidad {
   RETIRO
   DELIVERY
@@ -99,4 +113,69 @@ enum EstadoPedido {
   CONFIRMADO
   ENTREGADO
   CANCELADO
+}
+
+model Insumo {
+  id              String   @id @default(cuid())
+  nombre          String
+  unidad_medida   String
+  costo_unitario  Decimal  @db.Decimal(10, 2)
+  stock_actual    Float    @default(0)
+  stock_minimo    Float    @default(0)
+  proveedor       String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  ingredientes_receta IngredienteReceta[]
+  movimientos         MovimientoStock[]
+
+  @@map("insumos")
+}
+
+model MovimientoStock {
+  id              String   @id @default(cuid())
+  insumo_id       String
+  tipo            TipoMovimiento
+  cantidad        Float
+  motivo          String?
+  pedido_id       String?
+  created_at      DateTime @default(now())
+
+  insumo          Insumo   @relation(fields: [insumo_id], references: [id], onDelete: Cascade)
+
+  @@map("movimientos_stock")
+}
+
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA
+}
+
+model Receta {
+  id              String   @id @default(cuid())
+  nombre          String
+  descripcion     String?
+  rendimiento     Float    @default(1)
+  costo_total     Decimal  @default(0) @db.Decimal(10, 2)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  ingredientes    IngredienteReceta[]
+  menu_items      MenuItem[]
+
+  @@map("recetas")
+}
+
+model IngredienteReceta {
+  id              String   @id @default(cuid())
+  receta_id       String
+  insumo_id       String
+  cantidad        Float
+  merma           Float    @default(0)
+  created_at      DateTime @default(now())
+  
+  receta          Receta   @relation(fields: [receta_id], references: [id], onDelete: Cascade)
+  insumo          Insumo   @relation(fields: [insumo_id], references: [id], onDelete: Restrict)
+
+  @@map("ingredientes_receta")
 }

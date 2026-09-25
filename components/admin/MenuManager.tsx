@@ -27,6 +27,7 @@ interface MenuItem {
   tags: string[];
   menu_del_dia: boolean;
   components: ComponentForm[];
+  receta_id: string | null;
 }
 
 const EMPTY: Omit<MenuItem, "id"> = {
@@ -45,10 +46,12 @@ const EMPTY: Omit<MenuItem, "id"> = {
   tags: [],
   menu_del_dia: false,
   components: [],
+  receta_id: null,
 };
 
 export function MenuManager() {
   const [items, setItems] = useState<MenuItem[]>([]);
+  const [recetas, setRecetas] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<MenuItem | null>(null);
   const [creating, setCreating] = useState(false);
@@ -59,8 +62,12 @@ export function MenuManager() {
 
   async function load() {
     setLoading(true);
-    const res = await fetch("/api/admin/menu");
+    const [res, recRes] = await Promise.all([
+      fetch("/api/admin/menu"),
+      fetch("/api/admin/recetas")
+    ]);
     const data = await res.json();
+    setRecetas(await recRes.json());
     setItems(data.map((i: Record<string, unknown>) => ({
       ...i,
       calorias:      i.calorias      != null ? String(i.calorias)      : "",
@@ -73,6 +80,7 @@ export function MenuManager() {
       foto_url:      i.foto_url      ?? null,
       tags:          Array.isArray(i.tags) ? i.tags : [],
       menu_del_dia:  Boolean(i.menu_del_dia),
+      receta_id:     (i.receta_id as string) ?? null,
       components: Array.isArray(i.components)
         ? (i.components as Record<string, unknown>[]).map((c) => ({
             nombre:         String(c.nombre ?? ""),
@@ -110,6 +118,7 @@ export function MenuManager() {
       ingredientes:  item.ingredientes,
       tags:          item.tags,
       menu_del_dia:  item.menu_del_dia,
+      receta_id:     item.receta_id,
       components:    item.components,
     });
     setEditing(item);
@@ -181,6 +190,7 @@ export function MenuManager() {
       tagline:       form.tagline       || null,
       tags:          form.tags,
       menu_del_dia:  form.menu_del_dia,
+      receta_id:     form.receta_id || null,
       components:    form.components
         .filter((c) => c.nombre.trim())
         .map((c) => ({ ...c, foto_url: c.foto_url || null })),
@@ -308,6 +318,13 @@ export function MenuManager() {
             <div className="flex items-center gap-2 pt-5">
               <input type="checkbox" id="menu_del_dia" checked={form.menu_del_dia} onChange={(e) => setForm((p) => ({ ...p, menu_del_dia: e.target.checked }))} className="w-4 h-4 accent-orange-500" />
               <label htmlFor="menu_del_dia" className="text-sm text-gray-700">Menú del día ★</label>
+            </div>
+            <div className="col-span-1 sm:col-span-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Receta Asignada (Control de Stock)</label>
+              <select className={inputCls + " bg-white"} value={form.receta_id || ""} onChange={(e) => setForm(p => ({ ...p, receta_id: e.target.value || null }))}>
+                <option value="">Sin receta (No descuenta stock)</option>
+                {recetas.map(r => <option key={r.id} value={r.id}>{r.nombre} (Rinde: {r.rendimiento})</option>)}
+              </select>
             </div>
           </div>
 

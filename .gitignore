@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # /app/generated/prisma  ← kept in repo so Vercel build finds it
+
+# salida de consola accidental
+/initial_schema.sql

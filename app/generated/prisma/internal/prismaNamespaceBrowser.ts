@@ -55,7 +55,12 @@ export const ModelName = {
   MenuItemComponent: 'MenuItemComponent',
   Pedido: 'Pedido',
   PedidoItem: 'PedidoItem',
-  Configuracion: 'Configuracion'
+  Configuracion: 'Configuracion',
+  WhatsappTemplate: 'WhatsappTemplate',
+  Insumo: 'Insumo',
+  MovimientoStock: 'MovimientoStock',
+  Receta: 'Receta',
+  IngredienteReceta: 'IngredienteReceta'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -91,7 +96,8 @@ export const MenuItemScalarFieldEnum = {
   tags: 'tags',
   menu_del_dia: 'menu_del_dia',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  receta_id: 'receta_id'
 } as const
 
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
@@ -149,6 +155,71 @@ export const ConfiguracionScalarFieldEnum = {
 } as const
 
 export type ConfiguracionScalarFieldEnum = (typeof ConfiguracionScalarFieldEnum)[keyof typeof ConfiguracionScalarFieldEnum]
+
+
+export const WhatsappTemplateScalarFieldEnum = {
+  id: 'id',
+  estado: 'estado',
+  habilitado: 'habilitado',
+  plantilla: 'plantilla',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type WhatsappTemplateScalarFieldEnum = (typeof WhatsappTemplateScalarFieldEnum)[keyof typeof WhatsappTemplateScalarFieldEnum]
+
+
+export const InsumoScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  unidad_medida: 'unidad_medida',
+  costo_unitario: 'costo_unitario',
+  stock_actual: 'stock_actual',
+  stock_minimo: 'stock_minimo',
+  proveedor: 'proveedor',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type InsumoScalarFieldEnum = (typeof InsumoScalarFieldEnum)[keyof typeof InsumoScalarFieldEnum]
+
+
+export const MovimientoStockScalarFieldEnum = {
+  id: 'id',
+  insumo_id: 'insumo_id',
+  tipo: 'tipo',
+  cantidad: 'cantidad',
+  motivo: 'motivo',
+  pedido_id: 'pedido_id',
+  created_at: 'created_at'
+} as const
+
+export type MovimientoStockScalarFieldEnum = (typeof MovimientoStockScalarFieldEnum)[keyof typeof MovimientoStockScalarFieldEnum]
+
+
+export const RecetaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  rendimiento: 'rendimiento',
+  costo_total: 'costo_total',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type RecetaScalarFieldEnum = (typeof RecetaScalarFieldEnum)[keyof typeof RecetaScalarFieldEnum]
+
+
+export const IngredienteRecetaScalarFieldEnum = {
+  id: 'id',
+  receta_id: 'receta_id',
+  insumo_id: 'insumo_id',
+  cantidad: 'cantidad',
+  merma: 'merma',
+  created_at: 'created_at'
+} as const
+
+export type IngredienteRecetaScalarFieldEnum = (typeof IngredienteRecetaScalarFieldEnum)[keyof typeof IngredienteRecetaScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -37,6 +37,7 @@ export async function PUT(
         tagline: body.tagline ?? null,
         tags: body.tags ?? [],
         menu_del_dia: body.menu_del_dia ?? false,
+        receta_id: body.receta_id ?? null,
       },
     });
 

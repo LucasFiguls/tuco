@@ -388,7 +388,12 @@ export const ModelName = {
   MenuItemComponent: 'MenuItemComponent',
   Pedido: 'Pedido',
   PedidoItem: 'PedidoItem',
-  Configuracion: 'Configuracion'
+  Configuracion: 'Configuracion',
+  WhatsappTemplate: 'WhatsappTemplate',
+  Insumo: 'Insumo',
+  MovimientoStock: 'MovimientoStock',
+  Receta: 'Receta',
+  IngredienteReceta: 'IngredienteReceta'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -404,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "menuItem" | "menuItemComponent" | "pedido" | "pedidoItem" | "configuracion"
+    modelProps: "menuItem" | "menuItemComponent" | "pedido" | "pedidoItem" | "configuracion" | "whatsappTemplate" | "insumo" | "movimientoStock" | "receta" | "ingredienteReceta"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -778,6 +783,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WhatsappTemplate: {
+      payload: Prisma.$WhatsappTemplatePayload<ExtArgs>
+      fields: Prisma.WhatsappTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WhatsappTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WhatsappTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.WhatsappTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WhatsappTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.WhatsappTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.WhatsappTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.WhatsappTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WhatsappTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.WhatsappTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        update: {
+          args: Prisma.WhatsappTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.WhatsappTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WhatsappTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WhatsappTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.WhatsappTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WhatsappTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.WhatsappTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWhatsappTemplate>
+        }
+        groupBy: {
+          args: Prisma.WhatsappTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsappTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WhatsappTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WhatsappTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
+    Insumo: {
+      payload: Prisma.$InsumoPayload<ExtArgs>
+      fields: Prisma.InsumoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InsumoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InsumoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        findFirst: {
+          args: Prisma.InsumoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InsumoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        findMany: {
+          args: Prisma.InsumoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>[]
+        }
+        create: {
+          args: Prisma.InsumoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        createMany: {
+          args: Prisma.InsumoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InsumoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>[]
+        }
+        delete: {
+          args: Prisma.InsumoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        update: {
+          args: Prisma.InsumoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        deleteMany: {
+          args: Prisma.InsumoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InsumoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InsumoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>[]
+        }
+        upsert: {
+          args: Prisma.InsumoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InsumoPayload>
+        }
+        aggregate: {
+          args: Prisma.InsumoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInsumo>
+        }
+        groupBy: {
+          args: Prisma.InsumoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsumoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InsumoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InsumoCountAggregateOutputType> | number
+        }
+      }
+    }
+    MovimientoStock: {
+      payload: Prisma.$MovimientoStockPayload<ExtArgs>
+      fields: Prisma.MovimientoStockFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MovimientoStockFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MovimientoStockFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        findFirst: {
+          args: Prisma.MovimientoStockFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MovimientoStockFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        findMany: {
+          args: Prisma.MovimientoStockFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+        }
+        create: {
+          args: Prisma.MovimientoStockCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        createMany: {
+          args: Prisma.MovimientoStockCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MovimientoStockCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+        }
+        delete: {
+          args: Prisma.MovimientoStockDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        update: {
+          args: Prisma.MovimientoStockUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        deleteMany: {
+          args: Prisma.MovimientoStockDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MovimientoStockUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MovimientoStockUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>[]
+        }
+        upsert: {
+          args: Prisma.MovimientoStockUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MovimientoStockPayload>
+        }
+        aggregate: {
+          args: Prisma.MovimientoStockAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMovimientoStock>
+        }
+        groupBy: {
+          args: Prisma.MovimientoStockGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MovimientoStockGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MovimientoStockCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MovimientoStockCountAggregateOutputType> | number
+        }
+      }
+    }
+    Receta: {
+      payload: Prisma.$RecetaPayload<ExtArgs>
+      fields: Prisma.RecetaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RecetaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RecetaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        findFirst: {
+          args: Prisma.RecetaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RecetaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        findMany: {
+          args: Prisma.RecetaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>[]
+        }
+        create: {
+          args: Prisma.RecetaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        createMany: {
+          args: Prisma.RecetaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RecetaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>[]
+        }
+        delete: {
+          args: Prisma.RecetaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        update: {
+          args: Prisma.RecetaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        deleteMany: {
+          args: Prisma.RecetaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RecetaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RecetaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>[]
+        }
+        upsert: {
+          args: Prisma.RecetaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecetaPayload>
+        }
+        aggregate: {
+          args: Prisma.RecetaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReceta>
+        }
+        groupBy: {
+          args: Prisma.RecetaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecetaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RecetaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecetaCountAggregateOutputType> | number
+        }
+      }
+    }
+    IngredienteReceta: {
+      payload: Prisma.$IngredienteRecetaPayload<ExtArgs>
+      fields: Prisma.IngredienteRecetaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IngredienteRecetaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IngredienteRecetaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        findFirst: {
+          args: Prisma.IngredienteRecetaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IngredienteRecetaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        findMany: {
+          args: Prisma.IngredienteRecetaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>[]
+        }
+        create: {
+          args: Prisma.IngredienteRecetaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        createMany: {
+          args: Prisma.IngredienteRecetaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IngredienteRecetaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>[]
+        }
+        delete: {
+          args: Prisma.IngredienteRecetaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        update: {
+          args: Prisma.IngredienteRecetaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        deleteMany: {
+          args: Prisma.IngredienteRecetaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IngredienteRecetaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IngredienteRecetaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>[]
+        }
+        upsert: {
+          args: Prisma.IngredienteRecetaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IngredienteRecetaPayload>
+        }
+        aggregate: {
+          args: Prisma.IngredienteRecetaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIngredienteReceta>
+        }
+        groupBy: {
+          args: Prisma.IngredienteRecetaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IngredienteRecetaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IngredienteRecetaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IngredienteRecetaCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -834,7 +1209,8 @@ export const MenuItemScalarFieldEnum = {
   tags: 'tags',
   menu_del_dia: 'menu_del_dia',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  receta_id: 'receta_id'
 } as const
 
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
@@ -892,6 +1268,71 @@ export const ConfiguracionScalarFieldEnum = {
 } as const
 
 export type ConfiguracionScalarFieldEnum = (typeof ConfiguracionScalarFieldEnum)[keyof typeof ConfiguracionScalarFieldEnum]
+
+
+export const WhatsappTemplateScalarFieldEnum = {
+  id: 'id',
+  estado: 'estado',
+  habilitado: 'habilitado',
+  plantilla: 'plantilla',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type WhatsappTemplateScalarFieldEnum = (typeof WhatsappTemplateScalarFieldEnum)[keyof typeof WhatsappTemplateScalarFieldEnum]
+
+
+export const InsumoScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  unidad_medida: 'unidad_medida',
+  costo_unitario: 'costo_unitario',
+  stock_actual: 'stock_actual',
+  stock_minimo: 'stock_minimo',
+  proveedor: 'proveedor',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type InsumoScalarFieldEnum = (typeof InsumoScalarFieldEnum)[keyof typeof InsumoScalarFieldEnum]
+
+
+export const MovimientoStockScalarFieldEnum = {
+  id: 'id',
+  insumo_id: 'insumo_id',
+  tipo: 'tipo',
+  cantidad: 'cantidad',
+  motivo: 'motivo',
+  pedido_id: 'pedido_id',
+  created_at: 'created_at'
+} as const
+
+export type MovimientoStockScalarFieldEnum = (typeof MovimientoStockScalarFieldEnum)[keyof typeof MovimientoStockScalarFieldEnum]
+
+
+export const RecetaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  rendimiento: 'rendimiento',
+  costo_total: 'costo_total',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type RecetaScalarFieldEnum = (typeof RecetaScalarFieldEnum)[keyof typeof RecetaScalarFieldEnum]
+
+
+export const IngredienteRecetaScalarFieldEnum = {
+  id: 'id',
+  receta_id: 'receta_id',
+  insumo_id: 'insumo_id',
+  cantidad: 'cantidad',
+  merma: 'merma',
+  created_at: 'created_at'
+} as const
+
+export type IngredienteRecetaScalarFieldEnum = (typeof IngredienteRecetaScalarFieldEnum)[keyof typeof IngredienteRecetaScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1028,6 +1469,20 @@ export type EnumEstadoPedidoFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 export type ListEnumEstadoPedidoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoPedido[]'>
     
 
+
+/**
+ * Reference to a field of type 'TipoMovimiento'
+ */
+export type EnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoMovimiento'>
+    
+
+
+/**
+ * Reference to a field of type 'TipoMovimiento[]'
+ */
+export type ListEnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoMovimiento[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1143,6 +1598,11 @@ export type GlobalOmitConfig = {
   pedido?: Prisma.PedidoOmit
   pedidoItem?: Prisma.PedidoItemOmit
   configuracion?: Prisma.ConfiguracionOmit
+  whatsappTemplate?: Prisma.WhatsappTemplateOmit
+  insumo?: Prisma.InsumoOmit
+  movimientoStock?: Prisma.MovimientoStockOmit
+  receta?: Prisma.RecetaOmit
+  ingredienteReceta?: Prisma.IngredienteRecetaOmit
 }
 
 /* Types for Logging */
