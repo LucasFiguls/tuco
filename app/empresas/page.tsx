@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import { modoVacio } from "@/lib/vacio";
 import { prisma } from "@/lib/prisma";
 import { getConfig } from "@/lib/config";
 import { Navbar } from "@/components/storefront/Navbar";
@@ -33,10 +35,13 @@ export default async function EmpresasPage({
   const { paquete } = await searchParams;
   const paqueteInicial = PAQUETES.some((p) => p.id === paquete) ? (paquete as PaqueteId) : undefined;
 
-  const [config, items] = await Promise.all([
-    getConfig(),
+  const config = await getConfig();
+  // Con la línea al vacío activa, los convenios quedan ocultos (se reactivan más adelante)
+  if (modoVacio(config)) redirect("/");
+
+  const [items] = await Promise.all([
     prisma.menuItem.findMany({
-      where: { disponible: true, foto_url: { not: null } },
+      where: { disponible: true, linea: "CALIENTE", foto_url: { not: null } },
       orderBy: [{ menu_del_dia: "desc" }, { updated_at: "desc" }],
       select: { id: true, nombre: true, tagline: true, foto_url: true, categoria: true },
       take: 6,

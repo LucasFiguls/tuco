@@ -2,17 +2,28 @@
 
 import { useEffect, useState } from "react";
 import { interpolateTemplate } from "@/lib/whatsapp";
+import { CAJAS_DEFAULT, parseCajas } from "@/lib/vacio";
 
 interface Config {
   whatsapp_numero: string;
   horarios: string;
   zonas_delivery: string;
+  modo_vacio: string;
+  vacio_descuentos: string;
+  vacio_anticipacion_horas: string;
+  vacio_franjas: string;
+  vacio_costo_envio: string;
 }
 
 const DEFAULTS: Config = {
   whatsapp_numero: "",
   horarios: "Lunes a viernes 12:00 a 14:00 y 19:00 a 21:00",
   zonas_delivery: "",
+  modo_vacio: "false",
+  vacio_descuentos: CAJAS_DEFAULT.map((c) => c.descuento).join(","),
+  vacio_anticipacion_horas: "48",
+  vacio_franjas: "9 a 13 hs, 14 a 18 hs",
+  vacio_costo_envio: "0",
 };
 
 // ----- WhatsApp templates section -----
@@ -229,6 +240,15 @@ export function ConfiguracionForm() {
 
   if (loading) return <div className="text-center py-12 text-gray-400">Cargando...</div>;
 
+  const inputCls = "w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300";
+  const cajas = parseCajas(config.vacio_descuentos);
+  const activo = config.modo_vacio === "true";
+
+  function setDescuento(idx: number, valor: string) {
+    const pcts = cajas.map((c, i) => (i === idx ? valor : String(c.descuento)));
+    setConfig((p) => ({ ...p, vacio_descuentos: pcts.join(",") }));
+  }
+
   return (
     <div>
       <h1 className="text-xl font-bold text-gray-900 mb-6">Configuración</h1>
@@ -275,6 +295,61 @@ export function ConfiguracionForm() {
               placeholder="Palermo, Recoleta, Almagro..."
             />
           </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-semibold text-gray-800">Tuco al vacío</h2>
+              <p className="text-xs text-gray-500 mt-1">
+                {activo
+                  ? "Activo: la home muestra la línea al vacío y se ocultan el menú caliente y Empresas."
+                  : "Apagado: el sitio sigue igual. Podés revisar la línea en /armar mientras tanto."}
+              </p>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={activo}
+              aria-label="Activar la línea al vacío"
+              onClick={() => {
+                if (!activo && !confirm("Al guardar, la home pública pasa a ser la línea al vacío y se ocultan el menú caliente y Empresas. ¿Continuar?")) return;
+                setConfig((p) => ({ ...p, modo_vacio: activo ? "false" : "true" }));
+              }}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors ${activo ? "bg-orange-500" : "bg-gray-300"}`}
+            >
+              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${activo ? "translate-x-5" : "translate-x-0.5"}`} />
+            </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Descuento por tamaño de caja (%)</label>
+            <div className="grid grid-cols-4 gap-2">
+              {cajas.map((c, i) => (
+                <label key={c.tamano} className="block">
+                  <span className="block text-xs text-gray-500 mb-1">Caja de {c.tamano}</span>
+                  <input type="number" min="0" max="50" className={inputCls} value={c.descuento} onChange={(e) => setDescuento(i, e.target.value)} />
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block">
+              <span className="block text-sm font-medium text-gray-700 mb-1">Anticipación mínima (hs)</span>
+              <input type="number" min="0" className={inputCls} value={config.vacio_anticipacion_horas} onChange={(e) => setConfig((p) => ({ ...p, vacio_anticipacion_horas: e.target.value }))} />
+            </label>
+            <label className="block">
+              <span className="block text-sm font-medium text-gray-700 mb-1">Costo de envío ($)</span>
+              <input type="number" min="0" className={inputCls} value={config.vacio_costo_envio} onChange={(e) => setConfig((p) => ({ ...p, vacio_costo_envio: e.target.value }))} />
+            </label>
+          </div>
+
+          <label className="block">
+            <span className="block text-sm font-medium text-gray-700 mb-1">Franjas horarias de entrega</span>
+            <input className={inputCls} value={config.vacio_franjas} onChange={(e) => setConfig((p) => ({ ...p, vacio_franjas: e.target.value }))} placeholder="9 a 13 hs, 14 a 18 hs" />
+            <span className="block text-xs text-gray-400 mt-1">Separadas por coma.</span>
+          </label>
         </div>
 
         <button

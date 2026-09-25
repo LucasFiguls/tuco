@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { esSlugDuplicado, vacioFields } from "@/lib/menu-vacio-fields";
 
 async function requireAdmin() {
   return await getSession();
@@ -19,6 +20,7 @@ export async function PUT(
 
   type ComponentInput = { nombre: string; cantidad_label: string; foto_url?: string };
 
+  try {
   const result = await prisma.$transaction(async (tx) => {
     await tx.menuItem.update({
       where: { id },
@@ -38,6 +40,7 @@ export async function PUT(
         tags: body.tags ?? [],
         menu_del_dia: body.menu_del_dia ?? false,
         receta_id: body.receta_id ?? null,
+        ...vacioFields(body),
       },
     });
 
@@ -62,6 +65,12 @@ export async function PUT(
   });
 
   return NextResponse.json(result);
+  } catch (e) {
+    if (esSlugDuplicado(e)) {
+      return NextResponse.json({ error: "Ya existe otro producto con esa URL (slug). Cambiá el nombre o el slug." }, { status: 409 });
+    }
+    throw e;
+  }
 }
 
 export async function PATCH(

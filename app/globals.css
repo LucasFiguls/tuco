@@ -20,6 +20,10 @@
   --color-brand-white: #FFFFFF;
   --color-brand-border: #E8E0D5;
 
+  /* ── Acento frío (solo conservación / cadena de frío, línea al vacío) ── */
+  --color-brand-frio: #2F7A99;
+  --color-brand-frio-light: #E7F3F7;
+
   /* ── Typography ──────────────────────────────────────────────────────── */
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;

@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getConfig } from "@/lib/config";
+import { getSession } from "@/lib/auth";
+import { descuentoCaja, esFechaValida, getVacioConfig } from "@/lib/vacio";
 import {
   MAX_VOUCHERS_POR_PEDIDO,
   MENSAJE_ESTADO,
@@ -15,7 +17,7 @@ class VoucherError extends Error {}
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { checkout, items, vouchers: vouchersRaw = [] } = body as {
+  const { checkout, items, vouchers: vouchersRaw = [], caja } = body as {
     checkout: {
       cliente_nombre: string;
       cliente_telefono: string;
@@ -30,6 +32,8 @@ export async function POST(request: NextRequest) {
       cantidad: number;
     }>;
     vouchers?: string[];
+    /** Tamaño de caja (línea al vacío). */
+    caja?: number;
   };
 
   if (!checkout || !items?.length) {
@@ -49,12 +53,14 @@ export async function POST(request: NextRequest) {
   }
   const codigos = [...new Set(vouchersRaw.map((c) => normalizarCodigo(String(c))))];
 
-  // El precio se toma siempre de la DB, nunca del cliente
+  // El precio se toma siempre de la DB, nunca del cliente. Un admin logueado puede
+  // pedir productos no disponibles (vista previa de la línea al vacío antes de publicarla).
+  const preview = !!(await getSession());
   const menuItems = await prisma.menuItem.findMany({
-    where: { id: { in: items.map((i) => i.id) }, disponible: true },
-    select: { id: true, precio: true, categoria: true },
+    where: { id: { in: items.map((i) => i.id) }, ...(preview ? {} : { disponible: true }) },
+    select: { id: true, precio: true, categoria: true, linea: true },
   });
-  const porId = new Map(menuItems.map((m) => [m.id, { precio: Number(m.precio), categoria: m.categoria }]));
+  const porId = new Map(menuItems.map((m) => [m.id, { precio: Number(m.precio), categoria: m.categoria, linea: m.linea }]));
 
   if (items.some((i) => !porId.has(i.id))) {
     return NextResponse.json(
@@ -68,6 +74,35 @@ export async function POST(request: NextRequest) {
     return { menu_item_id: i.id, cantidad: i.cantidad, precio_unitario: precio, subtotal: precio * i.cantidad };
   });
   const subtotal = lineas.reduce((sum, l) => sum + l.subtotal, 0);
+
+  // ── Caja al vacío ──────────────────────────────────────────────────────
+  const hayVacio = items.some((i) => porId.get(i.id)!.linea === "VACIO");
+  let descCaja = 0;
+  let envio = 0;
+  if (caja !== undefined || hayVacio) {
+    const vacio = getVacioConfig(await getConfig());
+    if (!vacio.cajas.some((c) => c.tamano === caja)) {
+      return NextResponse.json({ error: "Elegí un tamaño de caja válido" }, { status: 400 });
+    }
+    if (items.some((i) => porId.get(i.id)!.linea !== "VACIO")) {
+      return NextResponse.json({ error: "La caja solo puede tener viandas al vacío" }, { status: 400 });
+    }
+    const bolsas = items.reduce((s, i) => s + i.cantidad, 0);
+    if (bolsas !== caja) {
+      return NextResponse.json({ error: `Tu caja tiene ${bolsas} de ${caja} viandas. Completala antes de confirmar.` }, { status: 400 });
+    }
+    if (codigos.length) {
+      return NextResponse.json({ error: "Los vouchers no aplican a cajas al vacío" }, { status: 400 });
+    }
+    if (!esFechaValida(checkout.fecha_entrega, vacio.anticipacionHoras)) {
+      return NextResponse.json({ error: `Elegí una fecha con al menos ${vacio.anticipacionHoras} hs de anticipación` }, { status: 400 });
+    }
+    if (!vacio.franjas.includes(checkout.hora_entrega)) {
+      return NextResponse.json({ error: "Elegí una franja horaria válida" }, { status: 400 });
+    }
+    descCaja = descuentoCaja(subtotal, caja!, vacio.cajas);
+    envio = checkout.modalidad === "DELIVERY" ? vacio.costoEnvio : 0;
+  }
 
   let descuento = 0;
   if (codigos.length) {
@@ -107,7 +142,10 @@ export async function POST(request: NextRequest) {
           hora_entrega: checkout.hora_entrega,
           comentarios: checkout.comentarios ?? null,
           descuento_vouchers: descuento,
-          total: subtotal - descuento,
+          tamano_caja: caja ?? null,
+          descuento_caja: descCaja,
+          costo_envio: envio,
+          total: subtotal - descuento - descCaja + envio,
           items: { create: lineas },
         },
         include: { items: true },

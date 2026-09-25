@@ -30,12 +30,18 @@ export type PedidoAvgAggregateOutputType = {
   numero_pedido: number | null
   total: runtime.Decimal | null
   descuento_vouchers: runtime.Decimal | null
+  tamano_caja: number | null
+  descuento_caja: runtime.Decimal | null
+  costo_envio: runtime.Decimal | null
 }
 
 export type PedidoSumAggregateOutputType = {
   numero_pedido: number | null
   total: runtime.Decimal | null
   descuento_vouchers: runtime.Decimal | null
+  tamano_caja: number | null
+  descuento_caja: runtime.Decimal | null
+  costo_envio: runtime.Decimal | null
 }
 
 export type PedidoMinAggregateOutputType = {
@@ -52,6 +58,9 @@ export type PedidoMinAggregateOutputType = {
   total: runtime.Decimal | null
   visto: boolean | null
   descuento_vouchers: runtime.Decimal | null
+  tamano_caja: number | null
+  descuento_caja: runtime.Decimal | null
+  costo_envio: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -70,6 +79,9 @@ export type PedidoMaxAggregateOutputType = {
   total: runtime.Decimal | null
   visto: boolean | null
   descuento_vouchers: runtime.Decimal | null
+  tamano_caja: number | null
+  descuento_caja: runtime.Decimal | null
+  costo_envio: runtime.Decimal | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -88,6 +100,9 @@ export type PedidoCountAggregateOutputType = {
   total: number
   visto: number
   descuento_vouchers: number
+  tamano_caja: number
+  descuento_caja: number
+  costo_envio: number
   created_at: number
   updated_at: number
   _all: number
@@ -98,12 +113,18 @@ export type PedidoAvgAggregateInputType = {
   numero_pedido?: true
   total?: true
   descuento_vouchers?: true
+  tamano_caja?: true
+  descuento_caja?: true
+  costo_envio?: true
 }
 
 export type PedidoSumAggregateInputType = {
   numero_pedido?: true
   total?: true
   descuento_vouchers?: true
+  tamano_caja?: true
+  descuento_caja?: true
+  costo_envio?: true
 }
 
 export type PedidoMinAggregateInputType = {
@@ -120,6 +141,9 @@ export type PedidoMinAggregateInputType = {
   total?: true
   visto?: true
   descuento_vouchers?: true
+  tamano_caja?: true
+  descuento_caja?: true
+  costo_envio?: true
   created_at?: true
   updated_at?: true
 }
@@ -138,6 +162,9 @@ export type PedidoMaxAggregateInputType = {
   total?: true
   visto?: true
   descuento_vouchers?: true
+  tamano_caja?: true
+  descuento_caja?: true
+  costo_envio?: true
   created_at?: true
   updated_at?: true
 }
@@ -156,6 +183,9 @@ export type PedidoCountAggregateInputType = {
   total?: true
   visto?: true
   descuento_vouchers?: true
+  tamano_caja?: true
+  descuento_caja?: true
+  costo_envio?: true
   created_at?: true
   updated_at?: true
   _all?: true
@@ -261,6 +291,9 @@ export type PedidoGroupByOutputType = {
   total: runtime.Decimal
   visto: boolean
   descuento_vouchers: runtime.Decimal
+  tamano_caja: number | null
+  descuento_caja: runtime.Decimal
+  costo_envio: runtime.Decimal
   created_at: Date
   updated_at: Date
   _count: PedidoCountAggregateOutputType | null
@@ -302,6 +335,9 @@ export type PedidoWhereInput = {
   total?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFilter<"Pedido"> | boolean
   descuento_vouchers?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.IntNullableFilter<"Pedido"> | number | null
+  descuento_caja?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   items?: Prisma.PedidoItemListRelationFilter
@@ -322,6 +358,9 @@ export type PedidoOrderByWithRelationInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrderInput | Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   items?: Prisma.PedidoItemOrderByRelationAggregateInput
@@ -345,6 +384,9 @@ export type PedidoWhereUniqueInput = Prisma.AtLeast<{
   total?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFilter<"Pedido"> | boolean
   descuento_vouchers?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.IntNullableFilter<"Pedido"> | number | null
+  descuento_caja?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"Pedido"> | Date | string
   items?: Prisma.PedidoItemListRelationFilter
@@ -365,6 +407,9 @@ export type PedidoOrderByWithAggregationInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrderInput | Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   _count?: Prisma.PedidoCountOrderByAggregateInput
@@ -391,6 +436,9 @@ export type PedidoScalarWhereWithAggregatesInput = {
   total?: Prisma.DecimalWithAggregatesFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolWithAggregatesFilter<"Pedido"> | boolean
   descuento_vouchers?: Prisma.DecimalWithAggregatesFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.IntNullableWithAggregatesFilter<"Pedido"> | number | null
+  descuento_caja?: Prisma.DecimalWithAggregatesFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalWithAggregatesFilter<"Pedido"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeWithAggregatesFilter<"Pedido"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"Pedido"> | Date | string
 }
@@ -409,6 +457,9 @@ export type PedidoCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   items?: Prisma.PedidoItemCreateNestedManyWithoutPedidoInput
@@ -429,6 +480,9 @@ export type PedidoUncheckedCreateInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutPedidoInput
@@ -449,6 +503,9 @@ export type PedidoUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUpdateManyWithoutPedidoNestedInput
@@ -469,6 +526,9 @@ export type PedidoUncheckedUpdateInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUncheckedUpdateManyWithoutPedidoNestedInput
@@ -489,6 +549,9 @@ export type PedidoCreateManyInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -507,6 +570,9 @@ export type PedidoUpdateManyMutationInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -525,6 +591,9 @@ export type PedidoUncheckedUpdateManyInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -543,6 +612,9 @@ export type PedidoCountOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -551,6 +623,9 @@ export type PedidoAvgOrderByAggregateInput = {
   numero_pedido?: Prisma.SortOrder
   total?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
 }
 
 export type PedidoMaxOrderByAggregateInput = {
@@ -567,6 +642,9 @@ export type PedidoMaxOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -585,6 +663,9 @@ export type PedidoMinOrderByAggregateInput = {
   total?: Prisma.SortOrder
   visto?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -593,6 +674,9 @@ export type PedidoSumOrderByAggregateInput = {
   numero_pedido?: Prisma.SortOrder
   total?: Prisma.SortOrder
   descuento_vouchers?: Prisma.SortOrder
+  tamano_caja?: Prisma.SortOrder
+  descuento_caja?: Prisma.SortOrder
+  costo_envio?: Prisma.SortOrder
 }
 
 export type PedidoScalarRelationFilter = {
@@ -657,6 +741,9 @@ export type PedidoCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   vouchers?: Prisma.VoucherCreateNestedManyWithoutPedidoInput
@@ -676,6 +763,9 @@ export type PedidoUncheckedCreateWithoutItemsInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   vouchers?: Prisma.VoucherUncheckedCreateNestedManyWithoutPedidoInput
@@ -711,6 +801,9 @@ export type PedidoUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vouchers?: Prisma.VoucherUpdateManyWithoutPedidoNestedInput
@@ -730,6 +823,9 @@ export type PedidoUncheckedUpdateWithoutItemsInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   vouchers?: Prisma.VoucherUncheckedUpdateManyWithoutPedidoNestedInput
@@ -749,6 +845,9 @@ export type PedidoCreateWithoutVouchersInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   items?: Prisma.PedidoItemCreateNestedManyWithoutPedidoInput
@@ -768,6 +867,9 @@ export type PedidoUncheckedCreateWithoutVouchersInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: boolean
   descuento_vouchers?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: number | null
+  descuento_caja?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Date | string
   updated_at?: Date | string
   items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutPedidoInput
@@ -803,6 +905,9 @@ export type PedidoUpdateWithoutVouchersInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUpdateManyWithoutPedidoNestedInput
@@ -822,6 +927,9 @@ export type PedidoUncheckedUpdateWithoutVouchersInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   visto?: Prisma.BoolFieldUpdateOperationsInput | boolean
   descuento_vouchers?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  tamano_caja?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  descuento_caja?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  costo_envio?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.PedidoItemUncheckedUpdateManyWithoutPedidoNestedInput
@@ -881,6 +989,9 @@ export type PedidoSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   total?: boolean
   visto?: boolean
   descuento_vouchers?: boolean
+  tamano_caja?: boolean
+  descuento_caja?: boolean
+  costo_envio?: boolean
   created_at?: boolean
   updated_at?: boolean
   items?: boolean | Prisma.Pedido$itemsArgs<ExtArgs>
@@ -902,6 +1013,9 @@ export type PedidoSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   total?: boolean
   visto?: boolean
   descuento_vouchers?: boolean
+  tamano_caja?: boolean
+  descuento_caja?: boolean
+  costo_envio?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["pedido"]>
@@ -920,6 +1034,9 @@ export type PedidoSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   total?: boolean
   visto?: boolean
   descuento_vouchers?: boolean
+  tamano_caja?: boolean
+  descuento_caja?: boolean
+  costo_envio?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["pedido"]>
@@ -938,11 +1055,14 @@ export type PedidoSelectScalar = {
   total?: boolean
   visto?: boolean
   descuento_vouchers?: boolean
+  tamano_caja?: boolean
+  descuento_caja?: boolean
+  costo_envio?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type PedidoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numero_pedido" | "cliente_nombre" | "cliente_telefono" | "modalidad" | "direccion_entrega" | "fecha_entrega" | "hora_entrega" | "comentarios" | "estado" | "total" | "visto" | "descuento_vouchers" | "created_at" | "updated_at", ExtArgs["result"]["pedido"]>
+export type PedidoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "numero_pedido" | "cliente_nombre" | "cliente_telefono" | "modalidad" | "direccion_entrega" | "fecha_entrega" | "hora_entrega" | "comentarios" | "estado" | "total" | "visto" | "descuento_vouchers" | "tamano_caja" | "descuento_caja" | "costo_envio" | "created_at" | "updated_at", ExtArgs["result"]["pedido"]>
 export type PedidoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | Prisma.Pedido$itemsArgs<ExtArgs>
   vouchers?: boolean | Prisma.Pedido$vouchersArgs<ExtArgs>
@@ -971,6 +1091,9 @@ export type $PedidoPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     total: runtime.Decimal
     visto: boolean
     descuento_vouchers: runtime.Decimal
+    tamano_caja: number | null
+    descuento_caja: runtime.Decimal
+    costo_envio: runtime.Decimal
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["pedido"]>
@@ -1411,6 +1534,9 @@ export interface PedidoFieldRefs {
   readonly total: Prisma.FieldRef<"Pedido", 'Decimal'>
   readonly visto: Prisma.FieldRef<"Pedido", 'Boolean'>
   readonly descuento_vouchers: Prisma.FieldRef<"Pedido", 'Decimal'>
+  readonly tamano_caja: Prisma.FieldRef<"Pedido", 'Int'>
+  readonly descuento_caja: Prisma.FieldRef<"Pedido", 'Decimal'>
+  readonly costo_envio: Prisma.FieldRef<"Pedido", 'Decimal'>
   readonly created_at: Prisma.FieldRef<"Pedido", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"Pedido", 'DateTime'>
 }

@@ -11,6 +11,19 @@ const BANNER_MESSAGES = [
   "Convenios para empresas con vouchers mensuales",
 ];
 
+const BANNER_VACIO = [
+  "Armá tu caja de 5, 10, 15 o 20 viandas",
+  "Envío a domicilio o retiro en el local",
+  "Heladera o freezer: vos elegís cuándo",
+];
+
+const NAV_VACIO = [
+  { label: "Armá tu caja",  href: "/armar" },
+  { label: "Cómo funciona", href: "/#como-funciona" },
+  { label: "Regenerar",     href: "/como-regenerar" },
+  { label: "Preguntas",     href: "/preguntas" },
+];
+
 const NAV_LINKS = [
   { label: "Menú",          href: "/#menu" },
   { label: "Empresas",      href: "/empresas" },
@@ -18,8 +31,19 @@ const NAV_LINKS = [
   { label: "Contacto",      href: "#contacto" },
 ];
 
-export function Navbar() {
-  const { count, setDrawerOpen } = useCart();
+interface NavbarProps {
+  /** "vacio" = línea al vacío (links y caja propios). */
+  variant?: "caliente" | "vacio";
+  /** Fondo sólido desde el inicio (páginas sin hero). */
+  solid?: boolean;
+}
+
+export function Navbar({ variant = "caliente", solid = false }: NavbarProps = {}) {
+  const { count, setDrawerOpen, caja } = useCart();
+  const esVacio = variant === "vacio";
+  const banner = esVacio ? BANNER_VACIO : BANNER_MESSAGES;
+  const links = esVacio ? NAV_VACIO : NAV_LINKS;
+  const cajaLabel = caja ? `Caja ${count}/${caja}` : "Armá tu caja";
 
   const [bannerIdx, setBannerIdx] = useState(0);
   const [bannerVisible, setBannerVisible] = useState(true);
@@ -34,12 +58,12 @@ export function Navbar() {
     const t = setInterval(() => {
       setBannerVisible(false);
       setTimeout(() => {
-        setBannerIdx((i) => (i + 1) % BANNER_MESSAGES.length);
+        setBannerIdx((i) => (i + 1) % banner.length);
         setBannerVisible(true);
       }, 400);
     }, 4000);
     return () => clearInterval(t);
-  }, []);
+  }, [banner.length]);
 
   // Scroll: >80px → navbar sólida
   // Usa RAF para que el navegador termine el scroll de anchor antes de medir
@@ -71,8 +95,9 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", close);
   }, [mobileOpen]);
 
-  const textColor   = scrolled ? "text-brand-dark"  : "text-white";
-  const mutedColor  = scrolled ? "text-brand-muted"  : "text-white/70";
+  const solido      = scrolled || solid;
+  const textColor   = solido ? "text-brand-dark"  : "text-white";
+  const mutedColor  = solido ? "text-brand-muted"  : "text-white/70";
 
   return (
     <header className="sticky top-0 z-50">
@@ -83,15 +108,15 @@ export function Navbar() {
           className="font-body text-[13px] transition-opacity duration-400"
           style={{ opacity: bannerVisible ? 1 : 0 }}
         >
-          {BANNER_MESSAGES[bannerIdx]}
+          {banner[bannerIdx % banner.length]}
         </span>
       </div>
 
       {/* ── Barra principal ─────────────────────────────────────────────── */}
       <nav
-        className={`transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-[12px] shadow-nav" : ""}`}
+        className={`transition-all duration-300 ${solido ? "bg-white/95 backdrop-blur-[12px] shadow-nav" : ""}`}
         style={
-          scrolled
+          solido
             ? undefined
             : { background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)" }
         }
@@ -110,7 +135,7 @@ export function Navbar() {
 
           {/* Links — desktop */}
           <div className="hidden md:flex items-center gap-7">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -123,10 +148,23 @@ export function Navbar() {
 
           {/* Botón carrito — desktop */}
           <div className="flex items-center gap-3">
+            {esVacio ? (
+              <Link
+                href="/armar"
+                className={`hidden md:flex items-center gap-2 font-body font-semibold text-sm px-5 py-2.5 rounded-btn transition-all duration-300 ${
+                  solido
+                    ? "bg-brand-primary text-white hover:bg-brand-primary-hover"
+                    : "border border-white text-white hover:bg-white/10"
+                }`}
+              >
+                <BoxIcon />
+                {cajaLabel}
+              </Link>
+            ) : (
             <button
               onClick={() => setDrawerOpen(true)}
               className={`hidden md:flex relative items-center gap-2 font-body font-semibold text-sm px-5 py-2.5 rounded-btn transition-all duration-300 ${
-                scrolled
+                solido
                   ? "bg-brand-primary text-white hover:bg-brand-primary-hover"
                   : "border border-white text-white hover:bg-white/10"
               }`}
@@ -135,8 +173,19 @@ export function Navbar() {
               Carrito
               <CartBadge count={count} bump={badgeBump} />
             </button>
+            )}
 
             {/* Ícono carrito — mobile (sin pill) */}
+            {esVacio ? (
+              <Link
+                href="/armar"
+                className={`relative md:hidden p-2 transition-colors duration-300 ${textColor}`}
+                aria-label={cajaLabel}
+              >
+                <BoxIcon />
+                <CartBadge count={count} bump={badgeBump} />
+              </Link>
+            ) : (
             <button
               onClick={() => setDrawerOpen(true)}
               className={`relative md:hidden p-2 transition-colors duration-300 ${textColor}`}
@@ -145,6 +194,7 @@ export function Navbar() {
               <CartIcon />
               <CartBadge count={count} bump={badgeBump} />
             </button>
+            )}
 
             {/* Hamburguesa — mobile */}
             <button
@@ -166,18 +216,28 @@ export function Navbar() {
         }`}
       >
         <div className="px-6 py-2 pb-6">
-          {NAV_LINKS.map((link, i) => (
+          {links.map((link, i) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
               className={`block font-display text-[24px] text-brand-dark py-4 transition-colors hover:text-brand-primary ${
-                i < NAV_LINKS.length - 1 ? "border-b border-brand-border" : ""
+                i < links.length - 1 ? "border-b border-brand-border" : ""
               }`}
             >
               {link.label}
             </a>
           ))}
+          {esVacio ? (
+            <Link
+              href="/armar"
+              onClick={() => setMobileOpen(false)}
+              className="mt-5 w-full flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-body font-semibold text-[15px] py-3 rounded-btn transition-colors duration-200"
+            >
+              <BoxIcon />
+              {cajaLabel}
+            </Link>
+          ) : (
           <button
             onClick={() => { setMobileOpen(false); setDrawerOpen(true); }}
             className="mt-5 w-full flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-white font-body font-semibold text-[15px] py-3 rounded-btn transition-colors duration-200"
@@ -185,6 +245,7 @@ export function Navbar() {
             <CartIcon />
             Ver carrito {count > 0 && `(${count})`}
           </button>
+          )}
         </div>
       </div>
     </header>
@@ -235,6 +296,15 @@ function HamburgerIcon({ open }: { open: boolean }) {
           transition: "transform 250ms ease",
         }}
       />
+    </svg>
+  );
+}
+
+function BoxIcon() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 8l-9-5-9 5v8l9 5 9-5z" />
+      <path d="M3 8l9 5 9-5M12 13v8" />
     </svg>
   );
 }

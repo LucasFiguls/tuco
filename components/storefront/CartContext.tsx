@@ -13,29 +13,54 @@ interface CartContextValue {
   count: number;
   drawerOpen: boolean;
   setDrawerOpen: (v: boolean) => void;
+  /** Tamaño de caja elegido en la línea al vacío (null = pedido común). */
+  caja: number | null;
+  setCaja: (tamano: number | null) => void;
+  /** true cuando ya se leyó localStorage (evita pisar lo guardado). */
+  hydrated: boolean;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "tuco_cart";
+const CAJA_KEY = "tuco_caja";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [caja, setCaja] = useState<number | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) setItems(JSON.parse(stored));
+      const storedCaja = Number(localStorage.getItem(CAJA_KEY));
+      if (storedCaja > 0) setCaja(storedCaja);
     } catch {}
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch {}
   }, [items]);
 
+  useEffect(() => {
+    try {
+      if (caja) localStorage.setItem(CAJA_KEY, String(caja));
+      else localStorage.removeItem(CAJA_KEY);
+    } catch {}
+  }, [caja]);
+
   function add(item: Omit<CartItem, "cantidad">) {
+    if ((item.linea ?? "CALIENTE") === "CALIENTE") setCaja(null);
     setItems((prev) => {
+      // Una caja al vacío y un pedido caliente no se mezclan
+      if (prev.some((i) => (i.linea ?? "CALIENTE") !== (item.linea ?? "CALIENTE"))) {
+        prev = [];
+      }
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
         return prev.map((i) =>
@@ -59,13 +84,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   function clear() {
     setItems([]);
+    setCaja(null);
   }
 
   const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
   const count = items.reduce((sum, i) => sum + i.cantidad, 0);
 
   return (
-    <CartContext.Provider value={{ items, add, remove, updateQty, clear, total, count, drawerOpen, setDrawerOpen }}>
+    <CartContext.Provider value={{ items, add, remove, updateQty, clear, total, count, drawerOpen, setDrawerOpen, caja, setCaja, hydrated }}>
       {children}
     </CartContext.Provider>
   );

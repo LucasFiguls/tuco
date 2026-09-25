@@ -11,6 +11,9 @@ interface OrderSummary {
   subtotal?: number;
   descuento?: number;
   vouchers?: number;
+  caja?: number | null;
+  descuentoCaja?: number;
+  envio?: number;
   modalidad: "RETIRO" | "DELIVERY";
   nombre: string;
 }
@@ -74,6 +77,18 @@ function ConfirmacionContent() {
                 </div>
               ))}
             </div>
+            {!!order.descuentoCaja && (
+              <div className="flex justify-between text-sm pb-1.5 text-tuco-green font-medium">
+                <span>Descuento caja de {order.caja}</span>
+                <span>−${order.descuentoCaja.toLocaleString("es-AR")}</span>
+              </div>
+            )}
+            {!!order.envio && (
+              <div className="flex justify-between text-sm pb-1.5 text-tuco-brown">
+                <span>Envío</span>
+                <span>${order.envio.toLocaleString("es-AR")}</span>
+              </div>
+            )}
             {!!order.descuento && (
               <div className="flex justify-between text-sm pb-1.5 text-tuco-green font-medium">
                 <span>🎟 {order.vouchers} voucher{order.vouchers === 1 ? "" : "s"} de tu empresa</span>
@@ -92,11 +107,21 @@ function ConfirmacionContent() {
           </div>
         )}
 
+        {order?.caja && (
+          <div className="bg-brand-frio-light rounded-2xl p-4 mb-6 text-sm text-brand-dark">
+            <p className="font-semibold mb-1">Cuando recibas tu caja</p>
+            <p>
+              Guardá todo en la heladera. Lo que no vayas a comer en los próximos días, pasalo al freezer apenas llega.
+              Cada bolsa trae cómo regenerarla.
+            </p>
+          </div>
+        )}
+
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push(order?.caja ? "/armar" : "/")}
           className="w-full bg-tuco-red hover:bg-tuco-red-dark text-white font-semibold py-3.5 rounded-full transition-colors text-sm"
         >
-          Ver el menú
+          {order?.caja ? "Armar otra caja" : "Ver el menú"}
         </button>
       </div>
     </div>

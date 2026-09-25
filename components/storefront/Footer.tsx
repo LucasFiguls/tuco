@@ -7,13 +7,21 @@ const NAV_LINKS = [
   { label: "Contacto",       href: "#contacto" },
 ];
 
+const NAV_VACIO = [
+  { label: "Armá tu caja",   href: "/armar" },
+  { label: "Cómo regenerar", href: "/como-regenerar" },
+  { label: "Preguntas",      href: "/preguntas" },
+  { label: "Contacto",       href: "#contacto" },
+];
+
 const INFO_ITEMS = [
   "Lunes a viernes · 8 a 18hs",
   "CABA y GBA",
   "Efectivo · Transferencia bancaria",
 ];
 
-export function Footer({ whatsapp }: { whatsapp?: string }) {
+export function Footer({ whatsapp, variant = "caliente" }: { whatsapp?: string; variant?: "caliente" | "vacio" }) {
+  const links = variant === "vacio" ? NAV_VACIO : NAV_LINKS;
   return (
     <footer id="contacto" className="bg-[#111111]">
 
@@ -27,8 +35,9 @@ export function Footer({ whatsapp }: { whatsapp?: string }) {
           </p>
           <p className="font-body text-[12px] italic text-white/40 mb-4">fatto in casa</p>
           <p className="font-body text-[14px] text-white/55 leading-relaxed max-w-[240px] mb-6">
-            Viandas caseras en Buenos Aires.
-            Cocinamos con amor para que vos no tengas que hacerlo.
+            {variant === "vacio"
+              ? "Viandas caseras envasadas al vacío. Llená tu heladera de comida de la nonna."
+              : "Viandas caseras en Buenos Aires. Cocinamos con amor para que vos no tengas que hacerlo."}
           </p>
           {whatsapp && (
             <a
@@ -49,7 +58,7 @@ export function Footer({ whatsapp }: { whatsapp?: string }) {
             Menú
           </p>
           <ul className="space-y-3">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}

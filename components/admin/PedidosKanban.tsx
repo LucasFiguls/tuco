@@ -47,6 +47,9 @@ interface Pedido {
   updated_at: string;
   items: PedidoItem[];
   descuento_vouchers?: string;
+  tamano_caja?: number | null;
+  descuento_caja?: string;
+  costo_envio?: string;
   vouchers?: Array<{ codigo: string; lote: { convenio: { empresa: string } } }>;
 }
 
@@ -181,6 +184,11 @@ function PedidoCard({
           </span>
         </div>
         <p className="text-sm font-medium text-gray-700 truncate">{pedido.cliente_nombre}</p>
+        {!!pedido.tamano_caja && (
+          <p className="mt-1 mr-1 text-[11px] font-semibold text-sky-700 bg-sky-50 rounded-full px-2 py-0.5 inline-block">
+            📦 Caja de {pedido.tamano_caja}
+          </p>
+        )}
         {!!pedido.vouchers?.length && (
           <p className="mt-1 text-[11px] font-semibold text-violet-700 bg-violet-50 rounded-full px-2 py-0.5 inline-block truncate max-w-full">
             🎟 {pedido.vouchers.length} · {pedido.vouchers[0].lote.convenio.empresa}
@@ -232,6 +240,18 @@ function PedidoCard({
               </span>
             </div>
           ))}
+          {Number(pedido.descuento_caja ?? 0) > 0 && (
+            <div className="flex justify-between text-xs text-sky-700">
+              <span>Descuento caja</span>
+              <span className="font-medium">−${Number(pedido.descuento_caja).toLocaleString("es-AR")}</span>
+            </div>
+          )}
+          {Number(pedido.costo_envio ?? 0) > 0 && (
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>Envío</span>
+              <span className="font-medium">${Number(pedido.costo_envio).toLocaleString("es-AR")}</span>
+            </div>
+          )}
           {Number(pedido.descuento_vouchers ?? 0) > 0 && (
             <div className="flex justify-between text-xs text-violet-700">
               <span>🎟 Vouchers ({pedido.vouchers?.map((v) => v.codigo).join(", ")})</span>

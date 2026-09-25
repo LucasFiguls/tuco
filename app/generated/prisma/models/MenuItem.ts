@@ -32,6 +32,9 @@ export type MenuItemAvgAggregateOutputType = {
   proteinas: number | null
   carbohidratos: number | null
   grasas: number | null
+  porcion_gramos: number | null
+  dias_heladera: number | null
+  meses_freezer: number | null
 }
 
 export type MenuItemSumAggregateOutputType = {
@@ -40,6 +43,9 @@ export type MenuItemSumAggregateOutputType = {
   proteinas: number | null
   carbohidratos: number | null
   grasas: number | null
+  porcion_gramos: number | null
+  dias_heladera: number | null
+  meses_freezer: number | null
 }
 
 export type MenuItemMinAggregateOutputType = {
@@ -60,6 +66,14 @@ export type MenuItemMinAggregateOutputType = {
   created_at: Date | null
   updated_at: Date | null
   receta_id: string | null
+  linea: $Enums.LineaProducto | null
+  tipo_vacio: $Enums.TipoVacio | null
+  slug: string | null
+  porcion_gramos: number | null
+  dias_heladera: number | null
+  meses_freezer: number | null
+  foto_bolsa_url: string | null
+  alergenos: string | null
 }
 
 export type MenuItemMaxAggregateOutputType = {
@@ -80,6 +94,14 @@ export type MenuItemMaxAggregateOutputType = {
   created_at: Date | null
   updated_at: Date | null
   receta_id: string | null
+  linea: $Enums.LineaProducto | null
+  tipo_vacio: $Enums.TipoVacio | null
+  slug: string | null
+  porcion_gramos: number | null
+  dias_heladera: number | null
+  meses_freezer: number | null
+  foto_bolsa_url: string | null
+  alergenos: string | null
 }
 
 export type MenuItemCountAggregateOutputType = {
@@ -101,6 +123,16 @@ export type MenuItemCountAggregateOutputType = {
   created_at: number
   updated_at: number
   receta_id: number
+  linea: number
+  tipo_vacio: number
+  slug: number
+  porcion_gramos: number
+  regeneracion: number
+  dias_heladera: number
+  meses_freezer: number
+  foto_bolsa_url: number
+  alergenos: number
+  va_bien_con: number
   _all: number
 }
 
@@ -111,6 +143,9 @@ export type MenuItemAvgAggregateInputType = {
   proteinas?: true
   carbohidratos?: true
   grasas?: true
+  porcion_gramos?: true
+  dias_heladera?: true
+  meses_freezer?: true
 }
 
 export type MenuItemSumAggregateInputType = {
@@ -119,6 +154,9 @@ export type MenuItemSumAggregateInputType = {
   proteinas?: true
   carbohidratos?: true
   grasas?: true
+  porcion_gramos?: true
+  dias_heladera?: true
+  meses_freezer?: true
 }
 
 export type MenuItemMinAggregateInputType = {
@@ -139,6 +177,14 @@ export type MenuItemMinAggregateInputType = {
   created_at?: true
   updated_at?: true
   receta_id?: true
+  linea?: true
+  tipo_vacio?: true
+  slug?: true
+  porcion_gramos?: true
+  dias_heladera?: true
+  meses_freezer?: true
+  foto_bolsa_url?: true
+  alergenos?: true
 }
 
 export type MenuItemMaxAggregateInputType = {
@@ -159,6 +205,14 @@ export type MenuItemMaxAggregateInputType = {
   created_at?: true
   updated_at?: true
   receta_id?: true
+  linea?: true
+  tipo_vacio?: true
+  slug?: true
+  porcion_gramos?: true
+  dias_heladera?: true
+  meses_freezer?: true
+  foto_bolsa_url?: true
+  alergenos?: true
 }
 
 export type MenuItemCountAggregateInputType = {
@@ -180,6 +234,16 @@ export type MenuItemCountAggregateInputType = {
   created_at?: true
   updated_at?: true
   receta_id?: true
+  linea?: true
+  tipo_vacio?: true
+  slug?: true
+  porcion_gramos?: true
+  regeneracion?: true
+  dias_heladera?: true
+  meses_freezer?: true
+  foto_bolsa_url?: true
+  alergenos?: true
+  va_bien_con?: true
   _all?: true
 }
 
@@ -288,6 +352,16 @@ export type MenuItemGroupByOutputType = {
   created_at: Date
   updated_at: Date
   receta_id: string | null
+  linea: $Enums.LineaProducto
+  tipo_vacio: $Enums.TipoVacio | null
+  slug: string | null
+  porcion_gramos: number | null
+  regeneracion: runtime.JsonValue | null
+  dias_heladera: number | null
+  meses_freezer: number | null
+  foto_bolsa_url: string | null
+  alergenos: string | null
+  va_bien_con: string[]
   _count: MenuItemCountAggregateOutputType | null
   _avg: MenuItemAvgAggregateOutputType | null
   _sum: MenuItemSumAggregateOutputType | null
@@ -332,6 +406,16 @@ export type MenuItemWhereInput = {
   created_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   receta_id?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  linea?: Prisma.EnumLineaProductoFilter<"MenuItem"> | $Enums.LineaProducto
+  tipo_vacio?: Prisma.EnumTipoVacioNullableFilter<"MenuItem"> | $Enums.TipoVacio | null
+  slug?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  porcion_gramos?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  regeneracion?: Prisma.JsonNullableFilter<"MenuItem">
+  dias_heladera?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  meses_freezer?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  foto_bolsa_url?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  alergenos?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  va_bien_con?: Prisma.StringNullableListFilter<"MenuItem">
   pedido_items?: Prisma.PedidoItemListRelationFilter
   components?: Prisma.MenuItemComponentListRelationFilter
   receta?: Prisma.XOR<Prisma.RecetaNullableScalarRelationFilter, Prisma.RecetaWhereInput> | null
@@ -356,6 +440,16 @@ export type MenuItemOrderByWithRelationInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   receta_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  linea?: Prisma.SortOrder
+  tipo_vacio?: Prisma.SortOrderInput | Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrderInput | Prisma.SortOrder
+  regeneracion?: Prisma.SortOrderInput | Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrderInput | Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrderInput | Prisma.SortOrder
+  foto_bolsa_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  alergenos?: Prisma.SortOrderInput | Prisma.SortOrder
+  va_bien_con?: Prisma.SortOrder
   pedido_items?: Prisma.PedidoItemOrderByRelationAggregateInput
   components?: Prisma.MenuItemComponentOrderByRelationAggregateInput
   receta?: Prisma.RecetaOrderByWithRelationInput
@@ -363,6 +457,7 @@ export type MenuItemOrderByWithRelationInput = {
 
 export type MenuItemWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   AND?: Prisma.MenuItemWhereInput | Prisma.MenuItemWhereInput[]
   OR?: Prisma.MenuItemWhereInput[]
   NOT?: Prisma.MenuItemWhereInput | Prisma.MenuItemWhereInput[]
@@ -383,10 +478,19 @@ export type MenuItemWhereUniqueInput = Prisma.AtLeast<{
   created_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   receta_id?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  linea?: Prisma.EnumLineaProductoFilter<"MenuItem"> | $Enums.LineaProducto
+  tipo_vacio?: Prisma.EnumTipoVacioNullableFilter<"MenuItem"> | $Enums.TipoVacio | null
+  porcion_gramos?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  regeneracion?: Prisma.JsonNullableFilter<"MenuItem">
+  dias_heladera?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  meses_freezer?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  foto_bolsa_url?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  alergenos?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  va_bien_con?: Prisma.StringNullableListFilter<"MenuItem">
   pedido_items?: Prisma.PedidoItemListRelationFilter
   components?: Prisma.MenuItemComponentListRelationFilter
   receta?: Prisma.XOR<Prisma.RecetaNullableScalarRelationFilter, Prisma.RecetaWhereInput> | null
-}, "id">
+}, "id" | "slug">
 
 export type MenuItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -407,6 +511,16 @@ export type MenuItemOrderByWithAggregationInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   receta_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  linea?: Prisma.SortOrder
+  tipo_vacio?: Prisma.SortOrderInput | Prisma.SortOrder
+  slug?: Prisma.SortOrderInput | Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrderInput | Prisma.SortOrder
+  regeneracion?: Prisma.SortOrderInput | Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrderInput | Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrderInput | Prisma.SortOrder
+  foto_bolsa_url?: Prisma.SortOrderInput | Prisma.SortOrder
+  alergenos?: Prisma.SortOrderInput | Prisma.SortOrder
+  va_bien_con?: Prisma.SortOrder
   _count?: Prisma.MenuItemCountOrderByAggregateInput
   _avg?: Prisma.MenuItemAvgOrderByAggregateInput
   _max?: Prisma.MenuItemMaxOrderByAggregateInput
@@ -436,6 +550,16 @@ export type MenuItemScalarWhereWithAggregatesInput = {
   created_at?: Prisma.DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
   receta_id?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+  linea?: Prisma.EnumLineaProductoWithAggregatesFilter<"MenuItem"> | $Enums.LineaProducto
+  tipo_vacio?: Prisma.EnumTipoVacioNullableWithAggregatesFilter<"MenuItem"> | $Enums.TipoVacio | null
+  slug?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+  porcion_gramos?: Prisma.IntNullableWithAggregatesFilter<"MenuItem"> | number | null
+  regeneracion?: Prisma.JsonNullableWithAggregatesFilter<"MenuItem">
+  dias_heladera?: Prisma.IntNullableWithAggregatesFilter<"MenuItem"> | number | null
+  meses_freezer?: Prisma.IntNullableWithAggregatesFilter<"MenuItem"> | number | null
+  foto_bolsa_url?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+  alergenos?: Prisma.StringNullableWithAggregatesFilter<"MenuItem"> | string | null
+  va_bien_con?: Prisma.StringNullableListFilter<"MenuItem">
 }
 
 export type MenuItemCreateInput = {
@@ -456,6 +580,16 @@ export type MenuItemCreateInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemCreateNestedManyWithoutMenu_itemInput
   components?: Prisma.MenuItemComponentCreateNestedManyWithoutMenu_itemInput
   receta?: Prisma.RecetaCreateNestedOneWithoutMenu_itemsInput
@@ -480,6 +614,16 @@ export type MenuItemUncheckedCreateInput = {
   created_at?: Date | string
   updated_at?: Date | string
   receta_id?: string | null
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutMenu_itemInput
   components?: Prisma.MenuItemComponentUncheckedCreateNestedManyWithoutMenu_itemInput
 }
@@ -502,6 +646,16 @@ export type MenuItemUpdateInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUpdateManyWithoutMenu_itemNestedInput
   components?: Prisma.MenuItemComponentUpdateManyWithoutMenu_itemNestedInput
   receta?: Prisma.RecetaUpdateOneWithoutMenu_itemsNestedInput
@@ -526,6 +680,16 @@ export type MenuItemUncheckedUpdateInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   receta_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedUpdateManyWithoutMenu_itemNestedInput
   components?: Prisma.MenuItemComponentUncheckedUpdateManyWithoutMenu_itemNestedInput
 }
@@ -549,6 +713,16 @@ export type MenuItemCreateManyInput = {
   created_at?: Date | string
   updated_at?: Date | string
   receta_id?: string | null
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
 }
 
 export type MenuItemUpdateManyMutationInput = {
@@ -569,6 +743,16 @@ export type MenuItemUpdateManyMutationInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
 }
 
 export type MenuItemUncheckedUpdateManyInput = {
@@ -590,6 +774,16 @@ export type MenuItemUncheckedUpdateManyInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   receta_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -619,6 +813,16 @@ export type MenuItemCountOrderByAggregateInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   receta_id?: Prisma.SortOrder
+  linea?: Prisma.SortOrder
+  tipo_vacio?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrder
+  regeneracion?: Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrder
+  foto_bolsa_url?: Prisma.SortOrder
+  alergenos?: Prisma.SortOrder
+  va_bien_con?: Prisma.SortOrder
 }
 
 export type MenuItemAvgOrderByAggregateInput = {
@@ -627,6 +831,9 @@ export type MenuItemAvgOrderByAggregateInput = {
   proteinas?: Prisma.SortOrder
   carbohidratos?: Prisma.SortOrder
   grasas?: Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrder
 }
 
 export type MenuItemMaxOrderByAggregateInput = {
@@ -647,6 +854,14 @@ export type MenuItemMaxOrderByAggregateInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   receta_id?: Prisma.SortOrder
+  linea?: Prisma.SortOrder
+  tipo_vacio?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrder
+  foto_bolsa_url?: Prisma.SortOrder
+  alergenos?: Prisma.SortOrder
 }
 
 export type MenuItemMinOrderByAggregateInput = {
@@ -667,6 +882,14 @@ export type MenuItemMinOrderByAggregateInput = {
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   receta_id?: Prisma.SortOrder
+  linea?: Prisma.SortOrder
+  tipo_vacio?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrder
+  foto_bolsa_url?: Prisma.SortOrder
+  alergenos?: Prisma.SortOrder
 }
 
 export type MenuItemSumOrderByAggregateInput = {
@@ -675,6 +898,9 @@ export type MenuItemSumOrderByAggregateInput = {
   proteinas?: Prisma.SortOrder
   carbohidratos?: Prisma.SortOrder
   grasas?: Prisma.SortOrder
+  porcion_gramos?: Prisma.SortOrder
+  dias_heladera?: Prisma.SortOrder
+  meses_freezer?: Prisma.SortOrder
 }
 
 export type MenuItemScalarRelationFilter = {
@@ -693,6 +919,10 @@ export type MenuItemOrderByRelationAggregateInput = {
 }
 
 export type MenuItemCreatetagsInput = {
+  set: string[]
+}
+
+export type MenuItemCreateva_bien_conInput = {
   set: string[]
 }
 
@@ -739,6 +969,19 @@ export type MenuItemUpdatetagsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type EnumLineaProductoFieldUpdateOperationsInput = {
+  set?: $Enums.LineaProducto
+}
+
+export type NullableEnumTipoVacioFieldUpdateOperationsInput = {
+  set?: $Enums.TipoVacio | null
+}
+
+export type MenuItemUpdateva_bien_conInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type MenuItemCreateNestedOneWithoutComponentsInput = {
@@ -829,6 +1072,16 @@ export type MenuItemCreateWithoutComponentsInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemCreateNestedManyWithoutMenu_itemInput
   receta?: Prisma.RecetaCreateNestedOneWithoutMenu_itemsInput
 }
@@ -852,6 +1105,16 @@ export type MenuItemUncheckedCreateWithoutComponentsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   receta_id?: string | null
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutMenu_itemInput
 }
 
@@ -889,6 +1152,16 @@ export type MenuItemUpdateWithoutComponentsInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUpdateManyWithoutMenu_itemNestedInput
   receta?: Prisma.RecetaUpdateOneWithoutMenu_itemsNestedInput
 }
@@ -912,6 +1185,16 @@ export type MenuItemUncheckedUpdateWithoutComponentsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   receta_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedUpdateManyWithoutMenu_itemNestedInput
 }
 
@@ -933,6 +1216,16 @@ export type MenuItemCreateWithoutPedido_itemsInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   components?: Prisma.MenuItemComponentCreateNestedManyWithoutMenu_itemInput
   receta?: Prisma.RecetaCreateNestedOneWithoutMenu_itemsInput
 }
@@ -956,6 +1249,16 @@ export type MenuItemUncheckedCreateWithoutPedido_itemsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   receta_id?: string | null
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   components?: Prisma.MenuItemComponentUncheckedCreateNestedManyWithoutMenu_itemInput
 }
 
@@ -993,6 +1296,16 @@ export type MenuItemUpdateWithoutPedido_itemsInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   components?: Prisma.MenuItemComponentUpdateManyWithoutMenu_itemNestedInput
   receta?: Prisma.RecetaUpdateOneWithoutMenu_itemsNestedInput
 }
@@ -1016,6 +1329,16 @@ export type MenuItemUncheckedUpdateWithoutPedido_itemsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   receta_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   components?: Prisma.MenuItemComponentUncheckedUpdateManyWithoutMenu_itemNestedInput
 }
 
@@ -1037,6 +1360,16 @@ export type MenuItemCreateWithoutRecetaInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemCreateNestedManyWithoutMenu_itemInput
   components?: Prisma.MenuItemComponentCreateNestedManyWithoutMenu_itemInput
 }
@@ -1059,6 +1392,16 @@ export type MenuItemUncheckedCreateWithoutRecetaInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedCreateNestedManyWithoutMenu_itemInput
   components?: Prisma.MenuItemComponentUncheckedCreateNestedManyWithoutMenu_itemInput
 }
@@ -1111,6 +1454,16 @@ export type MenuItemScalarWhereInput = {
   created_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"MenuItem"> | Date | string
   receta_id?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  linea?: Prisma.EnumLineaProductoFilter<"MenuItem"> | $Enums.LineaProducto
+  tipo_vacio?: Prisma.EnumTipoVacioNullableFilter<"MenuItem"> | $Enums.TipoVacio | null
+  slug?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  porcion_gramos?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  regeneracion?: Prisma.JsonNullableFilter<"MenuItem">
+  dias_heladera?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  meses_freezer?: Prisma.IntNullableFilter<"MenuItem"> | number | null
+  foto_bolsa_url?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  alergenos?: Prisma.StringNullableFilter<"MenuItem"> | string | null
+  va_bien_con?: Prisma.StringNullableListFilter<"MenuItem">
 }
 
 export type MenuItemCreateManyRecetaInput = {
@@ -1131,6 +1484,16 @@ export type MenuItemCreateManyRecetaInput = {
   menu_del_dia?: boolean
   created_at?: Date | string
   updated_at?: Date | string
+  linea?: $Enums.LineaProducto
+  tipo_vacio?: $Enums.TipoVacio | null
+  slug?: string | null
+  porcion_gramos?: number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: number | null
+  meses_freezer?: number | null
+  foto_bolsa_url?: string | null
+  alergenos?: string | null
+  va_bien_con?: Prisma.MenuItemCreateva_bien_conInput | string[]
 }
 
 export type MenuItemUpdateWithoutRecetaInput = {
@@ -1151,6 +1514,16 @@ export type MenuItemUpdateWithoutRecetaInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUpdateManyWithoutMenu_itemNestedInput
   components?: Prisma.MenuItemComponentUpdateManyWithoutMenu_itemNestedInput
 }
@@ -1173,6 +1546,16 @@ export type MenuItemUncheckedUpdateWithoutRecetaInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
   pedido_items?: Prisma.PedidoItemUncheckedUpdateManyWithoutMenu_itemNestedInput
   components?: Prisma.MenuItemComponentUncheckedUpdateManyWithoutMenu_itemNestedInput
 }
@@ -1195,6 +1578,16 @@ export type MenuItemUncheckedUpdateManyWithoutRecetaInput = {
   menu_del_dia?: Prisma.BoolFieldUpdateOperationsInput | boolean
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  linea?: Prisma.EnumLineaProductoFieldUpdateOperationsInput | $Enums.LineaProducto
+  tipo_vacio?: Prisma.NullableEnumTipoVacioFieldUpdateOperationsInput | $Enums.TipoVacio | null
+  slug?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  porcion_gramos?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  regeneracion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  dias_heladera?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  meses_freezer?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  foto_bolsa_url?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alergenos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  va_bien_con?: Prisma.MenuItemUpdateva_bien_conInput | string[]
 }
 
 
@@ -1256,6 +1649,16 @@ export type MenuItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   created_at?: boolean
   updated_at?: boolean
   receta_id?: boolean
+  linea?: boolean
+  tipo_vacio?: boolean
+  slug?: boolean
+  porcion_gramos?: boolean
+  regeneracion?: boolean
+  dias_heladera?: boolean
+  meses_freezer?: boolean
+  foto_bolsa_url?: boolean
+  alergenos?: boolean
+  va_bien_con?: boolean
   pedido_items?: boolean | Prisma.MenuItem$pedido_itemsArgs<ExtArgs>
   components?: boolean | Prisma.MenuItem$componentsArgs<ExtArgs>
   receta?: boolean | Prisma.MenuItem$recetaArgs<ExtArgs>
@@ -1281,6 +1684,16 @@ export type MenuItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   created_at?: boolean
   updated_at?: boolean
   receta_id?: boolean
+  linea?: boolean
+  tipo_vacio?: boolean
+  slug?: boolean
+  porcion_gramos?: boolean
+  regeneracion?: boolean
+  dias_heladera?: boolean
+  meses_freezer?: boolean
+  foto_bolsa_url?: boolean
+  alergenos?: boolean
+  va_bien_con?: boolean
   receta?: boolean | Prisma.MenuItem$recetaArgs<ExtArgs>
 }, ExtArgs["result"]["menuItem"]>
 
@@ -1303,6 +1716,16 @@ export type MenuItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   created_at?: boolean
   updated_at?: boolean
   receta_id?: boolean
+  linea?: boolean
+  tipo_vacio?: boolean
+  slug?: boolean
+  porcion_gramos?: boolean
+  regeneracion?: boolean
+  dias_heladera?: boolean
+  meses_freezer?: boolean
+  foto_bolsa_url?: boolean
+  alergenos?: boolean
+  va_bien_con?: boolean
   receta?: boolean | Prisma.MenuItem$recetaArgs<ExtArgs>
 }, ExtArgs["result"]["menuItem"]>
 
@@ -1325,9 +1748,19 @@ export type MenuItemSelectScalar = {
   created_at?: boolean
   updated_at?: boolean
   receta_id?: boolean
+  linea?: boolean
+  tipo_vacio?: boolean
+  slug?: boolean
+  porcion_gramos?: boolean
+  regeneracion?: boolean
+  dias_heladera?: boolean
+  meses_freezer?: boolean
+  foto_bolsa_url?: boolean
+  alergenos?: boolean
+  va_bien_con?: boolean
 }
 
-export type MenuItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "descripcion" | "precio" | "categoria" | "disponible" | "foto_url" | "calorias" | "proteinas" | "carbohidratos" | "grasas" | "ingredientes" | "tagline" | "tags" | "menu_del_dia" | "created_at" | "updated_at" | "receta_id", ExtArgs["result"]["menuItem"]>
+export type MenuItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nombre" | "descripcion" | "precio" | "categoria" | "disponible" | "foto_url" | "calorias" | "proteinas" | "carbohidratos" | "grasas" | "ingredientes" | "tagline" | "tags" | "menu_del_dia" | "created_at" | "updated_at" | "receta_id" | "linea" | "tipo_vacio" | "slug" | "porcion_gramos" | "regeneracion" | "dias_heladera" | "meses_freezer" | "foto_bolsa_url" | "alergenos" | "va_bien_con", ExtArgs["result"]["menuItem"]>
 export type MenuItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pedido_items?: boolean | Prisma.MenuItem$pedido_itemsArgs<ExtArgs>
   components?: boolean | Prisma.MenuItem$componentsArgs<ExtArgs>
@@ -1367,6 +1800,16 @@ export type $MenuItemPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     created_at: Date
     updated_at: Date
     receta_id: string | null
+    linea: $Enums.LineaProducto
+    tipo_vacio: $Enums.TipoVacio | null
+    slug: string | null
+    porcion_gramos: number | null
+    regeneracion: runtime.JsonValue | null
+    dias_heladera: number | null
+    meses_freezer: number | null
+    foto_bolsa_url: string | null
+    alergenos: string | null
+    va_bien_con: string[]
   }, ExtArgs["result"]["menuItem"]>
   composites: {}
 }
@@ -1811,6 +2254,16 @@ export interface MenuItemFieldRefs {
   readonly created_at: Prisma.FieldRef<"MenuItem", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"MenuItem", 'DateTime'>
   readonly receta_id: Prisma.FieldRef<"MenuItem", 'String'>
+  readonly linea: Prisma.FieldRef<"MenuItem", 'LineaProducto'>
+  readonly tipo_vacio: Prisma.FieldRef<"MenuItem", 'TipoVacio'>
+  readonly slug: Prisma.FieldRef<"MenuItem", 'String'>
+  readonly porcion_gramos: Prisma.FieldRef<"MenuItem", 'Int'>
+  readonly regeneracion: Prisma.FieldRef<"MenuItem", 'Json'>
+  readonly dias_heladera: Prisma.FieldRef<"MenuItem", 'Int'>
+  readonly meses_freezer: Prisma.FieldRef<"MenuItem", 'Int'>
+  readonly foto_bolsa_url: Prisma.FieldRef<"MenuItem", 'String'>
+  readonly alergenos: Prisma.FieldRef<"MenuItem", 'String'>
+  readonly va_bien_con: Prisma.FieldRef<"MenuItem", 'String[]'>
 }
     
 

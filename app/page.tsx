@@ -3,6 +3,11 @@ import { Navbar } from "@/components/storefront/Navbar";
 import { SplitHero } from "@/components/empresas/SplitHero";
 import { PaquetesEmpresas } from "@/components/empresas/PaquetesEmpresas";
 import { getConfig } from "@/lib/config";
+import { getSession } from "@/lib/auth";
+import { modoVacio, getVacioConfig } from "@/lib/vacio";
+import { getProductosVacio } from "@/lib/vacio-data";
+import { VacioShell } from "@/components/vacio/VacioShell";
+import { VacioHome } from "@/components/vacio/VacioHome";
 import { MenuGrid } from "@/components/storefront/MenuGrid";
 import { HowItWorks } from "@/components/storefront/HowItWorks";
 import { Footer } from "@/components/storefront/Footer";
@@ -11,13 +16,23 @@ import { CartDrawer } from "@/components/storefront/CartDrawer";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  const config = await getConfig();
+
+  // Flag "modo_vacio": la home pasa a ser la línea al vacío (menú caliente y empresas quedan ocultos)
+  if (modoVacio(config)) {
+    const productos = await getProductosVacio({ preview: !!(await getSession()) });
+    return (
+      <VacioShell whatsapp={config.whatsapp_numero} hero>
+        <VacioHome productos={productos} cajas={getVacioConfig(config).cajas} />
+      </VacioShell>
+    );
+  }
+
   const items = await prisma.menuItem.findMany({
-    where: { disponible: true },
+    where: { disponible: true, linea: "CALIENTE" },
     orderBy: [{ categoria: "asc" }, { nombre: "asc" }],
     include: { components: { orderBy: { orden: "asc" } } },
   });
-
-  const config = await getConfig();
 
   const mappedItems = items.map((i) => ({
     ...i,

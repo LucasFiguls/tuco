@@ -35,6 +35,7 @@ export interface CartItem {
   precio: number;
   foto_url: string | null;
   cantidad: number;
+  linea?: "CALIENTE" | "VACIO";
 }
 
 export interface CheckoutData {

@@ -35,6 +35,8 @@ This is the canonical design token reference. Use these values — never hardcod
 | `bg/text-brand-muted` | `#6B6B6B` | Secondary text, captions |
 | `bg/border-brand-light` | `#F5F0E8` | Subtle section backgrounds |
 | `bg/border-brand-border` | `#E8E0D5` | Dividers, input borders |
+| `bg/text/border-brand-frio` | `#2F7A99` | Only conservation / cold chain (vacuum line) |
+| `bg-brand-frio-light` | `#E7F3F7` | Background for conservation blocks |
 | `bg-brand-white` | `#FFFFFF` | White surfaces |
 
 ### Legacy Tuco (still in use — do not remove)

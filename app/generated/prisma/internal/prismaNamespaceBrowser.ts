@@ -101,7 +101,17 @@ export const MenuItemScalarFieldEnum = {
   menu_del_dia: 'menu_del_dia',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  receta_id: 'receta_id'
+  receta_id: 'receta_id',
+  linea: 'linea',
+  tipo_vacio: 'tipo_vacio',
+  slug: 'slug',
+  porcion_gramos: 'porcion_gramos',
+  regeneracion: 'regeneracion',
+  dias_heladera: 'dias_heladera',
+  meses_freezer: 'meses_freezer',
+  foto_bolsa_url: 'foto_bolsa_url',
+  alergenos: 'alergenos',
+  va_bien_con: 'va_bien_con'
 } as const
 
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
@@ -134,6 +144,9 @@ export const PedidoScalarFieldEnum = {
   total: 'total',
   visto: 'visto',
   descuento_vouchers: 'descuento_vouchers',
+  tamano_caja: 'tamano_caja',
+  descuento_caja: 'descuento_caja',
+  costo_envio: 'costo_envio',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -299,12 +312,29 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 export const NullsOrder = {

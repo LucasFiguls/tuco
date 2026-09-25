@@ -9,6 +9,24 @@
 * 🟢 You can import this file directly.
 */
 
+export const LineaProducto = {
+  CALIENTE: 'CALIENTE',
+  VACIO: 'VACIO'
+} as const
+
+export type LineaProducto = (typeof LineaProducto)[keyof typeof LineaProducto]
+
+
+export const TipoVacio = {
+  PLATO: 'PLATO',
+  BASE: 'BASE',
+  GUARNICION: 'GUARNICION',
+  SALSA: 'SALSA'
+} as const
+
+export type TipoVacio = (typeof TipoVacio)[keyof typeof TipoVacio]
+
+
 export const Modalidad = {
   RETIRO: 'RETIRO',
   DELIVERY: 'DELIVERY'
