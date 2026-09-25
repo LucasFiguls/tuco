@@ -60,7 +60,11 @@ export const ModelName = {
   Insumo: 'Insumo',
   MovimientoStock: 'MovimientoStock',
   Receta: 'Receta',
-  IngredienteReceta: 'IngredienteReceta'
+  IngredienteReceta: 'IngredienteReceta',
+  LeadEmpresa: 'LeadEmpresa',
+  Convenio: 'Convenio',
+  VoucherLote: 'VoucherLote',
+  Voucher: 'Voucher'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -129,6 +133,7 @@ export const PedidoScalarFieldEnum = {
   estado: 'estado',
   total: 'total',
   visto: 'visto',
+  descuento_vouchers: 'descuento_vouchers',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -220,6 +225,70 @@ export const IngredienteRecetaScalarFieldEnum = {
 } as const
 
 export type IngredienteRecetaScalarFieldEnum = (typeof IngredienteRecetaScalarFieldEnum)[keyof typeof IngredienteRecetaScalarFieldEnum]
+
+
+export const LeadEmpresaScalarFieldEnum = {
+  id: 'id',
+  empresa: 'empresa',
+  contacto_nombre: 'contacto_nombre',
+  cargo: 'cargo',
+  email: 'email',
+  telefono: 'telefono',
+  cantidad_empleados: 'cantidad_empleados',
+  paquete_interes: 'paquete_interes',
+  zona: 'zona',
+  comentarios: 'comentarios',
+  estado: 'estado',
+  notas_internas: 'notas_internas',
+  visto: 'visto',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type LeadEmpresaScalarFieldEnum = (typeof LeadEmpresaScalarFieldEnum)[keyof typeof LeadEmpresaScalarFieldEnum]
+
+
+export const ConvenioScalarFieldEnum = {
+  id: 'id',
+  empresa: 'empresa',
+  cuit: 'cuit',
+  contacto_nombre: 'contacto_nombre',
+  email: 'email',
+  telefono: 'telefono',
+  vouchers_por_mes: 'vouchers_por_mes',
+  precio_por_vianda: 'precio_por_vianda',
+  activo: 'activo',
+  lead_id: 'lead_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ConvenioScalarFieldEnum = (typeof ConvenioScalarFieldEnum)[keyof typeof ConvenioScalarFieldEnum]
+
+
+export const VoucherLoteScalarFieldEnum = {
+  id: 'id',
+  convenio_id: 'convenio_id',
+  periodo: 'periodo',
+  cantidad: 'cantidad',
+  vence_at: 'vence_at',
+  created_at: 'created_at'
+} as const
+
+export type VoucherLoteScalarFieldEnum = (typeof VoucherLoteScalarFieldEnum)[keyof typeof VoucherLoteScalarFieldEnum]
+
+
+export const VoucherScalarFieldEnum = {
+  id: 'id',
+  codigo: 'codigo',
+  lote_id: 'lote_id',
+  estado: 'estado',
+  pedido_id: 'pedido_id',
+  canjeado_at: 'canjeado_at',
+  created_at: 'created_at'
+} as const
+
+export type VoucherScalarFieldEnum = (typeof VoucherScalarFieldEnum)[keyof typeof VoucherScalarFieldEnum]
 
 
 export const SortOrder = {

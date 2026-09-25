@@ -62,10 +62,12 @@ model Pedido {
   estado           EstadoPedido @default(PENDIENTE)
   total            Decimal  @db.Decimal(10, 2)
   visto            Boolean  @default(false)
+  descuento_vouchers Decimal @default(0) @db.Decimal(10, 2)
   created_at       DateTime @default(now())
   updated_at       DateTime @default(now()) @updatedAt
 
-  items PedidoItem[]
+  items    PedidoItem[]
+  vouchers Voucher[]
 
   @@map("pedidos")
 }
@@ -178,4 +180,100 @@ model IngredienteReceta {
   insumo          Insumo   @relation(fields: [insumo_id], references: [id], onDelete: Restrict)
 
   @@map("ingredientes_receta")
+}
+
+// ── Convenios corporativos ──────────────────────────────────────────────
+
+model LeadEmpresa {
+  id                 String         @id @default(cuid())
+  empresa            String
+  contacto_nombre    String
+  cargo              String?
+  email              String
+  telefono           String
+  cantidad_empleados Int?
+  paquete_interes    PaqueteInteres
+  zona               String
+  comentarios        String?
+  estado             EstadoLead     @default(NUEVO)
+  notas_internas     String?
+  visto              Boolean        @default(false)
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+
+  convenio Convenio?
+
+  @@map("leads_empresas")
+}
+
+model Convenio {
+  id                String   @id @default(cuid())
+  empresa           String
+  cuit              String?
+  contacto_nombre   String
+  email             String
+  telefono          String
+  vouchers_por_mes  Int
+  precio_por_vianda Decimal? @db.Decimal(10, 2)
+  activo            Boolean  @default(true)
+  lead_id           String?  @unique
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  lead  LeadEmpresa?  @relation(fields: [lead_id], references: [id], onDelete: SetNull)
+  lotes VoucherLote[]
+
+  @@map("convenios")
+}
+
+model VoucherLote {
+  id          String   @id @default(cuid())
+  convenio_id String
+  periodo     String   // "YYYY-MM"
+  cantidad    Int
+  vence_at    DateTime
+  created_at  DateTime @default(now())
+
+  convenio Convenio  @relation(fields: [convenio_id], references: [id], onDelete: Cascade)
+  vouchers Voucher[]
+
+  @@unique([convenio_id, periodo])
+  @@map("voucher_lotes")
+}
+
+model Voucher {
+  id          String        @id @default(cuid())
+  codigo      String        @unique
+  lote_id     String
+  estado      EstadoVoucher @default(DISPONIBLE)
+  pedido_id   String?
+  canjeado_at DateTime?
+  created_at  DateTime      @default(now())
+
+  lote   VoucherLote @relation(fields: [lote_id], references: [id], onDelete: Cascade)
+  pedido Pedido?     @relation(fields: [pedido_id], references: [id], onDelete: SetNull)
+
+  @@index([lote_id, estado])
+  @@map("vouchers")
+}
+
+enum PaqueteInteres {
+  P50
+  P75
+  P100
+  A_MEDIDA
+}
+
+enum EstadoLead {
+  NUEVO
+  CONTACTADO
+  PROPUESTA
+  GANADO
+  PERDIDO
+}
+
+enum EstadoVoucher {
+  DISPONIBLE
+  CANJEADO
+  ANULADO
 }

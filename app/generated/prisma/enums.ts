@@ -33,3 +33,33 @@ export const TipoMovimiento = {
 } as const
 
 export type TipoMovimiento = (typeof TipoMovimiento)[keyof typeof TipoMovimiento]
+
+
+export const PaqueteInteres = {
+  P50: 'P50',
+  P75: 'P75',
+  P100: 'P100',
+  A_MEDIDA: 'A_MEDIDA'
+} as const
+
+export type PaqueteInteres = (typeof PaqueteInteres)[keyof typeof PaqueteInteres]
+
+
+export const EstadoLead = {
+  NUEVO: 'NUEVO',
+  CONTACTADO: 'CONTACTADO',
+  PROPUESTA: 'PROPUESTA',
+  GANADO: 'GANADO',
+  PERDIDO: 'PERDIDO'
+} as const
+
+export type EstadoLead = (typeof EstadoLead)[keyof typeof EstadoLead]
+
+
+export const EstadoVoucher = {
+  DISPONIBLE: 'DISPONIBLE',
+  CANJEADO: 'CANJEADO',
+  ANULADO: 'ANULADO'
+} as const
+
+export type EstadoVoucher = (typeof EstadoVoucher)[keyof typeof EstadoVoucher]

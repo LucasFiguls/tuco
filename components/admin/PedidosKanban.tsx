@@ -46,6 +46,8 @@ interface Pedido {
   created_at: string;
   updated_at: string;
   items: PedidoItem[];
+  descuento_vouchers?: string;
+  vouchers?: Array<{ codigo: string; lote: { convenio: { empresa: string } } }>;
 }
 
 interface WaTemplate {
@@ -179,6 +181,11 @@ function PedidoCard({
           </span>
         </div>
         <p className="text-sm font-medium text-gray-700 truncate">{pedido.cliente_nombre}</p>
+        {!!pedido.vouchers?.length && (
+          <p className="mt-1 text-[11px] font-semibold text-violet-700 bg-violet-50 rounded-full px-2 py-0.5 inline-block truncate max-w-full">
+            🎟 {pedido.vouchers.length} · {pedido.vouchers[0].lote.convenio.empresa}
+          </p>
+        )}
         <div className="flex items-center justify-between mt-2 text-xs">
           <span className="font-semibold text-gray-800">
             ${Number(pedido.total).toLocaleString("es-AR")}
@@ -225,6 +232,12 @@ function PedidoCard({
               </span>
             </div>
           ))}
+          {Number(pedido.descuento_vouchers ?? 0) > 0 && (
+            <div className="flex justify-between text-xs text-violet-700">
+              <span>🎟 Vouchers ({pedido.vouchers?.map((v) => v.codigo).join(", ")})</span>
+              <span className="font-medium">−${Number(pedido.descuento_vouchers).toLocaleString("es-AR")}</span>
+            </div>
+          )}
           {pedido.direccion_entrega && (
             <p className="text-xs text-gray-500 pt-1">📍 {pedido.direccion_entrega}</p>
           )}

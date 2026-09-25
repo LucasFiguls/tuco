@@ -8,11 +8,13 @@ const BANNER_MESSAGES = [
   "Pedí antes de las 18hs",
   "Retiro en local y delivery disponible",
   "Pagá con transferencia bancaria",
+  "Convenios para empresas con vouchers mensuales",
 ];
 
 const NAV_LINKS = [
-  { label: "Menú",          href: "#menu" },
-  { label: "Cómo funciona", href: "#como-funciona" },
+  { label: "Menú",          href: "/#menu" },
+  { label: "Empresas",      href: "/empresas" },
+  { label: "Cómo funciona", href: "/#como-funciona" },
   { label: "Contacto",      href: "#contacto" },
 ];
 

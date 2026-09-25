@@ -1,6 +1,9 @@
+import { buildWaLink } from "@/lib/whatsapp";
+
 const NAV_LINKS = [
-  { label: "Menú del día",    href: "#menu" },
-  { label: "Cómo funciona",  href: "#como-funciona" },
+  { label: "Menú del día",    href: "/#menu" },
+  { label: "Empresas",        href: "/empresas" },
+  { label: "Cómo funciona",  href: "/#como-funciona" },
   { label: "Contacto",       href: "#contacto" },
 ];
 
@@ -10,7 +13,7 @@ const INFO_ITEMS = [
   "Efectivo · Transferencia bancaria",
 ];
 
-export function Footer() {
+export function Footer({ whatsapp }: { whatsapp?: string }) {
   return (
     <footer id="contacto" className="bg-[#111111]">
 
@@ -27,15 +30,17 @@ export function Footer() {
             Viandas caseras en Buenos Aires.
             Cocinamos con amor para que vos no tengas que hacerlo.
           </p>
-          <a
-            href="https://wa.me/5491100000000"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 font-body text-[14px] text-white/70 hover:text-white transition-colors"
-          >
-            <WhatsAppIcon />
-            Escribinos
-          </a>
+          {whatsapp && (
+            <a
+              href={buildWaLink(whatsapp)}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 font-body text-[14px] text-white/70 hover:text-white transition-colors"
+            >
+              <WhatsAppIcon />
+              Escribinos
+            </a>
+          )}
         </div>
 
         {/* Columna 2 — Navegación */}

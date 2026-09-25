@@ -67,3 +67,23 @@ export type Receta = Prisma.RecetaModel
  * 
  */
 export type IngredienteReceta = Prisma.IngredienteRecetaModel
+/**
+ * Model LeadEmpresa
+ * 
+ */
+export type LeadEmpresa = Prisma.LeadEmpresaModel
+/**
+ * Model Convenio
+ * 
+ */
+export type Convenio = Prisma.ConvenioModel
+/**
+ * Model VoucherLote
+ * 
+ */
+export type VoucherLote = Prisma.VoucherLoteModel
+/**
+ * Model Voucher
+ * 
+ */
+export type Voucher = Prisma.VoucherModel

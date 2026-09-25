@@ -8,6 +8,9 @@ interface OrderSummary {
   numero: number;
   items: Array<{ nombre: string; cantidad: number; precio: number }>;
   total: number;
+  subtotal?: number;
+  descuento?: number;
+  vouchers?: number;
   modalidad: "RETIRO" | "DELIVERY";
   nombre: string;
 }
@@ -71,6 +74,12 @@ function ConfirmacionContent() {
                 </div>
               ))}
             </div>
+            {!!order.descuento && (
+              <div className="flex justify-between text-sm pb-1.5 text-tuco-green font-medium">
+                <span>🎟 {order.vouchers} voucher{order.vouchers === 1 ? "" : "s"} de tu empresa</span>
+                <span>−${order.descuento.toLocaleString("es-AR")}</span>
+              </div>
+            )}
             <div className="flex justify-between font-bold text-sm pt-2 border-t border-tuco-brown/10">
               <span className="text-tuco-brown">Total</span>
               <span className="text-tuco-brown font-serif text-base">

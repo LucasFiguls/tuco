@@ -21,6 +21,9 @@ export async function GET(request: NextRequest) {
         items: {
           include: { menu_item: true },
         },
+        vouchers: {
+          select: { codigo: true, lote: { select: { convenio: { select: { empresa: true } } } } },
+        },
       },
       orderBy: { created_at: "desc" },
       skip: (page - 1) * limit,

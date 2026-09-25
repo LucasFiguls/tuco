@@ -6,6 +6,7 @@ import { useAdminNotifications } from "./AdminNotificationsProvider";
 
 const NAV = [
   { href: "/admin/pedidos", label: "Pedidos", icon: "📋" },
+  { href: "/admin/empresas", label: "Empresas", icon: "🏢" },
   { href: "/admin/menu", label: "Menú", icon: "🍽️" },
   { href: "/admin/recetas", label: "Recetas", icon: "🍲" },
   { href: "/admin/insumos", label: "Insumos", icon: "📦" },
@@ -15,7 +16,13 @@ const NAV = [
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { unseenCount } = useAdminNotifications();
+  const { unseenCount, unseenLeads } = useAdminNotifications();
+
+  function badgeFor(href: string) {
+    if (href === "/admin/pedidos") return unseenCount;
+    if (href === "/admin/empresas") return unseenLeads;
+    return 0;
+  }
 
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -40,9 +47,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   }`}
                 >
                   {item.icon} {item.label}
-                  {item.href === "/admin/pedidos" && unseenCount > 0 && (
+                  {badgeFor(item.href) > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
-                      {unseenCount > 9 ? "9+" : unseenCount}
+                      {badgeFor(item.href) > 9 ? "9+" : badgeFor(item.href)}
                     </span>
                   )}
                 </Link>
@@ -72,9 +79,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           >
             <span className="block text-lg">{item.icon}</span>
             {item.label}
-            {item.href === "/admin/pedidos" && unseenCount > 0 && (
+            {badgeFor(item.href) > 0 && (
               <span className="absolute top-1 right-[calc(50%-16px)] bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center leading-none">
-                {unseenCount > 9 ? "9+" : unseenCount}
+                {badgeFor(item.href) > 9 ? "9+" : badgeFor(item.href)}
               </span>
             )}
           </Link>

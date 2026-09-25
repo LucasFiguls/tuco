@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
 import type { CheckoutData } from "@/lib/types";
 
+const MAX_VOUCHERS = 10;
+
+interface VoucherAplicado {
+  codigo: string;
+  valido: boolean;
+  empresa: string | null;
+  motivo: string | null;
+}
+
 const HORARIOS = [
   "12:00", "12:30", "13:00", "13:30", "14:00",
   "19:00", "19:30", "20:00", "20:30", "21:00",
@@ -20,6 +29,9 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [telefonoTouched, setTelefonoTouched] = useState(false);
+  const [vouchers, setVouchers] = useState<VoucherAplicado[]>([]);
+  const [voucherInput, setVoucherInput] = useState("");
+  const [validando, setValidando] = useState(false);
 
   const [form, setForm] = useState<CheckoutData>({
     cliente_nombre: "",
@@ -45,6 +57,44 @@ export default function CheckoutPage() {
 
   const telefonoError = telefonoTouched ? validarTelefono(form.cliente_telefono) : "";
 
+  // Estimación en el cliente (el servidor recalcula): cada voucher cubre la vianda más cara
+  const unidades = items.flatMap((i) => Array.from({ length: i.cantidad }, () => i.precio)).sort((a, b) => b - a);
+  const validos = vouchers.filter((v) => v.valido);
+  const descuento = unidades.slice(0, validos.length).reduce((s, p) => s + p, 0);
+  const totalAPagar = total - descuento;
+  const maxVouchers = Math.min(MAX_VOUCHERS, unidades.length);
+
+  async function aplicarVoucher() {
+    const codigo = voucherInput.trim();
+    if (!codigo) return;
+    if (validos.length >= maxVouchers) {
+      setError(`Podés usar hasta ${maxVouchers} voucher${maxVouchers === 1 ? "" : "s"} en este pedido`);
+      return;
+    }
+    setValidando(true);
+    setError("");
+    try {
+      const res = await fetch("/api/vouchers/validar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ codigos: [codigo] }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "No pudimos validar el código");
+      const r: VoucherAplicado = data.resultados[0];
+      setVouchers((prev) => [...prev.filter((v) => v.codigo !== r.codigo), r]);
+      if (r.valido) setVoucherInput("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error inesperado");
+    } finally {
+      setValidando(false);
+    }
+  }
+
+  function quitarVoucher(codigo: string) {
+    setVouchers((prev) => prev.filter((v) => v.codigo !== codigo));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -66,7 +116,11 @@ export default function CheckoutPage() {
       const res = await fetch("/api/pedidos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ checkout: form, items }),
+        body: JSON.stringify({
+          checkout: form,
+          items: items.map((i) => ({ id: i.id, cantidad: i.cantidad })),
+          vouchers: validos.map((v) => v.codigo),
+        }),
       });
 
       if (!res.ok) {
@@ -82,7 +136,10 @@ export default function CheckoutPage() {
         JSON.stringify({
           numero: pedido.numero_pedido,
           items,
-          total,
+          subtotal: total,
+          descuento: Number(pedido.descuento_vouchers ?? 0),
+          vouchers: validos.length,
+          total: Number(pedido.total),
           modalidad: form.modalidad,
           nombre: form.cliente_nombre,
         })
@@ -133,10 +190,75 @@ export default function CheckoutPage() {
               <span className="font-medium">${(item.precio * item.cantidad).toLocaleString("es-AR")}</span>
             </div>
           ))}
-          <div className="flex justify-between font-bold text-base pt-3 border-t mt-3">
-            <span>Total</span>
-            <span>${total.toLocaleString("es-AR")}</span>
+          {descuento > 0 && (
+            <>
+              <div className="flex justify-between text-sm pt-3 border-t mt-3 text-gray-600">
+                <span>Subtotal</span>
+                <span>${total.toLocaleString("es-AR")}</span>
+              </div>
+              <div className="flex justify-between text-sm py-1 text-violet-700 font-medium">
+                <span>🎟 {validos.length} voucher{validos.length === 1 ? "" : "s"}</span>
+                <span>−${descuento.toLocaleString("es-AR")}</span>
+              </div>
+            </>
+          )}
+          <div className={`flex justify-between font-bold text-base pt-3 border-t ${descuento > 0 ? "mt-1" : "mt-3"}`}>
+            <span>{descuento > 0 ? "Total a pagar" : "Total"}</span>
+            <span>${totalAPagar.toLocaleString("es-AR")}</span>
           </div>
+        </div>
+
+        {/* ── Vouchers de empresa ───────────────────────────────────────── */}
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <h2 className="font-semibold text-gray-800 mb-1">¿Tenés vouchers de tu empresa?</h2>
+          <p className="text-xs text-gray-500 mb-3">Cada voucher cubre una vianda del pedido.</p>
+          <div className="flex gap-2">
+            <input
+              value={voucherInput}
+              onChange={(e) => setVoucherInput(e.target.value.toUpperCase())}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  aplicarVoucher();
+                }
+              }}
+              placeholder="TUCO-XXXX-XXXX"
+              maxLength={20}
+              autoComplete="off"
+              className="flex-1 min-w-0 border border-gray-200 rounded-xl px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-orange-300"
+            />
+            <button
+              type="button"
+              onClick={aplicarVoucher}
+              disabled={validando || !voucherInput.trim()}
+              className="shrink-0 px-4 py-2 rounded-xl text-sm font-semibold border border-orange-500 text-orange-600 hover:bg-orange-50 disabled:opacity-50"
+            >
+              {validando ? "…" : "Aplicar"}
+            </button>
+          </div>
+          {vouchers.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2">
+              {vouchers.map((v) => (
+                <li
+                  key={v.codigo}
+                  className={`inline-flex items-center gap-2 text-xs font-medium rounded-full pl-3 pr-1.5 py-1 ${
+                    v.valido ? "bg-violet-50 text-violet-800" : "bg-red-50 text-red-700"
+                  }`}
+                >
+                  <span className="font-mono">{v.codigo}</span>
+                  <span className="opacity-70">{v.valido ? `· ${v.empresa}` : `· ${v.motivo}`}</span>
+                  <button
+                    type="button"
+                    onClick={() => quitarVoucher(v.codigo)}
+                    aria-label={`Quitar ${v.codigo}`}
+                    className="w-5 h-5 rounded-full hover:bg-black/10 leading-none"
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

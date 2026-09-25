@@ -393,7 +393,11 @@ export const ModelName = {
   Insumo: 'Insumo',
   MovimientoStock: 'MovimientoStock',
   Receta: 'Receta',
-  IngredienteReceta: 'IngredienteReceta'
+  IngredienteReceta: 'IngredienteReceta',
+  LeadEmpresa: 'LeadEmpresa',
+  Convenio: 'Convenio',
+  VoucherLote: 'VoucherLote',
+  Voucher: 'Voucher'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "menuItem" | "menuItemComponent" | "pedido" | "pedidoItem" | "configuracion" | "whatsappTemplate" | "insumo" | "movimientoStock" | "receta" | "ingredienteReceta"
+    modelProps: "menuItem" | "menuItemComponent" | "pedido" | "pedidoItem" | "configuracion" | "whatsappTemplate" | "insumo" | "movimientoStock" | "receta" | "ingredienteReceta" | "leadEmpresa" | "convenio" | "voucherLote" | "voucher"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1157,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LeadEmpresa: {
+      payload: Prisma.$LeadEmpresaPayload<ExtArgs>
+      fields: Prisma.LeadEmpresaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadEmpresaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadEmpresaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadEmpresaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadEmpresaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        findMany: {
+          args: Prisma.LeadEmpresaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>[]
+        }
+        create: {
+          args: Prisma.LeadEmpresaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        createMany: {
+          args: Prisma.LeadEmpresaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadEmpresaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadEmpresaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        update: {
+          args: Prisma.LeadEmpresaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadEmpresaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadEmpresaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadEmpresaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadEmpresaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadEmpresaPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadEmpresaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLeadEmpresa>
+        }
+        groupBy: {
+          args: Prisma.LeadEmpresaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadEmpresaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadEmpresaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadEmpresaCountAggregateOutputType> | number
+        }
+      }
+    }
+    Convenio: {
+      payload: Prisma.$ConvenioPayload<ExtArgs>
+      fields: Prisma.ConvenioFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConvenioFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConvenioFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        findFirst: {
+          args: Prisma.ConvenioFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConvenioFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        findMany: {
+          args: Prisma.ConvenioFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>[]
+        }
+        create: {
+          args: Prisma.ConvenioCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        createMany: {
+          args: Prisma.ConvenioCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConvenioCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>[]
+        }
+        delete: {
+          args: Prisma.ConvenioDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        update: {
+          args: Prisma.ConvenioUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConvenioDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConvenioUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConvenioUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConvenioUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConvenioPayload>
+        }
+        aggregate: {
+          args: Prisma.ConvenioAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConvenio>
+        }
+        groupBy: {
+          args: Prisma.ConvenioGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConvenioGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConvenioCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConvenioCountAggregateOutputType> | number
+        }
+      }
+    }
+    VoucherLote: {
+      payload: Prisma.$VoucherLotePayload<ExtArgs>
+      fields: Prisma.VoucherLoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VoucherLoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VoucherLoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        findFirst: {
+          args: Prisma.VoucherLoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VoucherLoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        findMany: {
+          args: Prisma.VoucherLoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>[]
+        }
+        create: {
+          args: Prisma.VoucherLoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        createMany: {
+          args: Prisma.VoucherLoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VoucherLoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>[]
+        }
+        delete: {
+          args: Prisma.VoucherLoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        update: {
+          args: Prisma.VoucherLoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        deleteMany: {
+          args: Prisma.VoucherLoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VoucherLoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VoucherLoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>[]
+        }
+        upsert: {
+          args: Prisma.VoucherLoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherLotePayload>
+        }
+        aggregate: {
+          args: Prisma.VoucherLoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVoucherLote>
+        }
+        groupBy: {
+          args: Prisma.VoucherLoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VoucherLoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VoucherLoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VoucherLoteCountAggregateOutputType> | number
+        }
+      }
+    }
+    Voucher: {
+      payload: Prisma.$VoucherPayload<ExtArgs>
+      fields: Prisma.VoucherFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VoucherFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VoucherFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        findFirst: {
+          args: Prisma.VoucherFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VoucherFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        findMany: {
+          args: Prisma.VoucherFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>[]
+        }
+        create: {
+          args: Prisma.VoucherCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        createMany: {
+          args: Prisma.VoucherCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VoucherCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>[]
+        }
+        delete: {
+          args: Prisma.VoucherDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        update: {
+          args: Prisma.VoucherUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        deleteMany: {
+          args: Prisma.VoucherDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VoucherUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VoucherUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>[]
+        }
+        upsert: {
+          args: Prisma.VoucherUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VoucherPayload>
+        }
+        aggregate: {
+          args: Prisma.VoucherAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVoucher>
+        }
+        groupBy: {
+          args: Prisma.VoucherGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VoucherGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VoucherCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VoucherCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1242,6 +1542,7 @@ export const PedidoScalarFieldEnum = {
   estado: 'estado',
   total: 'total',
   visto: 'visto',
+  descuento_vouchers: 'descuento_vouchers',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -1333,6 +1634,70 @@ export const IngredienteRecetaScalarFieldEnum = {
 } as const
 
 export type IngredienteRecetaScalarFieldEnum = (typeof IngredienteRecetaScalarFieldEnum)[keyof typeof IngredienteRecetaScalarFieldEnum]
+
+
+export const LeadEmpresaScalarFieldEnum = {
+  id: 'id',
+  empresa: 'empresa',
+  contacto_nombre: 'contacto_nombre',
+  cargo: 'cargo',
+  email: 'email',
+  telefono: 'telefono',
+  cantidad_empleados: 'cantidad_empleados',
+  paquete_interes: 'paquete_interes',
+  zona: 'zona',
+  comentarios: 'comentarios',
+  estado: 'estado',
+  notas_internas: 'notas_internas',
+  visto: 'visto',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type LeadEmpresaScalarFieldEnum = (typeof LeadEmpresaScalarFieldEnum)[keyof typeof LeadEmpresaScalarFieldEnum]
+
+
+export const ConvenioScalarFieldEnum = {
+  id: 'id',
+  empresa: 'empresa',
+  cuit: 'cuit',
+  contacto_nombre: 'contacto_nombre',
+  email: 'email',
+  telefono: 'telefono',
+  vouchers_por_mes: 'vouchers_por_mes',
+  precio_por_vianda: 'precio_por_vianda',
+  activo: 'activo',
+  lead_id: 'lead_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ConvenioScalarFieldEnum = (typeof ConvenioScalarFieldEnum)[keyof typeof ConvenioScalarFieldEnum]
+
+
+export const VoucherLoteScalarFieldEnum = {
+  id: 'id',
+  convenio_id: 'convenio_id',
+  periodo: 'periodo',
+  cantidad: 'cantidad',
+  vence_at: 'vence_at',
+  created_at: 'created_at'
+} as const
+
+export type VoucherLoteScalarFieldEnum = (typeof VoucherLoteScalarFieldEnum)[keyof typeof VoucherLoteScalarFieldEnum]
+
+
+export const VoucherScalarFieldEnum = {
+  id: 'id',
+  codigo: 'codigo',
+  lote_id: 'lote_id',
+  estado: 'estado',
+  pedido_id: 'pedido_id',
+  canjeado_at: 'canjeado_at',
+  created_at: 'created_at'
+} as const
+
+export type VoucherScalarFieldEnum = (typeof VoucherScalarFieldEnum)[keyof typeof VoucherScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1483,6 +1848,48 @@ export type EnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 export type ListEnumTipoMovimientoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TipoMovimiento[]'>
     
 
+
+/**
+ * Reference to a field of type 'PaqueteInteres'
+ */
+export type EnumPaqueteInteresFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaqueteInteres'>
+    
+
+
+/**
+ * Reference to a field of type 'PaqueteInteres[]'
+ */
+export type ListEnumPaqueteInteresFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaqueteInteres[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoLead'
+ */
+export type EnumEstadoLeadFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoLead'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoLead[]'
+ */
+export type ListEnumEstadoLeadFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoLead[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoVoucher'
+ */
+export type EnumEstadoVoucherFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoVoucher'>
+    
+
+
+/**
+ * Reference to a field of type 'EstadoVoucher[]'
+ */
+export type ListEnumEstadoVoucherFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EstadoVoucher[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -1603,6 +2010,10 @@ export type GlobalOmitConfig = {
   movimientoStock?: Prisma.MovimientoStockOmit
   receta?: Prisma.RecetaOmit
   ingredienteReceta?: Prisma.IngredienteRecetaOmit
+  leadEmpresa?: Prisma.LeadEmpresaOmit
+  convenio?: Prisma.ConvenioOmit
+  voucherLote?: Prisma.VoucherLoteOmit
+  voucher?: Prisma.VoucherOmit
 }
 
 /* Types for Logging */

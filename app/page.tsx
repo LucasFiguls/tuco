@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { Navbar } from "@/components/storefront/Navbar";
-import { HeroCarousel } from "@/components/storefront/HeroCarousel";
+import { SplitHero } from "@/components/empresas/SplitHero";
+import { PaquetesEmpresas } from "@/components/empresas/PaquetesEmpresas";
+import { getConfig } from "@/lib/config";
 import { MenuGrid } from "@/components/storefront/MenuGrid";
 import { HowItWorks } from "@/components/storefront/HowItWorks";
 import { Footer } from "@/components/storefront/Footer";
@@ -15,10 +17,7 @@ export default async function HomePage() {
     include: { components: { orderBy: { orden: "asc" } } },
   });
 
-  const configuracion = await prisma.configuracion.findMany();
-  const config = Object.fromEntries(
-    configuracion.map((c: { clave: string; valor: string }) => [c.clave, c.valor])
-  );
+  const config = await getConfig();
 
   const mappedItems = items.map((i) => ({
     ...i,
@@ -47,9 +46,9 @@ export default async function HomePage() {
       <Navbar />
 
       <main>
-        <HeroCarousel />
+        <SplitHero />
 
-        <div id="menu">
+        <div id="menu" className="scroll-mt-20">
           {config.zonas_delivery && (
             <div className="bg-brand-cream border-b border-brand-border px-4 py-3">
               <div className="max-w-6xl mx-auto flex items-center gap-2 text-sm text-brand-muted">
@@ -61,10 +60,12 @@ export default async function HomePage() {
           <MenuGrid items={mappedItems} />
         </div>
 
-        <HowItWorks />
+        <PaquetesEmpresas />
+
+        <HowItWorks modo="dual" />
       </main>
 
-      <Footer />
+      <Footer whatsapp={config.whatsapp_numero} />
       <CartDrawer />
     </>
   );

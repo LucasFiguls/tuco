@@ -8,9 +8,18 @@ import { supabase } from "@/lib/supabase-client";
 interface NotifContextValue {
   unseenCount: number;
   reloadTrigger: number;
+  unseenLeads: number;
+  setUnseenLeads: (n: number) => void;
 }
 
-const NotifContext = createContext<NotifContextValue>({ unseenCount: 0, reloadTrigger: 0 });
+const LEADS_POLL_MS = 60_000;
+
+const NotifContext = createContext<NotifContextValue>({
+  unseenCount: 0,
+  reloadTrigger: 0,
+  unseenLeads: 0,
+  setUnseenLeads: () => {},
+});
 
 export function useAdminNotifications() {
   return useContext(NotifContext);
@@ -19,6 +28,7 @@ export function useAdminNotifications() {
 export function AdminNotificationsProvider({ children }: { children: React.ReactNode }) {
   const [unseenCount, setUnseenCount] = useState(0);
   const [reloadTrigger, setReloadTrigger] = useState(0);
+  const [unseenLeads, setUnseenLeads] = useState(0);
   const pathname = usePathname();
   const pathnameRef = useRef(pathname);
   const router = useRouter();
@@ -85,6 +95,33 @@ export function AdminNotificationsProvider({ children }: { children: React.React
     }
   }, [pathname]);
 
+  // Leads de empresas: polling del conteo (no Realtime: la tabla tiene RLS
+  // y datos de contacto, no se expone a la anon key).
+  useEffect(() => {
+    let prev: number | null = null;
+    const poll = () => {
+      if (pathnameRef.current.startsWith("/admin/empresas")) return;
+      fetch("/api/admin/leads?count=no-vistos")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (!d) return;
+          const count = d.count ?? 0;
+          if (prev !== null && count > prev) {
+            playBeep(audioCtxRef.current);
+            toast("🏢 Nueva consulta de empresa", {
+              action: { label: "Ver", onClick: () => router.push("/admin/empresas") },
+            });
+          }
+          prev = count;
+          setUnseenLeads(count);
+        })
+        .catch(() => {});
+    };
+    poll();
+    const t = setInterval(poll, LEADS_POLL_MS);
+    return () => clearInterval(t);
+  }, [router]);
+
   // Suscripción a Supabase Realtime
   useEffect(() => {
     if (!supabase) return;
@@ -122,7 +159,7 @@ export function AdminNotificationsProvider({ children }: { children: React.React
   }, [router]);
 
   return (
-    <NotifContext.Provider value={{ unseenCount, reloadTrigger }}>
+    <NotifContext.Provider value={{ unseenCount, reloadTrigger, unseenLeads, setUnseenLeads }}>
       {children}
     </NotifContext.Provider>
   );
