@@ -81,3 +81,12 @@ export const EstadoVoucher = {
 } as const
 
 export type EstadoVoucher = (typeof EstadoVoucher)[keyof typeof EstadoVoucher]
+
+
+export const EstadoSuscripcion = {
+  ACTIVA: 'ACTIVA',
+  PAUSADA: 'PAUSADA',
+  CANCELADA: 'CANCELADA'
+} as const
+
+export type EstadoSuscripcion = (typeof EstadoSuscripcion)[keyof typeof EstadoSuscripcion]

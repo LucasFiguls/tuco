@@ -64,7 +64,8 @@ export const ModelName = {
   LeadEmpresa: 'LeadEmpresa',
   Convenio: 'Convenio',
   VoucherLote: 'VoucherLote',
-  Voucher: 'Voucher'
+  Voucher: 'Voucher',
+  Suscripcion: 'Suscripcion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -147,6 +148,8 @@ export const PedidoScalarFieldEnum = {
   tamano_caja: 'tamano_caja',
   descuento_caja: 'descuento_caja',
   costo_envio: 'costo_envio',
+  descuento_suscripcion: 'descuento_suscripcion',
+  suscripcion_id: 'suscripcion_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -304,6 +307,27 @@ export const VoucherScalarFieldEnum = {
 export type VoucherScalarFieldEnum = (typeof VoucherScalarFieldEnum)[keyof typeof VoucherScalarFieldEnum]
 
 
+export const SuscripcionScalarFieldEnum = {
+  id: 'id',
+  token_hash: 'token_hash',
+  estado: 'estado',
+  cliente_nombre: 'cliente_nombre',
+  cliente_telefono: 'cliente_telefono',
+  modalidad: 'modalidad',
+  direccion_entrega: 'direccion_entrega',
+  hora_entrega: 'hora_entrega',
+  comentarios: 'comentarios',
+  frecuencia_dias: 'frecuencia_dias',
+  tamano_caja: 'tamano_caja',
+  items: 'items',
+  proxima_entrega: 'proxima_entrega',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type SuscripcionScalarFieldEnum = (typeof SuscripcionScalarFieldEnum)[keyof typeof SuscripcionScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -318,6 +342,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {

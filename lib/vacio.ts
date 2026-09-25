@@ -73,6 +73,12 @@ export function parseAnticipacionHoras(valor?: string): number {
   return Number.isInteger(n) && n >= 0 && n <= 24 * 14 ? n : 48;
 }
 
+/** Descuento extra de la suscripción (%), sobre el subtotal. */
+export function parseDescuentoSuscripcion(valor?: string): number {
+  const n = Number(valor);
+  return valor !== undefined && valor !== "" && Number.isFinite(n) && n >= 0 && n <= 30 ? n : 5;
+}
+
 export function parseCostoEnvio(valor?: string): number {
   const n = Number(valor);
   return Number.isFinite(n) && n >= 0 ? n : 0;
@@ -83,6 +89,8 @@ export interface VacioConfig {
   franjas: string[];
   anticipacionHoras: number;
   costoEnvio: number;
+  /** % extra de descuento al suscribirse. */
+  descuentoSuscripcion: number;
 }
 
 export function getVacioConfig(config: Record<string, string>): VacioConfig {
@@ -91,6 +99,7 @@ export function getVacioConfig(config: Record<string, string>): VacioConfig {
     franjas: parseFranjas(config.vacio_franjas),
     anticipacionHoras: parseAnticipacionHoras(config.vacio_anticipacion_horas),
     costoEnvio: parseCostoEnvio(config.vacio_costo_envio),
+    descuentoSuscripcion: parseDescuentoSuscripcion(config.vacio_descuento_suscripcion),
   };
 }
 

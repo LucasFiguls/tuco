@@ -14,6 +14,9 @@ interface OrderSummary {
   caja?: number | null;
   descuentoCaja?: number;
   envio?: number;
+  descuentoSuscripcion?: number;
+  suscripcionUrl?: string | null;
+  frecuencia?: number | null;
   modalidad: "RETIRO" | "DELIVERY";
   nombre: string;
 }
@@ -83,6 +86,12 @@ function ConfirmacionContent() {
                 <span>−${order.descuentoCaja.toLocaleString("es-AR")}</span>
               </div>
             )}
+            {!!order.descuentoSuscripcion && (
+              <div className="flex justify-between text-sm pb-1.5 text-tuco-green font-medium">
+                <span>Descuento suscripción</span>
+                <span>−${order.descuentoSuscripcion.toLocaleString("es-AR")}</span>
+              </div>
+            )}
             {!!order.envio && (
               <div className="flex justify-between text-sm pb-1.5 text-tuco-brown">
                 <span>Envío</span>
@@ -106,6 +115,8 @@ function ConfirmacionContent() {
             </p>
           </div>
         )}
+
+        {order?.suscripcionUrl && <LinkSuscripcion url={order.suscripcionUrl} frecuencia={order.frecuencia ?? null} />}
 
         {order?.caja && (
           <div className="bg-brand-frio-light rounded-2xl p-4 mb-6 text-sm text-brand-dark">
@@ -141,5 +152,37 @@ export default function ConfirmacionPage() {
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p>Cargando...</p></div>}>
       <ConfirmacionContent />
     </Suspense>
+  );
+}
+
+function LinkSuscripcion({ url, frecuencia }: { url: string; frecuencia: number | null }) {
+  const [copiado, setCopiado] = useState(false);
+  const completo = typeof window !== "undefined" ? window.location.origin + url : url;
+
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(completo);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {}
+  }
+
+  return (
+    <div className="bg-brand-cream border border-brand-border rounded-2xl p-4 mb-6 text-sm text-brand-dark">
+      <p className="font-semibold mb-1">🔁 Tu suscripción está activa</p>
+      <p className="mb-3">
+        Vas a recibir esta caja {frecuencia === 7 ? "cada semana" : frecuencia === 14 ? "cada 2 semanas" : "cada mes"}. Guardá
+        este link privado: con él podés cambiar la caja, saltear una entrega, pausarla o cancelarla.{" "}
+        <strong>No lo compartas.</strong>
+      </p>
+      <div className="flex gap-2">
+        <a href={url} className="flex-1 text-center font-semibold bg-brand-primary text-white rounded-full py-2 hover:bg-brand-primary-hover">
+          Ir a mi suscripción
+        </a>
+        <button type="button" onClick={copiar} className="px-4 rounded-full border border-brand-border font-semibold hover:bg-white">
+          {copiado ? "¡Copiado!" : "Copiar link"}
+        </button>
+      </div>
+    </div>
   );
 }

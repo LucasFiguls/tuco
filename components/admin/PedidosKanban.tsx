@@ -48,6 +48,8 @@ interface Pedido {
   items: PedidoItem[];
   descuento_vouchers?: string;
   tamano_caja?: number | null;
+  suscripcion_id?: string | null;
+  descuento_suscripcion?: string;
   descuento_caja?: string;
   costo_envio?: string;
   vouchers?: Array<{ codigo: string; lote: { convenio: { empresa: string } } }>;
@@ -189,6 +191,11 @@ function PedidoCard({
             📦 Caja de {pedido.tamano_caja}
           </p>
         )}
+        {!!pedido.suscripcion_id && (
+          <p className="mt-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 rounded-full px-2 py-0.5 inline-block">
+            🔁 Suscripción
+          </p>
+        )}
         {!!pedido.vouchers?.length && (
           <p className="mt-1 text-[11px] font-semibold text-violet-700 bg-violet-50 rounded-full px-2 py-0.5 inline-block truncate max-w-full">
             🎟 {pedido.vouchers.length} · {pedido.vouchers[0].lote.convenio.empresa}
@@ -244,6 +251,12 @@ function PedidoCard({
             <div className="flex justify-between text-xs text-sky-700">
               <span>Descuento caja</span>
               <span className="font-medium">−${Number(pedido.descuento_caja).toLocaleString("es-AR")}</span>
+            </div>
+          )}
+          {Number(pedido.descuento_suscripcion ?? 0) > 0 && (
+            <div className="flex justify-between text-xs text-emerald-700">
+              <span>Descuento suscripción</span>
+              <span className="font-medium">−${Number(pedido.descuento_suscripcion).toLocaleString("es-AR")}</span>
             </div>
           )}
           {Number(pedido.costo_envio ?? 0) > 0 && (

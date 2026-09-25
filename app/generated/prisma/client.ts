@@ -111,3 +111,8 @@ export type VoucherLote = Prisma.VoucherLoteModel
  * 
  */
 export type Voucher = Prisma.VoucherModel
+/**
+ * Model Suscripcion
+ * 
+ */
+export type Suscripcion = Prisma.SuscripcionModel

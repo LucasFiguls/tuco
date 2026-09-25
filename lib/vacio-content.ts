@@ -69,6 +69,7 @@ export const FAQ_VACIO = [
   { pregunta: "¿Cómo las caliento?", respuesta: "Cada producto trae sus métodos y tiempos: baño María, microondas, sartén u horno. También tenés la guía completa en \"Cómo regenerar\" y un QR en cada bolsa." },
   { pregunta: "¿Puedo combinar platos, bases y guarniciones?", respuesta: "Sí. Cada bolsa ocupa un lugar en la caja, sea un plato completo, una base, una guarnición o una salsa. Armala como quieras." },
   { pregunta: "¿Cuánto ahorro con una caja más grande?", respuesta: "El descuento crece con el tamaño de la caja. Lo ves aplicado en el armador y en el checkout antes de confirmar." },
+  { pregunta: "¿Puedo recibir la caja todas las semanas?", respuesta: "Sí. En el checkout elegís recibirla cada semana, cada 2 semanas o cada mes, con un descuento extra. Te damos un link privado para cambiar la caja, saltear una entrega, pausarla o cancelarla cuando quieras." },
   { pregunta: "¿Cómo es la entrega?", respuesta: "Elegís envío a domicilio o retiro sin costo en el local, y el día y la franja horaria que te quedan cómodos, con algunos días de anticipación para que cocinemos tu caja." },
   { pregunta: "¿Cómo pago?", respuesta: "Por transferencia bancaria o en efectivo al recibir o retirar." },
 ];

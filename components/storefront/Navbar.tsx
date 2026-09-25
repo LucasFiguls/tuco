@@ -128,18 +128,18 @@ export function Navbar({ variant = "caliente", solid = false }: NavbarProps = {}
             <span className="font-display text-[28px] font-bold text-brand-primary leading-none">
               Tuco
             </span>
-            <span className={`font-body text-[11px] hidden sm:block pt-1 transition-colors duration-300 ${mutedColor}`}>
+            <span className={`font-body text-[11px] hidden lg:block pt-1 transition-colors duration-300 ${mutedColor}`}>
               fatto in casa
             </span>
           </Link>
 
           {/* Links — desktop */}
-          <div className="hidden md:flex items-center gap-7">
+          <div className="hidden md:flex items-center gap-5 lg:gap-7">
             {links.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`font-body text-[15px] font-medium transition-colors duration-150 hover:text-brand-primary no-underline ${textColor}`}
+                className={`font-body text-[14px] lg:text-[15px] font-medium whitespace-nowrap transition-colors duration-150 hover:text-brand-primary no-underline ${textColor}`}
               >
                 {link.label}
               </a>
@@ -151,7 +151,7 @@ export function Navbar({ variant = "caliente", solid = false }: NavbarProps = {}
             {esVacio ? (
               <Link
                 href="/armar"
-                className={`hidden md:flex items-center gap-2 font-body font-semibold text-sm px-5 py-2.5 rounded-btn transition-all duration-300 ${
+                className={`hidden md:flex items-center gap-2 font-body font-semibold text-sm px-5 py-2.5 rounded-btn whitespace-nowrap transition-all duration-300 ${
                   solido
                     ? "bg-brand-primary text-white hover:bg-brand-primary-hover"
                     : "border border-white text-white hover:bg-white/10"

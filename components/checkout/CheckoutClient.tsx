@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
 import type { CheckoutData } from "@/lib/types";
 import { descuentoCaja, fechaMinimaEntrega, type VacioConfig } from "@/lib/vacio";
+import { FRECUENCIAS, FRECUENCIA_LABEL, type Frecuencia } from "@/lib/suscripciones";
 
 const MAX_VOUCHERS = 10;
 
@@ -43,6 +44,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
   const [vouchers, setVouchers] = useState<VoucherAplicado[]>([]);
   const [voucherInput, setVoucherInput] = useState("");
   const [validando, setValidando] = useState(false);
+  const [frecuencia, setFrecuencia] = useState<Frecuencia | null>(null);
 
   const [form, setForm] = useState<CheckoutData>({
     cliente_nombre: "",
@@ -80,8 +82,10 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
   const descCaja = esCaja ? descuentoCaja(total, caja!, vacio.cajas) : 0;
   const pctCaja = esCaja ? (vacio.cajas.find((c) => c.tamano === caja)?.descuento ?? 0) : 0;
   const envio = esCaja && form.modalidad === "DELIVERY" ? vacio.costoEnvio : 0;
+  const descSusc = esCaja && frecuencia ? Math.round((total * vacio.descuentoSuscripcion) / 100) : 0;
   const cajaIncompleta = esCaja && count !== caja;
-  const totalAPagar = total - descuento - descCaja + envio;
+  const totalAPagar = total - descuento - descCaja - descSusc + envio;
+  const hayAjustes = descuento > 0 || descCaja > 0 || descSusc > 0 || envio > 0;
   const maxVouchers = Math.min(MAX_VOUCHERS, unidades.length);
 
   async function aplicarVoucher() {
@@ -145,6 +149,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
           items: items.map((i) => ({ id: i.id, cantidad: i.cantidad })),
           vouchers: esCaja ? [] : validos.map((v) => v.codigo),
           caja: esCaja ? caja : undefined,
+          suscripcion: esCaja && frecuencia ? { frecuencia_dias: frecuencia } : undefined,
         }),
       });
 
@@ -167,6 +172,9 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
           caja: esCaja ? caja : null,
           descuentoCaja: Number(pedido.descuento_caja ?? 0),
           envio: Number(pedido.costo_envio ?? 0),
+          descuentoSuscripcion: Number(pedido.descuento_suscripcion ?? 0),
+          suscripcionUrl: pedido.suscripcion_url ?? null,
+          frecuencia: esCaja ? frecuencia : null,
           total: Number(pedido.total),
           modalidad: form.modalidad,
           nombre: form.cliente_nombre,
@@ -245,7 +253,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
               </div>
             </>
           )}
-          {esCaja && (descCaja > 0 || envio > 0) && (
+          {esCaja && (descCaja > 0 || descSusc > 0 || envio > 0) && (
             <>
               <div className="flex justify-between text-sm pt-3 border-t mt-3 text-gray-600">
                 <span>Subtotal</span>
@@ -257,6 +265,12 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
                   <span>−${descCaja.toLocaleString("es-AR")}</span>
                 </div>
               )}
+              {descSusc > 0 && (
+                <div className="flex justify-between text-sm py-1 text-orange-600 font-medium">
+                  <span>Suscripción (−{vacio.descuentoSuscripcion}%)</span>
+                  <span>−${descSusc.toLocaleString("es-AR")}</span>
+                </div>
+              )}
               {envio > 0 && (
                 <div className="flex justify-between text-sm py-1 text-gray-600">
                   <span>Envío</span>
@@ -265,11 +279,39 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
               )}
             </>
           )}
-          <div className={`flex justify-between font-bold text-base pt-3 border-t ${descuento > 0 || descCaja > 0 || envio > 0 ? "mt-1" : "mt-3"}`}>
-            <span>{descuento > 0 || descCaja > 0 || envio > 0 ? "Total a pagar" : "Total"}</span>
+          <div className={`flex justify-between font-bold text-base pt-3 border-t ${hayAjustes ? "mt-1" : "mt-3"}`}>
+            <span>{hayAjustes ? "Total a pagar" : "Total"}</span>
             <span>${totalAPagar.toLocaleString("es-AR")}</span>
           </div>
         </div>
+
+        {/* ── Compra única o suscripción (caja al vacío) ─────────────────── */}
+        {esCaja && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm">
+            <h2 className="font-semibold text-gray-800 mb-1">¿Cada cuánto la querés?</h2>
+            <p className="text-xs text-gray-500 mb-3">
+              Suscribite y recibí esta misma caja con {vacio.descuentoSuscripcion}% extra de descuento. Podés cambiarla, pausarla o
+              cancelarla cuando quieras.
+            </p>
+            <div role="radiogroup" aria-label="Frecuencia" className="grid grid-cols-2 gap-2">
+              {([null, ...FRECUENCIAS] as const).map((f) => (
+                <button
+                  key={f ?? "unica"}
+                  type="button"
+                  role="radio"
+                  aria-checked={frecuencia === f}
+                  onClick={() => setFrecuencia(f)}
+                  className={`rounded-xl border px-3 py-2.5 text-sm font-medium text-left transition-colors ${
+                    frecuencia === f ? "bg-orange-500 text-white border-orange-500" : "bg-white text-gray-700 border-gray-200 hover:border-orange-300"
+                  }`}
+                >
+                  {f ? FRECUENCIA_LABEL[f] : "Solo esta vez"}
+                  {f && <span className={`block text-xs ${frecuencia === f ? "text-white/85" : "text-orange-600"}`}>−{vacio.descuentoSuscripcion}% extra</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── Vouchers de empresa ───────────────────────────────────────── */}
         {vouchersVisibles && !esCaja && (

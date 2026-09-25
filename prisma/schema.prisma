@@ -78,11 +78,17 @@ model Pedido {
   tamano_caja      Int?
   descuento_caja   Decimal  @default(0) @db.Decimal(10, 2)
   costo_envio      Decimal  @default(0) @db.Decimal(10, 2)
+  descuento_suscripcion Decimal @default(0) @db.Decimal(10, 2)
+  suscripcion_id   String?
   created_at       DateTime @default(now())
   updated_at       DateTime @default(now()) @updatedAt
 
-  items    PedidoItem[]
-  vouchers Voucher[]
+  items       PedidoItem[]
+  vouchers    Voucher[]
+  suscripcion Suscripcion? @relation(fields: [suscripcion_id], references: [id], onDelete: SetNull)
+
+  // Una sola entrega por suscripción y fecha (evita duplicados al generar)
+  @@unique([suscripcion_id, fecha_entrega])
 
   @@map("pedidos")
 }
@@ -303,4 +309,35 @@ enum EstadoVoucher {
   DISPONIBLE
   CANJEADO
   ANULADO
+}
+
+// ── Suscripciones (línea al vacío) ──────────────────────────────────────
+
+model Suscripcion {
+  id                String            @id @default(cuid())
+  token_hash        String            @unique // sha256 del token del link privado
+  estado            EstadoSuscripcion @default(ACTIVA)
+  cliente_nombre    String
+  cliente_telefono  String
+  modalidad         Modalidad
+  direccion_entrega String?
+  hora_entrega      String
+  comentarios       String?
+  frecuencia_dias   Int
+  tamano_caja       Int
+  items             Json              // [{ menu_item_id, cantidad }]
+  proxima_entrega   DateTime
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
+
+  pedidos Pedido[]
+
+  @@index([estado, proxima_entrega])
+  @@map("suscripciones")
+}
+
+enum EstadoSuscripcion {
+  ACTIVA
+  PAUSADA
+  CANCELADA
 }

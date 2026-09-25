@@ -31,11 +31,38 @@ interface ArmadorCajaProps {
   cajas: Caja[];
   cajaInicial: number | null;
   preview: boolean;
+  /** Editando la caja de una suscripción (link privado): el CTA guarda en la suscripción. */
+  suscripcionToken: string | null;
 }
 
-export function ArmadorCaja({ productos, cajas, cajaInicial, preview }: ArmadorCajaProps) {
+export function ArmadorCaja({ productos, cajas, cajaInicial, preview, suscripcionToken }: ArmadorCajaProps) {
   const router = useRouter();
-  const { items, add, updateQty, caja, setCaja, hydrated } = useCart();
+  const { items, add, updateQty, caja, setCaja, hydrated, clear } = useCart();
+  const [guardando, setGuardando] = useState(false);
+  const [errorGuardar, setErrorGuardar] = useState("");
+
+  async function guardarEnSuscripcion() {
+    setGuardando(true);
+    setErrorGuardar("");
+    try {
+      const res = await fetch(`/api/suscripciones/${encodeURIComponent(suscripcionToken!)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          accion: "caja",
+          tamano,
+          items: enCaja.map((i) => ({ id: i.id, cantidad: i.cantidad })),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "No pudimos guardar la caja");
+      clear();
+      router.push(`/mi-suscripcion/${encodeURIComponent(suscripcionToken!)}`);
+    } catch (e) {
+      setErrorGuardar(e instanceof Error ? e.message : "Error inesperado");
+      setGuardando(false);
+    }
+  }
   const [tipo, setTipo] = useState<TipoVacio | "TODOS">("TODOS");
   const [tagFiltro, setTagFiltro] = useState<string | null>(null);
   const [panelMobile, setPanelMobile] = useState(false);
@@ -113,6 +140,15 @@ export function ArmadorCaja({ productos, cajas, cajaInicial, preview }: ArmadorC
         <p className="font-body text-sm text-red-700 bg-red-50 rounded-input px-3 py-2">
           Te pasaste por {count - tamano}. Quitá algunas bolsas para continuar.
         </p>
+      ) : suscripcionToken ? (
+        <button
+          type="button"
+          disabled={!completa || guardando}
+          onClick={guardarEnSuscripcion}
+          className="w-full rounded-btn bg-brand-primary text-white font-body font-semibold py-3 hover:bg-brand-primary-hover disabled:bg-brand-border disabled:text-brand-muted disabled:cursor-not-allowed transition-colors"
+        >
+          {guardando ? "Guardando…" : completa ? "Guardar en mi suscripción" : `Faltan ${faltan}`}
+        </button>
       ) : (
         <button
           type="button"
@@ -123,6 +159,7 @@ export function ArmadorCaja({ productos, cajas, cajaInicial, preview }: ArmadorC
           {completa ? "Ir al checkout" : `Faltan ${faltan}`}
         </button>
       )}
+      {errorGuardar && <p className="font-body text-sm text-red-700 bg-red-50 rounded-input px-3 py-2">{errorGuardar}</p>}
       {count < tamano && (
         <button type="button" onClick={llenarPorMi} className="w-full font-body text-sm font-semibold text-brand-primary hover:text-brand-primary-hover py-1">
           Llenala por mí
@@ -136,6 +173,12 @@ export function ArmadorCaja({ productos, cajas, cajaInicial, preview }: ArmadorC
       {preview && (
         <p className="mb-6 font-body text-sm bg-amber-50 border border-amber-200 text-amber-900 rounded-input px-4 py-3">
           Vista previa de admin: se muestran también los productos no disponibles.
+        </p>
+      )}
+
+      {suscripcionToken && (
+        <p className="mb-6 font-body text-sm bg-brand-frio-light text-brand-dark rounded-input px-4 py-3">
+          Estás cambiando la caja de tu suscripción. Cuando la completes, tocá “Guardar en mi suscripción”.
         </p>
       )}
 

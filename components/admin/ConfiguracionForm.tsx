@@ -15,6 +15,7 @@ interface Config {
   vacio_franjas: string;
   vacio_costo_envio: string;
   vacio_hero_imagen: string;
+  vacio_descuento_suscripcion: string;
 }
 
 const DEFAULTS: Config = {
@@ -27,6 +28,7 @@ const DEFAULTS: Config = {
   vacio_franjas: "9 a 13 hs, 14 a 18 hs",
   vacio_costo_envio: "0",
   vacio_hero_imagen: "",
+  vacio_descuento_suscripcion: "5",
 };
 
 // ----- WhatsApp templates section -----
@@ -354,7 +356,11 @@ export function ConfiguracionForm() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
+            <label className="block">
+              <span className="block text-sm font-medium text-gray-700 mb-1">Descuento suscripción (%)</span>
+              <input type="number" min="0" max="30" className={inputCls} value={config.vacio_descuento_suscripcion} onChange={(e) => setConfig((p) => ({ ...p, vacio_descuento_suscripcion: e.target.value }))} />
+            </label>
             <label className="block">
               <span className="block text-sm font-medium text-gray-700 mb-1">Anticipación mínima (hs)</span>
               <input type="number" min="0" className={inputCls} value={config.vacio_anticipacion_horas} onChange={(e) => setConfig((p) => ({ ...p, vacio_anticipacion_horas: e.target.value }))} />

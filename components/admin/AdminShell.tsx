@@ -6,6 +6,7 @@ import { useAdminNotifications } from "./AdminNotificationsProvider";
 
 const NAV = [
   { href: "/admin/pedidos", label: "Pedidos", icon: "📋" },
+  { href: "/admin/suscripciones", label: "Suscripciones", icon: "🔁" },
   { href: "/admin/empresas", label: "Empresas", icon: "🏢" },
   { href: "/admin/menu", label: "Menú", icon: "🍽️" },
   { href: "/admin/recetas", label: "Recetas", icon: "🍲" },

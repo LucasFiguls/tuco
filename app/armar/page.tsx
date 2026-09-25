@@ -13,8 +13,8 @@ export function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default async function ArmarPage({ searchParams }: { searchParams: Promise<{ caja?: string }> }) {
-  const [{ caja }, ctx] = await Promise.all([searchParams, getVacioPageContext()]);
+export default async function ArmarPage({ searchParams }: { searchParams: Promise<{ caja?: string; suscripcion?: string }> }) {
+  const [{ caja, suscripcion }, ctx] = await Promise.all([searchParams, getVacioPageContext()]);
   const productos = await getProductosVacio({ preview: ctx.preview });
 
   return (
@@ -24,6 +24,7 @@ export default async function ArmarPage({ searchParams }: { searchParams: Promis
         cajas={ctx.vacio.cajas}
         cajaInicial={caja ? Number(caja) : null}
         preview={ctx.preview}
+        suscripcionToken={suscripcion ?? null}
       />
     </VacioShell>
   );
