@@ -8,8 +8,9 @@ export const HERO_VACIO = {
   titulo: "Llená tu heladera\nde comida casera.",
   bajada:
     "Platos de la nonna envasados al vacío. Elegís 5, 10, 15 o 20, te los llevamos juntos y los regenerás en minutos.",
+  // Provisoria (stock): se reemplaza subiendo la foto en Admin → Configuración → Tuco al vacío
   imagen:
-    "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=1920&q=80",
+    "https://images.unsplash.com/photo-1606859191214-25806e8e2423?auto=format&fit=crop&w=1920&q=80",
 };
 
 export const PASOS_VACIO = [

@@ -23,7 +23,7 @@ export default async function HomePage() {
     const productos = await getProductosVacio({ preview: !!(await getSession()) });
     return (
       <VacioShell whatsapp={config.whatsapp_numero} hero>
-        <VacioHome productos={productos} cajas={getVacioConfig(config).cajas} />
+        <VacioHome productos={productos} cajas={getVacioConfig(config).cajas} heroImagen={config.vacio_hero_imagen} />
       </VacioShell>
     );
   }

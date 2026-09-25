@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/components/storefront/CartContext";
 import type { CheckoutData } from "@/lib/types";
@@ -54,17 +54,10 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
     comentarios: "",
   });
 
-  // El carrito se lee de localStorage después del primer render: al detectar una
-  // caja, la fecha y la franja pasan a las reglas de la línea al vacío
-  useEffect(() => {
-    if (!esCaja) return;
-    setForm((prev) =>
-      prev.fecha_entrega >= fechaMin && horarios.includes(prev.hora_entrega)
-        ? prev
-        : { ...prev, fecha_entrega: prev.fecha_entrega >= fechaMin ? prev.fecha_entrega : fechaMin, hora_entrega: horarios.includes(prev.hora_entrega) ? prev.hora_entrega : horarios[0] }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [esCaja]);
+  // El carrito se lee de localStorage después del primer render: si la fecha o la
+  // franja elegidas no valen para una caja, se usan las primeras válidas
+  const fechaEntrega = form.fecha_entrega >= fechaMin ? form.fecha_entrega : fechaMin;
+  const horaEntrega = horarios.includes(form.hora_entrega) ? form.hora_entrega : horarios[0];
 
   function set(field: keyof CheckoutData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -148,7 +141,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          checkout: form,
+          checkout: { ...form, fecha_entrega: fechaEntrega, hora_entrega: horaEntrega },
           items: items.map((i) => ({ id: i.id, cantidad: i.cantidad })),
           vouchers: esCaja ? [] : validos.map((v) => v.codigo),
           caja: esCaja ? caja : undefined,
@@ -417,7 +410,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
                   type="date"
                   min={fechaMin}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.fecha_entrega}
+                  value={fechaEntrega}
                   onChange={(e) => set("fecha_entrega", e.target.value)}
                 />
               </div>
@@ -426,7 +419,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
                 <select
                   required
                   className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
-                  value={form.hora_entrega}
+                  value={horaEntrega}
                   onChange={(e) => set("hora_entrega", e.target.value)}
                 >
                   {horarios.map((h) => (

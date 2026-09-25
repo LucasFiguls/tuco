@@ -10,10 +10,18 @@ import { CajaIcon, FreezerIcon, HeladeraIcon, MetodoIcon } from "./Iconos";
 const CTA =
   "inline-flex items-center justify-center font-body font-semibold rounded-btn px-7 py-3.5 text-base bg-brand-primary text-white hover:bg-brand-primary-hover transition-all duration-200 active:scale-[0.98]";
 
-export function VacioHome({ productos, cajas }: { productos: ProductoVacio[]; cajas: Caja[] }) {
+export function VacioHome({
+  productos,
+  cajas,
+  heroImagen,
+}: {
+  productos: ProductoVacio[];
+  cajas: Caja[];
+  heroImagen?: string;
+}) {
   return (
     <>
-      <Hero />
+      <Hero imagen={heroImagen || HERO_VACIO.imagen} />
       <Pasos />
       <SelectorCajas cajas={cajas} />
       {productos.length > 0 && <Destacados productos={productos.slice(0, 8)} />}
@@ -25,10 +33,10 @@ export function VacioHome({ productos, cajas }: { productos: ProductoVacio[]; ca
   );
 }
 
-function Hero() {
+function Hero({ imagen }: { imagen: string }) {
   return (
     <section className="-mt-16 relative min-h-[88svh] flex items-end md:items-center bg-brand-dark overflow-hidden">
-      <Image src={HERO_VACIO.imagen} alt="" fill priority sizes="100vw" className="object-cover object-center" />
+      <Image src={imagen} alt="" fill priority sizes="100vw" className="object-cover object-center" />
       <div
         aria-hidden
         className="absolute inset-0"

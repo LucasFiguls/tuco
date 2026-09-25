@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { interpolateTemplate } from "@/lib/whatsapp";
 import { CAJAS_DEFAULT, parseCajas } from "@/lib/vacio";
 
@@ -13,6 +14,7 @@ interface Config {
   vacio_anticipacion_horas: string;
   vacio_franjas: string;
   vacio_costo_envio: string;
+  vacio_hero_imagen: string;
 }
 
 const DEFAULTS: Config = {
@@ -24,6 +26,7 @@ const DEFAULTS: Config = {
   vacio_anticipacion_horas: "48",
   vacio_franjas: "9 a 13 hs, 14 a 18 hs",
   vacio_costo_envio: "0",
+  vacio_hero_imagen: "",
 };
 
 // ----- WhatsApp templates section -----
@@ -215,6 +218,23 @@ export function ConfiguracionForm() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [subiendo, setSubiendo] = useState(false);
+
+  async function subirHero(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSubiendo(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return alert(data.error ?? "Error al subir imagen");
+      setConfig((p) => ({ ...p, vacio_hero_imagen: data.url }));
+    } finally {
+      setSubiendo(false);
+    }
+  }
 
   useEffect(() => {
     fetch("/api/admin/configuracion")
@@ -345,6 +365,29 @@ export function ConfiguracionForm() {
             </label>
           </div>
 
+          <div>
+            <span className="block text-sm font-medium text-gray-700 mb-1">Foto del hero de la home</span>
+            <div className="flex items-center gap-3">
+              {config.vacio_hero_imagen && (
+                <div className="relative w-24 h-14 rounded-lg overflow-hidden bg-gray-100">
+                  <Image src={config.vacio_hero_imagen} alt="Hero" fill className="object-cover" />
+                </div>
+              )}
+              <label className="cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors">
+                {subiendo ? "Subiendo..." : config.vacio_hero_imagen ? "Cambiar foto" : "Subir foto"}
+                <input type="file" accept="image/*" className="hidden" onChange={subirHero} />
+              </label>
+              {config.vacio_hero_imagen && (
+                <button type="button" onClick={() => setConfig((p) => ({ ...p, vacio_hero_imagen: "" }))} className="text-xs text-red-400 hover:text-red-600">
+                  Quitar
+                </button>
+              )}
+            </div>
+            <span className="block text-xs text-gray-400 mt-1">
+              Sin foto propia se usa una provisoria. Ideal: una heladera llena de bolsas Tuco, horizontal.
+            </span>
+          </div>
+
           <label className="block">
             <span className="block text-sm font-medium text-gray-700 mb-1">Franjas horarias de entrega</span>
             <input className={inputCls} value={config.vacio_franjas} onChange={(e) => setConfig((p) => ({ ...p, vacio_franjas: e.target.value }))} placeholder="9 a 13 hs, 14 a 18 hs" />
@@ -354,7 +397,7 @@ export function ConfiguracionForm() {
 
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || subiendo}
           className="bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
           {saving ? "Guardando..." : saved ? "✓ Guardado" : "Guardar cambios"}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useSyncExternalStore } from "react";
 import type { CartItem } from "@/lib/types";
 
 interface CartContextValue {
@@ -25,73 +25,104 @@ const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "tuco_cart";
 const CAJA_KEY = "tuco_caja";
 
+// ── Store sobre localStorage (useSyncExternalStore) ─────────────────────────
+
+interface CartState {
+  items: CartItem[];
+  caja: number | null;
+}
+
+const EMPTY: CartState = { items: [], caja: null };
+let snapshot: CartState | null = null;
+const listeners = new Set<() => void>();
+
+function readStorage(): CartState {
+  try {
+    const items = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    const caja = Number(localStorage.getItem(CAJA_KEY));
+    return { items: Array.isArray(items) ? items : [], caja: caja > 0 ? caja : null };
+  } catch {
+    return EMPTY;
+  }
+}
+
+function getSnapshot(): CartState {
+  if (!snapshot) snapshot = readStorage();
+  return snapshot;
+}
+
+function setState(update: (prev: CartState) => CartState) {
+  snapshot = update(getSnapshot());
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot.items));
+    if (snapshot.caja) localStorage.setItem(CAJA_KEY, String(snapshot.caja));
+    else localStorage.removeItem(CAJA_KEY);
+  } catch {}
+  listeners.forEach((l) => l());
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  // Otra pestaña cambió el carrito: releer
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === STORAGE_KEY || e.key === CAJA_KEY) {
+      snapshot = null;
+      listener();
+    }
+  };
+  window.addEventListener("storage", onStorage);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
+const noopSubscribe = () => () => {};
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const { items, caja } = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY);
+  const hydrated = useSyncExternalStore(noopSubscribe, () => true, () => false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [caja, setCaja] = useState<number | null>(null);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setItems(JSON.parse(stored));
-      const storedCaja = Number(localStorage.getItem(CAJA_KEY));
-      if (storedCaja > 0) setCaja(storedCaja);
-    } catch {}
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-    } catch {}
-  }, [items]);
-
-  useEffect(() => {
-    try {
-      if (caja) localStorage.setItem(CAJA_KEY, String(caja));
-      else localStorage.removeItem(CAJA_KEY);
-    } catch {}
-  }, [caja]);
 
   function add(item: Omit<CartItem, "cantidad">) {
-    if ((item.linea ?? "CALIENTE") === "CALIENTE") setCaja(null);
-    setItems((prev) => {
+    setState((prev) => {
+      let current = prev.items;
       // Una caja al vacío y un pedido caliente no se mezclan
-      if (prev.some((i) => (i.linea ?? "CALIENTE") !== (item.linea ?? "CALIENTE"))) {
-        prev = [];
+      if (current.some((i) => (i.linea ?? "CALIENTE") !== (item.linea ?? "CALIENTE"))) {
+        current = [];
       }
-      const existing = prev.find((i) => i.id === item.id);
-      if (existing) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, cantidad: i.cantidad + 1 } : i
-        );
-      }
-      return [...prev, { ...item, cantidad: 1 }];
+      const existing = current.find((i) => i.id === item.id);
+      const next = existing
+        ? current.map((i) => (i.id === item.id ? { ...i, cantidad: i.cantidad + 1 } : i))
+        : [...current, { ...item, cantidad: 1 }];
+      return { items: next, caja: (item.linea ?? "CALIENTE") === "CALIENTE" ? null : prev.caja };
     });
   }
 
   function remove(id: string) {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    setState((prev) => ({ ...prev, items: prev.items.filter((i) => i.id !== id) }));
   }
 
   function updateQty(id: string, cantidad: number) {
     if (cantidad <= 0) return remove(id);
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, cantidad } : i))
-    );
+    setState((prev) => ({ ...prev, items: prev.items.map((i) => (i.id === id ? { ...i, cantidad } : i)) }));
   }
 
   function clear() {
-    setItems([]);
-    setCaja(null);
+    setState(() => EMPTY);
+  }
+
+  function setCaja(tamano: number | null) {
+    setState((prev) => ({ ...prev, caja: tamano }));
   }
 
   const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
   const count = items.reduce((sum, i) => sum + i.cantidad, 0);
 
   return (
-    <CartContext.Provider value={{ items, add, remove, updateQty, clear, total, count, drawerOpen, setDrawerOpen, caja, setCaja, hydrated }}>
+    <CartContext.Provider
+      value={{ items, add, remove, updateQty, clear, total, count, drawerOpen, setDrawerOpen, caja, setCaja, hydrated }}
+    >
       {children}
     </CartContext.Provider>
   );
