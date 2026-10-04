@@ -6,6 +6,7 @@ import { useCart } from "@/components/storefront/CartContext";
 import type { CheckoutData } from "@/lib/types";
 import { descuentoCaja, fechaMinimaEntrega, type VacioConfig } from "@/lib/vacio";
 import { FRECUENCIAS, FRECUENCIA_LABEL, type Frecuencia } from "@/lib/suscripciones";
+import { borrarDatosCliente, guardarDatosCliente, leerDatosCliente } from "@/lib/datos-cliente";
 
 const MAX_VOUCHERS = 10;
 
@@ -32,7 +33,7 @@ interface CheckoutClientProps {
 }
 
 export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps) {
-  const { items, total, clear, caja, count } = useCart();
+  const { items, total, clear, caja, count, hydrated } = useCart();
   // Pedido de caja al vacío: todas las bolsas de la línea VACIO y un tamaño elegido
   const esCaja = caja !== null && items.length > 0 && items.every((i) => i.linea === "VACIO");
   const fechaMin = esCaja ? fechaMinimaEntrega(vacio.anticipacionHoras) : getTodayDate();
@@ -45,6 +46,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
   const [voucherInput, setVoucherInput] = useState("");
   const [validando, setValidando] = useState(false);
   const [frecuencia, setFrecuencia] = useState<Frecuencia | null>(null);
+  const [website, setWebsite] = useState(""); // honeypot
 
   const [form, setForm] = useState<CheckoutData>({
     cliente_nombre: "",
@@ -55,6 +57,28 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
     hora_entrega: horarios[0],
     comentarios: "",
   });
+
+  // Datos recordados en este navegador: se leen una sola vez, ya hidratado (en SSR no hay storage)
+  const [precargado, setPrecargado] = useState(false);
+  const [recordar, setRecordar] = useState(true);
+  const [usandoGuardados, setUsandoGuardados] = useState(false);
+  if (hydrated && !precargado) {
+    setPrecargado(true);
+    const guardados = leerDatosCliente();
+    if (guardados) {
+      setForm((prev) => ({ ...prev, ...guardados }));
+      setRecordar(true);
+      setUsandoGuardados(true);
+    }
+  }
+
+  function olvidarDatos() {
+    borrarDatosCliente();
+    setForm((prev) => ({ ...prev, cliente_nombre: "", cliente_telefono: "", modalidad: "RETIRO", direccion_entrega: "" }));
+    // "¿No sos vos?" sugiere un equipo compartido: el próximo no se guarda salvo que lo tilde
+    setRecordar(false);
+    setUsandoGuardados(false);
+  }
 
   // El carrito se lee de localStorage después del primer render: si la fecha o la
   // franja elegidas no valen para una caja, se usan las primeras válidas
@@ -150,6 +174,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
           vouchers: esCaja ? [] : validos.map((v) => v.codigo),
           caja: esCaja ? caja : undefined,
           suscripcion: esCaja && frecuencia ? { frecuencia_dias: frecuencia } : undefined,
+          website,
         }),
       });
 
@@ -159,6 +184,17 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
       }
 
       const pedido = await res.json();
+
+      if (recordar) {
+        guardarDatosCliente({
+          cliente_nombre: form.cliente_nombre,
+          cliente_telefono: form.cliente_telefono,
+          modalidad: form.modalidad,
+          direccion_entrega: form.direccion_entrega ?? "",
+        });
+      } else {
+        borrarDatosCliente();
+      }
 
       // Guardamos el resumen en sessionStorage para la pantalla de confirmación
       sessionStorage.setItem(
@@ -372,11 +408,21 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
           <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
             <h2 className="font-semibold text-gray-800">Tus datos</h2>
 
+            {usandoGuardados && (
+              <p className="text-xs text-gray-500">
+                Usamos los datos que guardaste.{" "}
+                <button type="button" onClick={olvidarDatos} className="font-semibold text-orange-600 hover:text-orange-700 underline">
+                  ¿No sos vos? Borrar
+                </button>
+              </p>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nombre y apellido</label>
               <input
                 required
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                maxLength={100}
                 value={form.cliente_nombre}
                 onChange={(e) => set("cliente_nombre", e.target.value)}
               />
@@ -406,6 +452,21 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
                 <p className="mt-1 text-xs text-red-500">{telefonoError}</p>
               )}
             </div>
+
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={recordar}
+                onChange={(e) => setRecordar(e.target.checked)}
+                className="mt-0.5 w-4 h-4 accent-brand-primary"
+              />
+              <span className="text-sm text-gray-700">
+                Recordar mis datos en este dispositivo
+                <span className="block text-xs text-gray-500">
+                  Nombre, teléfono y dirección se guardan solo en este navegador; no los compartimos.
+                </span>
+              </span>
+            </label>
           </div>
 
           <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
@@ -437,6 +498,7 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
                 <input
                   required
                   className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+                  maxLength={300}
                   value={form.direccion_entrega}
                   onChange={(e) => set("direccion_entrega", e.target.value)}
                   placeholder="Calle 123, Piso 2, Depto B"
@@ -485,11 +547,20 @@ export function CheckoutClient({ vacio, vouchersVisibles }: CheckoutClientProps)
               <textarea
                 rows={2}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 resize-none"
+                maxLength={1000}
                 value={form.comentarios}
                 onChange={(e) => set("comentarios", e.target.value)}
                 placeholder="Alergias, aclaraciones, etc."
               />
             </div>
+          </div>
+
+          {/* Honeypot: invisible para personas, los bots lo completan */}
+          <div aria-hidden className="absolute -left-[9999px] w-px h-px overflow-hidden">
+            <label>
+              Website
+              <input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+            </label>
           </div>
 
           {error && (

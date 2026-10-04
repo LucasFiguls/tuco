@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getConfig } from "@/lib/config";
 import { getSession } from "@/lib/auth";
-import { esFechaValida } from "@/lib/vacio";
+import { esFechaValida, fechaMinimaEntrega } from "@/lib/vacio";
 import { cotizarCaja } from "@/lib/caja";
 import { esFrecuencia, linkSuscripcion, sumarDias } from "@/lib/suscripciones";
 import { generarToken } from "@/lib/suscripciones-server";
@@ -28,6 +28,44 @@ interface Checkout {
   comentarios?: string;
 }
 
+function str(v: unknown, max: number): string {
+  return typeof v === "string" ? v.trim().slice(0, max) : "";
+}
+
+/** Valida y normaliza los datos del cliente: nunca confiar en la validación del front. */
+function parseCheckout(raw: unknown): Checkout | string {
+  if (!raw || typeof raw !== "object") return "Datos incompletos";
+  const c = raw as Record<string, unknown>;
+
+  const cliente_nombre = str(c.cliente_nombre, 100);
+  if (!cliente_nombre) return "Ingresá tu nombre";
+
+  // Mismo criterio que el checkout: 10 dígitos sin 0 ni 15
+  const cliente_telefono = str(c.cliente_telefono, 30).replace(/\D/g, "");
+  if (cliente_telefono.length !== 10) return "Ingresá un teléfono de 10 dígitos sin el 0 ni el 15";
+
+  if (c.modalidad !== "RETIRO" && c.modalidad !== "DELIVERY") return "Modalidad inválida";
+  const direccion_entrega = str(c.direccion_entrega, 300);
+  if (c.modalidad === "DELIVERY" && !direccion_entrega) return "Dirección requerida para delivery";
+
+  const fecha_entrega = str(c.fecha_entrega, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha_entrega) || isNaN(Date.parse(fecha_entrega))) return "Fecha inválida";
+  if (fecha_entrega < fechaMinimaEntrega(0)) return "La fecha de entrega ya pasó";
+
+  const hora_entrega = str(c.hora_entrega, 20);
+  if (!hora_entrega) return "Elegí un horario";
+
+  return {
+    cliente_nombre,
+    cliente_telefono,
+    modalidad: c.modalidad,
+    direccion_entrega: c.modalidad === "DELIVERY" ? direccion_entrega : undefined,
+    fecha_entrega,
+    hora_entrega,
+    comentarios: str(c.comentarios, 1000) || undefined,
+  };
+}
+
 function datosCliente(checkout: Checkout) {
   return {
     cliente_nombre: checkout.cliente_nombre,
@@ -41,9 +79,16 @@ function datosCliente(checkout: Checkout) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const { checkout, items, vouchers: vouchersRaw = [], caja, suscripcion } = body as {
-    checkout: Checkout;
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body !== "object") {
+    return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+  // Honeypot: campo invisible en el checkout que solo completan los bots
+  if (str(body.website, 200)) {
+    return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
+  }
+  const { checkout: checkoutRaw, items, vouchers: vouchersRaw = [], caja, suscripcion } = body as {
+    checkout: unknown;
     items: Array<{ id: string; cantidad: number }>;
     vouchers?: string[];
     /** Tamaño de caja (línea al vacío). */
@@ -52,11 +97,15 @@ export async function POST(request: NextRequest) {
     suscripcion?: { frecuencia_dias: number };
   };
 
-  if (!checkout || !items?.length) {
+  if (!Array.isArray(items) || !items.length || items.length > 50) {
     return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
   }
-  if (checkout.modalidad === "DELIVERY" && !checkout.direccion_entrega?.trim()) {
-    return NextResponse.json({ error: "Dirección requerida para delivery" }, { status: 400 });
+  const checkout = parseCheckout(checkoutRaw);
+  if (typeof checkout === "string") {
+    return NextResponse.json({ error: checkout }, { status: 400 });
+  }
+  if (items.some((i) => !i || typeof i.id !== "string" || i.id.length > 50)) {
+    return NextResponse.json({ error: "Producto inválido" }, { status: 400 });
   }
   if (items.some((i) => !Number.isInteger(i.cantidad) || i.cantidad < 1 || i.cantidad > 50)) {
     return NextResponse.json({ error: "Cantidad inválida" }, { status: 400 });
