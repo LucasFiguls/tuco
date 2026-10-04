@@ -44,3 +44,11 @@ next-env.d.ts
 
 # salida de consola accidental
 /initial_schema.sql
+
+# claude code (config local, no se commitea)
+.claude/settings.local.json
+
+# Playwright MCP (capturas y trazas de QA)
+.playwright-mcp/
+/playwright-report/
+/test-results/
