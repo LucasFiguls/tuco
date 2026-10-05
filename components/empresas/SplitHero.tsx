@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 
 const PANELES = [
   {
@@ -30,7 +30,7 @@ export function SplitHero() {
           key={p.eyebrow}
           className="group relative overflow-hidden min-h-[70svh] md:min-h-[88vh] flex items-end"
         >
-          <Image
+          <Imagen
             src={p.image}
             alt=""
             fill

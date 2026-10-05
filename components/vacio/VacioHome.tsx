@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import Link from "next/link";
 import type { ProductoVacio } from "@/lib/vacio-data";
 import { CAJA_SUGERIDA, METODOS, METODO_LABEL, type Caja } from "@/lib/vacio";
@@ -36,7 +36,7 @@ export function VacioHome({
 function Hero({ imagen }: { imagen: string }) {
   return (
     <section className="-mt-16 relative min-h-[88svh] flex items-end md:items-center bg-brand-dark overflow-hidden">
-      <Image src={imagen} alt="" fill priority sizes="100vw" className="object-cover object-center" />
+      <Imagen src={imagen} alt="" fill priority sizes="100vw" className="object-cover object-center" />
       <div
         aria-hidden
         className="absolute inset-0"

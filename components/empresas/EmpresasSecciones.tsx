@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import Link from "next/link";
 import { BENEFICIOS, METRICAS, TESTIMONIOS, FAQ } from "@/lib/empresas-content";
 import { Accordion } from "@/components/storefront/Accordion";
@@ -8,7 +8,7 @@ import { Accordion } from "@/components/storefront/Accordion";
 export function EmpresasHero() {
   return (
     <section className="-mt-16 relative min-h-[80svh] md:min-h-[85vh] flex items-end md:items-center bg-brand-dark overflow-hidden">
-      <Image
+      <Imagen
         src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1920&q=80"
         alt=""
         fill
@@ -132,7 +132,7 @@ export function MenuPreview({
             <div key={it.id} className="bg-brand-cream rounded-card overflow-hidden">
               <div className="relative aspect-[4/3] bg-brand-light">
                 {it.foto_url && (
-                  <Image src={it.foto_url} alt={it.nombre} fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
+                  <Imagen src={it.foto_url} alt={it.nombre} fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
                 )}
               </div>
               <div className="p-4">

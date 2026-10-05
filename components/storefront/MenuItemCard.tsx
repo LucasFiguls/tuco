@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import { useCart } from "./CartContext";
 
 interface MenuItemCardProps {
@@ -21,7 +21,7 @@ export function MenuItemCard({ id, nombre, descripcion, precio, categoria, foto_
       {/* Imagen */}
       <div className="relative h-40 bg-tuco-cream overflow-hidden">
         {foto_url ? (
-          <Image
+          <Imagen
             src={foto_url}
             alt={nombre}
             fill

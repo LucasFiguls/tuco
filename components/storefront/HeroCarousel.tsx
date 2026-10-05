@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 
 const SLIDES = [
   {
@@ -56,7 +56,7 @@ export function HeroCarousel() {
             i === active ? "opacity-100" : "opacity-0"
           }`}
         >
-          <Image
+          <Imagen
             src={slide.backgroundImage}
             alt=""
             fill

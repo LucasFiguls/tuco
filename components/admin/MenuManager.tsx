@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import { TAG_CONFIG } from "@/lib/tags";
 import { METODOS, METODO_LABEL, TIPO_LABEL, slugify, type MetodoRegeneracion, type TipoVacio } from "@/lib/vacio";
 
@@ -460,12 +460,12 @@ export function MenuManager() {
             <div className="flex items-center gap-3">
               {form.foto_url && (
                 <div className="relative w-16 h-16 rounded-xl overflow-hidden">
-                  <Image src={form.foto_url} alt="foto" fill className="object-cover" />
+                  <Imagen src={form.foto_url} alt="foto" fill className="object-cover" />
                 </div>
               )}
               <label className="cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors">
                 {uploadingImg ? "Subiendo..." : "Subir imagen"}
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" onChange={handleImageUpload} />
               </label>
               {form.foto_url && (
                 <button onClick={() => setForm((p) => ({ ...p, foto_url: null }))} className="text-xs text-red-400 hover:text-red-600">Quitar</button>
@@ -514,12 +514,12 @@ export function MenuManager() {
                 <div className="flex items-center gap-3">
                   {form.foto_bolsa_url && (
                     <div className="relative w-16 h-16 rounded-xl overflow-hidden">
-                      <Image src={form.foto_bolsa_url} alt="bolsa" fill className="object-cover" />
+                      <Imagen src={form.foto_bolsa_url} alt="bolsa" fill className="object-cover" />
                     </div>
                   )}
                   <label className="cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors">
                     {uploadingImg ? "Subiendo..." : "Subir imagen"}
-                    <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(e, "foto_bolsa_url")} />
+                    <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" onChange={(e) => handleImageUpload(e, "foto_bolsa_url")} />
                   </label>
                   {form.foto_bolsa_url && (
                     <button onClick={() => setForm((p) => ({ ...p, foto_bolsa_url: null }))} className="text-xs text-red-400 hover:text-red-600">Quitar</button>
@@ -714,7 +714,7 @@ export function MenuManager() {
             <div key={item.id} className="bg-white rounded-2xl shadow-sm flex items-center gap-4 p-4">
               <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                 {item.foto_url ? (
-                  <Image src={item.foto_url} alt={item.nombre} fill className="object-cover" />
+                  <Imagen src={item.foto_url} alt={item.nombre} fill className="object-cover" />
                 ) : (
                   <div className="h-full flex items-center justify-center text-2xl">🍽️</div>
                 )}

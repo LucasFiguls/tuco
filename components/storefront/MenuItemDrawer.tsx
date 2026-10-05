@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import type { MenuItem } from "@/lib/types";
 import { useCart } from "./CartContext";
 import { useDrawerBackButton } from "@/hooks/useDrawerBackButton";
@@ -76,7 +76,7 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
             {/* ── Hero image ──────────────────────────────────────────────── */}
             <div className="relative h-64 md:h-72 bg-brand-cream shrink-0">
               {item.foto_url ? (
-                <Image
+                <Imagen
                   src={item.foto_url}
                   alt={item.nombre}
                   fill
@@ -178,7 +178,7 @@ export function MenuItemDrawer({ item, onClose }: MenuItemDrawerProps) {
                         <div key={c.id} className="flex items-center gap-3">
                           <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-brand-light flex-shrink-0">
                             {c.foto_url ? (
-                              <Image
+                              <Imagen
                                 src={c.foto_url}
                                 alt={c.nombre}
                                 fill

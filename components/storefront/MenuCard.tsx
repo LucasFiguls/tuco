@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import type { MenuItem } from "@/lib/types";
 import { useCart } from "./CartContext";
 import { getTag } from "@/lib/tags";
@@ -36,7 +36,7 @@ export function MenuCard({
       {/* ── Imagen ──────────────────────────────────────────────────────── */}
       <div className="relative aspect-[3/2] sm:aspect-[4/3] bg-brand-cream overflow-hidden shrink-0">
         {foto_url ? (
-          <Image
+          <Imagen
             src={foto_url}
             alt={nombre}
             fill

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 
 /** Foto del producto o, si todavía no hay, un placeholder de bolsa al vacío. */
 export function ProductoImagen({
@@ -13,7 +13,7 @@ export function ProductoImagen({
   priority?: boolean;
 }) {
   if (src) {
-    return <Image src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />;
+    return <Imagen src={src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />;
   }
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-brand-frio-light text-brand-frio">

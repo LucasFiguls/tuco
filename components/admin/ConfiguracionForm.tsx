@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { Imagen } from "@/components/ui/Imagen";
 import { interpolateTemplate } from "@/lib/whatsapp";
 import { CAJAS_DEFAULT, parseCajas } from "@/lib/vacio";
 
@@ -376,12 +376,12 @@ export function ConfiguracionForm() {
             <div className="flex items-center gap-3">
               {config.vacio_hero_imagen && (
                 <div className="relative w-24 h-14 rounded-lg overflow-hidden bg-gray-100">
-                  <Image src={config.vacio_hero_imagen} alt="Hero" fill className="object-cover" />
+                  <Imagen src={config.vacio_hero_imagen} alt="Hero" fill className="object-cover" />
                 </div>
               )}
               <label className="cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-xl transition-colors">
                 {subiendo ? "Subiendo..." : config.vacio_hero_imagen ? "Cambiar foto" : "Subir foto"}
-                <input type="file" accept="image/*" className="hidden" onChange={subirHero} />
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" onChange={subirHero} />
               </label>
               {config.vacio_hero_imagen && (
                 <button type="button" onClick={() => setConfig((p) => ({ ...p, vacio_hero_imagen: "" }))} className="text-xs text-red-400 hover:text-red-600">
